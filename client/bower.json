@@ -1,0 +1,23 @@
+{
+  "name": "Halloween Client",
+  "homepage": "https://github.com/MeganCFord/HalloweenCapstone",
+  "authors": [
+    "Megan Ford <meg.c.ford@gmail.com>"
+  ],
+  "description": "angular front-end for halloween capstone",
+  "main": "main.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-bootstrap": "^2.1.3",
+    "bootstrap": "^3.3.7",
+    "angular-route": "^1.5.8"
+  }
+}
