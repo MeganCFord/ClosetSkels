@@ -7,7 +7,8 @@ from halloween.permissions import IsOwnerOrReadOnly
 from django.contrib.auth.models import User
 
 from halloween.models import Tag, Costume, Boo, Element, CostumeElement
-from halloween.serializers import UserSerializer, TagSerializer, CostumeSerializer, BooSerializer, ElementSerializer, CostumeElementSerializer, TagMiniSerializer, CostumeMiniSerializer, CostumeElementMiniSerializer
+
+from halloween.serializers import *
 
 # Create your views here.
 
@@ -20,25 +21,11 @@ class Tag(viewsets.ModelViewSet):
   queryset = Tag.objects.all()
   serializer_class = TagSerializer
 
-  def get_serializer_class(self):
-    if self.action =="list":
-      return TagMiniSerializer
-    elif self.action == "create" or self.action == "update":
-      return TagSerializer
-    else:
-      return TagSerializer
 
 class Costume(viewsets.ModelViewSet):
   queryset = Costume.objects.all()
   serializer_class = CostumeSerializer
-
-  def get_serializer_class(self):
-    if self.action =="list":
-      return CostumeMiniSerializer
-    elif self.action == "create" or self.action == "update":
-      return CostumeSerializer
-    else:
-      return CostumeSerializer  
+ 
 
 
 class Boo(viewsets.ModelViewSet):
@@ -53,10 +40,10 @@ class CostumeElement(viewsets.ModelViewSet):
   queryset = CostumeElement.objects.all()
   serializer_class = CostumeElementSerializer
 
-  def get_serializer_class(self):
-    if self.action =="list":
-      return CostumeElementMiniSerializer
-    elif self.action == "create" or self.action == "update":
-      return CostumeElementSerializer
-    else:
-      return CostumeElementSerializer 
+  # def get_serializer_class(self):
+  #   if self.action =="list":
+  #     return CostumeElementMiniSerializer
+  #   elif self.action == "create" or self.action == "update":
+  #     return CostumeElementEditSerializer
+  #   else:
+  #     return CostumeElementSerializer 
