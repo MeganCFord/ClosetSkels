@@ -2,11 +2,18 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+
+from django.contrib.auth.models import User
+
 from halloween.models import Tag, Costume, Boo, Element, CostumeElement
-from halloween.serializers import TagSerializer, CostumeSerializer, BooSerializer, ElementSerializer, CostumeElementSerializer
+from halloween.serializers import UserSerializer, TagSerializer, CostumeSerializer, BooSerializer, ElementSerializer, CostumeElementSerializer
 
 # Create your views here.
-# 
+
+class UserList(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 class TagList(viewsets.ModelViewSet):
   queryset = Tag.objects.all()
   serializer_class = TagSerializer

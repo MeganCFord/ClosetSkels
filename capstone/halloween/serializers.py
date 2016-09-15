@@ -2,9 +2,14 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from halloween.models import Tag, Costume, Boo, Element, CostumeElement
 
+class UserSerializer(serializers.HyperlinkedModelSerializer):
 
+  class Meta:
+    model = User
+    fields = ('id', 'url', 'username', 'costumes')
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
+  
   class Meta: 
     model = Tag
     fields = ("id", "name")

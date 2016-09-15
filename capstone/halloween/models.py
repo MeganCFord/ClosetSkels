@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils import timezone
 
 # Create your models here.
@@ -32,7 +31,7 @@ class Costume(models.Model):
         return "{}: {}".format(self.id, self.name)
 
 class Boo(models.Model):
-  datebood = models.DateField(auto_now=True)
+  date = models.DateField(auto_now=True)
 
   def __str__(self):
         return "{}: {}".format(self.id, self.datebood)

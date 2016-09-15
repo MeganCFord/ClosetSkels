@@ -3,6 +3,8 @@ from django.conf.urls import url, include
 from halloween import views
 
 router = routers.DefaultRouter()
+
+router.register(r'users', views.UserList)
 router.register(r'tags', views.TagList)
 router.register(r'costumes', views.CostumeList)
 router.register(r'boos', views.BooList)
