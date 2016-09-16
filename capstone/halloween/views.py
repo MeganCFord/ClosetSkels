@@ -57,6 +57,7 @@ def login_user(request):
 
     # Load the JSON string of the request body into a dict
     print(request.COOKIES)
+    print(request.session)
     req_body = json.loads(request.body.decode())
 
     # Use the built-in authenticate method to verify

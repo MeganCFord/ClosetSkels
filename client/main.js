@@ -1,10 +1,10 @@
-const app = angular.module("Halloween", ["ngRoute", "ngCookies"]);
+const app = angular.module("Halloween", ["ngRoute", "ngCookies", "ui.bootstrap"]);
 
 app.constant('apiUrl', "http://localhost:8000");
 
 
 
-
+// THIS STUFF DOES NOT WORK for some reason.
 app.config(($httpProvider) => {
   // const csrfToken = Cookies.get('csrftoken')
   $httpProvider.defaults.headers.xsrfCookieName = 'csrfToken';
@@ -14,7 +14,6 @@ app.config(($httpProvider) => {
 app.run(function run($http, $cookies) {
 //   // For CSRF token compatibility with Django
   $http.defaults.headers.post['X-CSRFToken'] = $cookies['csrftoken'];
-  $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 });
 
 app.config($routeProvider => {
@@ -24,8 +23,8 @@ app.config($routeProvider => {
       controller: "Login",
       controllerAs: "login"
     })
-    .when("/main", {
-      templateUrl: "partials/main.html", 
+    .when("/home", {
+      templateUrl: "partials/home.html", 
       controller: "Home", 
       controllerAs: "home"
     })

@@ -19,8 +19,17 @@ app.controller("Login", [
 
 
     login.login = function() {
-      $http.post(`${apiUrl}/login`, {"username": login.user.username,"password": login.user.password}
-      ).success(res => {
+      $http({
+        url: `${apiUrl}/login`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        data: {
+          "username": login.user.username,
+          "password": login.user.password
+        }
+      }).success(res => {
         if (res.success) {
           /*
           Login was successful, store credentials for use in requests
@@ -31,24 +40,24 @@ app.controller("Login", [
             password: login.user.password
           });
 
-          // Redirect to home page on successful login
-          $location.path("/main");
+          // Redirect to new ticket form on successful login
+          $location.path('/home');
         }
       }).error(console.error);
     };
 
 
     login.register = function() {
-      $http.POST( `${apiUrl}/register`, {
+      $http.post( `${apiUrl}/register`, {
         "username": login.user.username,
         "password": login.user.password,
         "first_name": login.user.first_name,
         "last_name": login.user.last_name}
-      ).success(res => {
+      ).then(res => {
         if (res.success) {
           login.login();
         }
-      }).error(console.error);
+      }, () => (console.error));
     };
 
   }]);
