@@ -1,0 +1,31 @@
+<div ng-if="login.registering===false" class="container">
+  <h1 class="text-center">Login</h1>
+  <form ng-submit="login.login()"
+        class="form-horizontal col-sm-6 col-sm-offset-2">
+    <div class="form-group">
+        <label class="control-label col-sm-4">Username:</label>
+        <div class="col-sm-8">
+            <input class="form-control"
+                   placeholder="Username"
+                   ng-model="login.user.username"
+                   required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-4">Password:</label>
+        <div class="col-sm-8">
+            <input class="form-control"
+                   type="password" placeholder="Password"
+                   ng-model="login.user.password"
+                   required>
+        </div>
+    </div>
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary">Login</button>
+    </div>
+  </form>
+<div class="text-right col-sm-6 col-sm-offset-2">
+    <button  class="btn btn-info" ng-click="login.registering=true">New User</button>
+</div>
+</div>
+<div ng-if="login.registering===true" ng-include src="'partials/register.html'"></div>

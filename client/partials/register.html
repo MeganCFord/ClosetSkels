@@ -1,0 +1,23 @@
+<div class="container">
+  <h1>Register User</h1>
+  <form ng-submit="login.register()">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" ng-model="login.user.username" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label class="input-label" for="first_name">First Name:</label>
+      <input type="text" id="first_name" name="first_name" ng-model="login.user.first_name" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label class="input-label" for="last_name">Last Name:</label>
+      <input type="text" id="last_name" name="last_name" ng-model="login.user.last_name" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" ng-model="login.user.password" class="form-control" />
+    </div>
+    <input type="submit" value="Submit" class="btn btn-primary" />
+  </form>
+  <button class="btn btn-primary" ng-click="login.registering=false">I have an account</button>
+</div>

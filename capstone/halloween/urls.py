@@ -14,4 +14,6 @@ router.register(r'costumeelements', views.CostumeElement)
 
 urlpatterns = [
   url(r'^', include(router.urls)),
+  url(r'^login$', views.login_user, name='login'),
+  url(r'^register$', views.create_user, name='create_user'),
 ]
