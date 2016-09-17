@@ -1,11 +1,18 @@
-<nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">Welcome {{nav.username}}!</a>
+      <a class="navbar-brand" href="#">Closet Skeletons</a>
     </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a ng-click="nav.logout()">Log Out</a></li>
-      <li><a href="#">Link</a></li>
+
+      <ul class="nav navbar-nav">
+        <li><a href="#/home">Home</a></li>
+        <li><a href="#/likes">Likes</a></li>
+        <li><a href="#/closet">Closet</a></li>
+        <li><a href="#/create">Create</a></li>
+        <li><a href="#/search">Search</a></li>
+      </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><p class="navbar-text">Signed in as {{nav.username}}</p></li>
+      <li></li>
+      <li><button ng-click="nav.logout()" class="navbar-btn btn btn-default">Log Out</button></li>
     </ul>
   </div>
-</nav>

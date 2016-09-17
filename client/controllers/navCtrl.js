@@ -8,7 +8,6 @@ app.controller("Nav", [
     const nav = this;
     
     nav.username = AuthFactory.getDecodedCredentials();
-    console.log("username...", nav.username);
     if (nav.username.length === 0 || nav.username === undefined) {
       $location.path("/");
     }
