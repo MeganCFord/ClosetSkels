@@ -1,9 +1,9 @@
 app.controller("Nav", [
   "AuthFactory", 
-  "$location",
   "$cookies",
   "$scope",
-  function(AuthFactory, $location, $cookies, $scope) {
+  "$location",
+  function(AuthFactory, $cookies, $scope, $location) {
 
     const nav = this;
     
@@ -13,6 +13,8 @@ app.controller("Nav", [
     } else {
       $scope.$emit("username", nav.username);
     }
+
+    nav.currentPage = $location.path();
 
     nav.logout = () => {
       $cookies.remove("HalloweenCredentials");

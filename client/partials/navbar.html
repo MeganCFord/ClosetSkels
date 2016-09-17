@@ -4,11 +4,11 @@
     </div>
 
       <ul class="nav navbar-nav">
-        <li><a href="#/home">Home</a></li>
-        <li><a href="#/likes">Likes</a></li>
-        <li><a href="#/closet">Closet</a></li>
-        <li><a href="#/create">Create</a></li>
-        <li><a href="#/search">Search</a></li>
+        <li ng-class="nav.currentPage == '/home'? 'active':''" ><a href="#/home">Home</a></li>
+        <li ng-class="nav.currentPage == '/likes'? 'active':''" ><a href="#/likes">Likes</a></li>
+        <li ng-class="nav.currentPage == '/closet'? 'active':''" ><a href="#/closet">Closet</a></li>
+        <li ng-class="nav.currentPage == '/create'? 'active':''" ><a href="#/create">Create</a></li>
+        <li ng-class="nav.currentPage == '/search'? 'active':''" ><a href="#/search">Search</a></li>
       </ul>
     <ul class="nav navbar-nav navbar-right">
       <li><p class="navbar-text">Signed in as {{nav.username}}</p></li>
