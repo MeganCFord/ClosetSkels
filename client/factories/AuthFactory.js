@@ -1,24 +1,24 @@
-app.factory( "AuthFactory", function($http) {
+app.factory( "AuthFactory", function() {
   
-  let userCredentials={};
-  // For Scopes.
-  let username="";
+  let encodedUserCredentials = "";
+  let decodedUserCredentials = {"username": "", "password": ""};
 
   return {
-    credentials: (creds) => {
-      if(creds) {
-        userCredentials=creds;
-        username=userCredentials.username;
-      } else {
-        if (userCredentials.hasOwnProperty("password")) {
-          return window.btoa(`${userCredentials.username}:${userCredentials.password}`);
-        } else {
-          return false;
-        }
-      }
+    encodeCredentials: (creds) => {
+      decodedUserCredentials = creds;
+      encodedUserCredentials = window.btoa(`${creds.username}:${creds.password}`);
     },
-    currentUser: () => {
-      return username;
+    getEncodedCredentials: () => {
+      return encodedUserCredentials;
+    },
+    decodeCredentials: (encoded) => {
+      encodedUserCredentials = encoded;
+      const decoded = window.atob(encoded).split(":");
+      decodedUserCredentials.username = decoded[0];
+      decodedUserCredentials.password = decoded[1];
+    }, 
+    getDecodedCredentials: () => {
+      return decodedUserCredentials.username;
     }
   };
 });

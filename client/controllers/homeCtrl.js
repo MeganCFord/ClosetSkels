@@ -1,12 +1,5 @@
-app.controller("Home", [
-  "AuthFactory", 
-  "apiUrl", 
-  "$http", 
-  function(AuthFactory, apiUrl, $http) {
-
+app.controller("Home",
+  function() {
     const home = this;
-
     home.title="hey home page";
-
-
-  }]);
+  });

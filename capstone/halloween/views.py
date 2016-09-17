@@ -56,8 +56,6 @@ def login_user(request):
     '''
 
     # Load the JSON string of the request body into a dict
-    print(request.COOKIES)
-    print(request.session)
     req_body = json.loads(request.body.decode())
 
     # Use the built-in authenticate method to verify
@@ -74,6 +72,7 @@ def login_user(request):
         success = False
     data = {"success":success}
     return JsonResponse(data)
+
 
 @csrf_exempt
 def create_user(request):
@@ -96,3 +95,4 @@ def create_user(request):
                                   last_name=LastName)
   user.save()
   return JsonResponse({"success": True})
+

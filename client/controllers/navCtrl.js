@@ -2,19 +2,20 @@ app.controller("Nav", [
   "AuthFactory", 
   "$http", 
   "$location",
-  function(AuthFactory, $http, $location) {
+  "$cookies",
+  function(AuthFactory, $http, $location, $cookies) {
 
     const nav = this;
     
-    nav.username = AuthFactory.currentUser();
-
-    if (nav.username === "") {
+    nav.username = AuthFactory.getDecodedCredentials();
+    console.log("username...", nav.username);
+    if (nav.username.length === 0 || nav.username === undefined) {
       $location.path("/");
     }
 
     nav.logout = () => {
-      AuthFactory.credentials({});
-      $location.path("/");
+      $cookies.remove("HalloweenCredentials");
+      $location.path("/login");
     };
 
   }]);

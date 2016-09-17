@@ -1,24 +1,20 @@
-const app = angular.module("Halloween", ["ngRoute", "ngCookies", "ui.bootstrap"]);
+const app = angular.module("Halloween", ["ngRoute", "ngCookies"]);
 
-app.constant('apiUrl', "http://localhost:8000");
+app.constant("apiUrl", "http://localhost:8000");
 
-
-
-// THIS STUFF DOES NOT WORK for some reason.
-app.config(($httpProvider) => {
-  // const csrfToken = Cookies.get('csrftoken')
-  $httpProvider.defaults.headers.xsrfCookieName = 'csrfToken';
-  $httpProvider.defaults.headers.xsrfHeaderName = 'X-CSRFToken';
+// on page load, get cookie if it exists and set credentials/permissions.
+app.run(function run(AuthFactory, $cookies, $http) {
+  const hc= $cookies.get("HalloweenCredentials");
+  if (hc) {
+    AuthFactory.decodeCredentials(hc);
+    $http.defaults.headers.common.Authorization = "Basic " + AuthFactory.getEncodedCredentials();
+  }
 });
 
-app.run(function run($http, $cookies) {
-//   // For CSRF token compatibility with Django
-  $http.defaults.headers.post['X-CSRFToken'] = $cookies['csrftoken'];
-});
 
-app.config($routeProvider => {
+app.config(function($routeProvider) {
   $routeProvider
-    .when("/", {
+    .when("/login", {
       templateUrl: "partials/login.html",
       controller: "Login",
       controllerAs: "login"
@@ -28,7 +24,7 @@ app.config($routeProvider => {
       controller: "Home", 
       controllerAs: "home"
     })
-    .otherwise("/");
+    .otherwise("/login");
 });
 
 

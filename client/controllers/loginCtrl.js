@@ -3,7 +3,8 @@ app.controller("Login", [
   "$http",  
   "AuthFactory", 
   "apiUrl", 
-  function( $location, $http, AuthFactory, apiUrl) {
+  "$cookies",
+  function( $location, $http, AuthFactory, apiUrl, $cookies) {
 
     const login = this;
 
@@ -35,13 +36,15 @@ app.controller("Login", [
           Login was successful, store credentials for use in requests
           to API that require permissions
            */
-          AuthFactory.credentials({
+          AuthFactory.encodeCredentials({
             username: login.user.username,
             password: login.user.password
           });
-
-          // Redirect to new ticket form on successful login
-          $location.path('/home');
+          // create cookie and authorization headers for http requests etc.
+          $cookies.put("HalloweenCredentials", AuthFactory.getEncodedCredentials());
+          $http.defaults.headers.common.Authorization = "Basic " + AuthFactory.getEncodedCredentials();
+          // Redirect
+          $location.path("/home");
         }
       }).error(console.error);
     };
