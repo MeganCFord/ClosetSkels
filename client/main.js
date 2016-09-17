@@ -24,8 +24,25 @@ app.config(function($routeProvider) {
       controller: "Home", 
       controllerAs: "home"
     })
+    .when("/likes", {
+      templateUrl: "partials/likes.html", 
+      controller: "Likes", 
+      controllerAs: "likes"
+    })
+    .when("/closet", {
+      templateUrl: "partials/closet.html", 
+      controller: "Closet", 
+      controllerAs: "closet"
+    })
+    .when("/create", {
+      templateUrl: "partials/create.html", 
+      controller: "Create", 
+      controllerAs: "create"
+    })
+    .when("/search", {
+      templateUrl: "partials/search.html", 
+      controller: "Search", 
+      controllerAs: "search"
+    })
     .otherwise("/login");
 });
-
-
-
