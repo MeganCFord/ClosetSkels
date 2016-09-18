@@ -8,5 +8,14 @@ app.controller("Create",[
       create.username = data;
     });
 
+    create.costume = {
+      "name": "",
+      "description": "", 
+      "datecreated": "", 
+      "public": false, 
+      "owner": create.username, 
+      "tags": [],
+      "costumeelements": []
+    };
 
   }]);
