@@ -17,8 +17,19 @@ from halloween.serializers import *
 from halloween.permissions import IsOwnerOrReadOnly
 
 class User(viewsets.ModelViewSet):
-  queryset = User.objects.all()
   serializer_class = UserSerializer
+  queryset = DjangoUser.objects.all()
+
+  def get_queryset(self):
+    """
+    Optionally restricts the returned queryset to a given user,
+    by filtering against a `username` query parameter in the URL.
+    """
+    queryset = DjangoUser.objects.all()
+    username = self.request.query_params.get('username', None)
+    if username is not None:
+        queryset = queryset.filter(username=username)
+    return queryset
 
 
 class Tag(viewsets.ModelViewSet):
