@@ -21,13 +21,13 @@ class Costume(models.Model):
 
 
 class Boo(models.Model):
-  user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name="boos")
+  owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name="boos")
   costume = models.ForeignKey('costume', on_delete=models.CASCADE, related_name="boos")
 
   def __str__(self):
-        return "{}: {}".format(self.user, self.date)
+        return "{}".format(self.id)
   def __unicode__(self):
-        return "{}: {}".format(self.user, self.date)
+        return "{}".format(self.id)
 
 
 class Element(models.Model):

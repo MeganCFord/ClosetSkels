@@ -13,6 +13,14 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
     model = Tag
     fields = ("id", "name")
 
+class BooSerializer(serializers.HyperlinkedModelSerializer):
+  # user = UserSerializer()
+  
+  class Meta: 
+    model = Boo
+    fields = ("url", "owner", "costume")
+
+
 class CostumeElementSerializer(serializers.HyperlinkedModelSerializer):
   tags = TagSerializer(many=True)
   class Meta:
@@ -28,9 +36,10 @@ class CostumeElementSerializer(serializers.HyperlinkedModelSerializer):
 class CostumeSerializer(serializers.HyperlinkedModelSerializer):
   tags = TagSerializer(many=True)
   costume_elements=CostumeElementSerializer(many=True)
+  boos=BooSerializer(many=True)
   class Meta: 
     model = Costume
-    fields = ("id", 'url', 'owner', 'name', 'description', 'datecreated', 'public', 'costume_elements', 'tags')
+    fields = ("id", 'url', 'owner', 'name', 'description', 'datecreated', 'public', 'costume_elements', 'tags', 'boos')
 
     # ALL THIS IS FOR IF I DECIDE I WANT TO CREATE ALL THE STUFF AT ONCE which I am not going to do right now.
   # def create(self, data):
@@ -74,16 +83,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
   
   class Meta:
     model = User
-    fields = ('username', 'costumes')
+    fields = ('id', 'url', 'username', 'costumes')
 
 
-class BooSerializer(serializers.HyperlinkedModelSerializer):
-  costume=CostumeSerializer()
-  user = UserSerializer()
-  
-  class Meta: 
-    model = Boo
-    fields = ("user", "costume")
 
 
 

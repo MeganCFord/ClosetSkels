@@ -9,61 +9,80 @@ app.factory( "APIFactory", [
       return httpGet.then(res => res.data);
     };
 
+    const errorHandle = (e) => {console.log(e);};
+
+    const getUser = (username) => {
+      return getApiRoot().then((root) => {
+        return $http.get(`${root.users}?username=${username}`);
+      }, errorHandle)
+      .then((res) => {
+        return res.data;
+      }, errorHandle);
+    };
+
     return {
       getCostumes: () => {
         return getApiRoot()
         .then((root) => {
           return $http.get(`${root.costumes}`);
-        }, e => console.error)
+        }, errorHandle)
         .then((res) => {
           return res.data;
-        }, e => console.error);
+        }, errorHandle);
       }, 
+      getUserUrl: (username) => {
+        return getUser(username)
+        .then((res) => {
+          return res[0].url;
+        }, errorHandle);
+      },
       getUserCostumes: (username) => {
+        return getUser(username)
+        .then((res) => {
+          // returns in a list since queries return filtered lists. in this case, there will be just one match since Django requires unique usernames in its User model.
+          return res[0].costumes;
+        }, errorHandle);
+      },
+      addBoo: (userUrl, costumeUrl) => {
         return getApiRoot()
-          .then((root) => {
-            return $http.get(`${root.users}?username=${username}`);
-          }, (e) => console.log(e))
-          .then((res) => {
-            // returns in a list since queries return filtered lists. in this case, there will be just one match since Django requires unique usernames in its User model.
-            return res.data[0].costumes;
-          }, e => console.error);
+        .then((root)=> {
+          return $http.post(`${root.boos}`, {"owner": userUrl, "costume": costumeUrl});
+        }, errorHandle)
+        .then((res) => console.log(res), errorHandle);
       }, 
+      deleteBoo: (booUrl) => {
+        return $http.delete(`${booUrl}`)
+        .then((res)=> console.log(res), errorHandle);
+      },
       getTags: () => {
         return getApiRoot()
         .then((root) => {
           return $http.get(`${root.tags}`);
-        }, e => console.error)
+        }, errorHandle)
         .then((res)=> {
           return res.data;
-        }, e => console.error);
+        }, errorHandle);
       },
       createTag: (data) => {
         return getApiRoot()
-          .then((root) => {
-            return $http.post(`${root.tags}`, data);
-          }, e => console.error);
-          // .then((res) => {
-          //   console.log(res.data);
-          // });
+        .then((root) => {
+          return $http.post(`${root.tags}`, data);
+        }, errorHandle);
       }, 
       getElements: () => {
         return getApiRoot()
         .then((root) => {
           return $http.get(`${root.elements}`);
-        }, e => console.error)
+        }, errorHandle)
         .then((res)=> {
           return res.data;
-        }, e => console.error);
+        }, errorHandle);
       },
       createElement: (data) => {
         return getApiRoot()
-          .then((root) => {
-            return $http.post(`${root.elements}`, data);
-          }, e => console.error);
-          // .then((res) => {
-          //   console.log(res.data);
-          // });
+        .then((root) => {
+          return $http.post(`${root.elements}`, data);
+        }, errorHandle);
       }
     };  
   }]);
