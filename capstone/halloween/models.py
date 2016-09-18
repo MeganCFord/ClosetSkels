@@ -4,12 +4,12 @@ from django.utils import timezone
 
 
 class Costume(models.Model):
-  # Permissions here.
     name = models.CharField(max_length=55)
     description = models.CharField(max_length=1000, blank=True)
+    # This will always be now.
     datecreated = models.DateTimeField(default=timezone.now)
     public = models.BooleanField(default=False)
-    # Allowing owner to be null in case a users wants to delete their private version of a published costume- then the public version will still be available if it exists. 
+    # Allowing owner to be null in case a users wants to delete their private version of a published costume- then the public version will still be available if they've published it. 
     owner = models.ForeignKey('auth.User',on_delete=models.SET_NULL, related_name ="costumes", null=True)
     # tags are on CostumeTag.
     # costume elements are on costumeElement.
@@ -21,7 +21,6 @@ class Costume(models.Model):
 
 
 class Boo(models.Model):
-  # permissions here.
   user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name="boos")
   costume = models.ForeignKey('costume', on_delete=models.CASCADE, related_name="boos")
 
