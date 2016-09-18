@@ -1,4 +1,12 @@
 <div ng-include="'partials/navbar.html'" class="navbar navbar-default" ng-controller="Nav as nav"></div>
 
 
-{{closet.title}} {{closet.username}}
+<h1>{{closet.title}}</h1> 
+<div  ng-if="closet.costumes.length > 0" ng-repeat="costume in closet.costumes">
+  <p>Costume name: {{costume.name}}</p>
+</div>
+<div ng-if="closet.costumes.length ===0">
+  <p>No costumes are in your closet yet!</p>
+  <a class="btn btn-default" href="#/home">Browse all costumes</a>
+  <a class="btn btn-default" href="#/search">Search for costumes</a>
+</div>

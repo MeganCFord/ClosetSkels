@@ -25,8 +25,9 @@ app.factory( "APIFactory", [
             return $http.get(`${root.users}?username=${username}`);
           }, (e) => console.log(e))
           .then((res) => {
-            console.log("should have user costumes here", res.data);
-            return res.data;
+            // returns in a list since queries return filtered lists. in this case, there will be just one match since Django requires unique usernames in its User model.
+            console.log("should have user costumes here", res.data[0].costumes);
+            return res.data[0].costumes;
           }, (e) => console.log(e));
       }
     };  
