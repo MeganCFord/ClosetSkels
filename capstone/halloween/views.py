@@ -3,20 +3,18 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
+# was pulling from another User in another file so aliased it to prevent program confusion.
 from django.contrib.auth.models import User as DjangoUser
 from django.contrib.auth import authenticate, login, logout
 
-import requests
 import json
 
-from halloween.models import Tag, Costume, Boo, Element, CostumeElement
+from halloween.models import *
 from halloween.serializers import *
 from halloween.permissions import IsOwnerOrReadOnly
-
-# Create your views here.
 
 class User(viewsets.ModelViewSet):
   queryset = User.objects.all()
@@ -47,6 +45,8 @@ class Element(viewsets.ModelViewSet):
 class CostumeElement(viewsets.ModelViewSet):
   queryset = CostumeElement.objects.all()
   serializer_class = CostumeElementSerializer
+
+
 
 @csrf_exempt
 def login_user(request):
