@@ -42,6 +42,7 @@ class CostumeElement(models.Model):
   description = models.CharField(max_length=1000, blank=True)
   element = models.ForeignKey('element', on_delete=models.CASCADE, related_name="costume_elements")
   costume = models.ForeignKey('costume', on_delete=models.CASCADE, related_name="costume_elements")
+  # Do I need a through field here?
 
   def __str__(self):
         return "{}".format(self.description)
