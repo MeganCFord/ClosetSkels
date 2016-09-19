@@ -1,12 +1,17 @@
 <div ng-include="'partials/navbar.html'" class="navbar navbar-default" ng-controller="Nav as nav"></div>
 
-<div class="container">
-  <h1 class="text-center">Create a Costume</h1>
-  <form ng-submit="create.createCostume()"
-        class="form-horizontal col-sm-6 col-sm-offset-2">
-    <!-- Costume Name -->
+<div class="container-fluid">
+  <div class="col col-sm-1"></div>
+  <div class="form-horizontal col-sm-10">
     <div class="form-group">
-        <label class="control-label col-sm-4">Costume Name</label>
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8">
+        <h1>Create a Costume</h1>
+      </div>
+    </div>
+<!-- NAME -->
+    <div class="form-group">
+        <label class="control-label col-sm-2">Title</label>
         <div class="col-sm-8">
             <input class="form-control"
                    placeholder="eg. 'Harley Quinn', 'Gumball Machine'"
@@ -14,83 +19,161 @@
                    required>
         </div>
     </div>
-    <!-- Costume Description -->
+    <hr>
+<!-- DESCRIPTION -->
     <div class="form-group">
-        <label class="control-label col-sm-4">Costume Description</label>
+        <label class="control-label col-sm-2">Description</label>
         <div class="col-sm-8">
             <textarea class="form-control"
                    placeholder="talk about some features of your costume or special instructions here."
-                   ng-model="create.costume.description"></textarea>
+                   ng-model="create.costume.description"
+                   rows="8">
+           </textarea>
         </div>
     </div>
-    <!-- public Boolean -->
+    <hr>
+<!-- TAGS -->
     <div class="form-group">
+    <label class="control-label col-sm-2">Tags</label>
+      <div class="col-sm-8">
+        <div  uib-collapse="!create.tagIsCollapsed">
+          <div class="well well-lg container-fluid">
+            <span ng-repeat="tag in create.tags">
+              <span ng-hide="create.costume.tags | contains:tag.url" ng-click="create.addTag(tag.url)" class="btn btn-default">{{tag.name}}</span>
+              <span ng-show="create.costume.tags | contains:tag.url" ng-click="create.removeTag(tag.url)" class="btn btn-primary">{{tag.name}}</span>
+            </span>
+            <button type="button" class="btn btn-info" ng-click="create.tagIsCollapsed = !create.tagIsCollapsed">Add a New Tag</button>
+          </div>
+        </div>
+        <div uib-collapse="create.tagIsCollapsed">
+          <div class="well well-lg container-fluid">
+            <div class="form-group">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-10">
+              </div>
+            </div>
+            <form ng-submit="create.createTag()" class="form-group">
+              <label class="control-label col-sm-2"></label>
+              <div class="col-sm-10">
+                  <input class="form-control"
+                         placeholder="eg. 'blue', 'mini length', 'striped'"
+                         ng-model="create.tag.name"
+                         required>
+                <div class="text-right">
+                    <button type="submit" class="btn btn-default">Add</button>
+                    <span ng-click="create.tagIsCollapsed = !create.tagIsCollapsed" class="btn btn-default">Cancel</span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+<!-- SUPPLIES -->
+    <div class="form-group">
+      <label class="control-label col-sm-2">Supplies</label>
+      <div class="col-sm-8">
+        <div class="container-fluid">
+        <!-- EDIT SUPPLIES -->
+          <div ng-include="'partials/createEditElement.html'"></div>
+          
+          <div class="col-sm-6" ng-show="create.costumeelements | isEmpty"><p>No Supplies Added Yet!</p>
+          </div>
+<!-- create Supply form. Always shows next to created elements. -->
+          <div class="col-sm-6">
+            <div class="form-group">
+              <h3>New Supply</h5>
+            </div>
+            <div class="form-group">
+              <label for="name">Supply Name</label>
+              <input type="text" class="form-control" id="name" ng-model="create.costumeelement.name" placeholder="eg. 'red and white baseball tee'">
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea class="form-control" id="description" ng-model="create.costumeelement.description" placeholder="add some instructions or additional info here." rows="6"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="element">Supply</label>
+              <p class="help-block">This field is used to help find parts of your costume beyond tags.</p>
+              <div uib-collapse="!create.elementIsCollapsed">
+                <select class="form-control" ng-model="create.costumeelement.element">
+                  <option disabled selected value> -- select an option -- </option>
+                  <option ng-selected="element.url == create.costumeelement.element" ng-repeat="element in create.elements" value="{{element.url}}">{{element.name}}</option>
+                </select>
+                <button class="btn btn-sm btn-info" ng-click="create.elementIsCollapsed = !create.elementIsCollapsed">Create a New Supply</button>
+              </div>
+<!-- add new supply form. -->
+              <div uib-collapse = "create.elementIsCollapsed">
+                <div class="well well-lg">
+                  <input type="text" class="form-control" id="name" ng-model="create.element.name" placeholder=" Name">
+                  <span class="btn btn-default btn-sm" ng-click="create.createElement()">Add</span>
+                  <span class="btn btn-default btn-sm" ng-click="create.elementIsCollapsed=!create.elementIsCollapsed">Cancel</span>
+                </div>
+              </div>
+            </div>
+<!-- ELEMENT TAGS -->
+            <div class="form-group">
+              <label>Tags</label>
+              <div uib-collapse="!create.elementTagIsCollapsed">
+                <div class="well well-lg">
+                  <span ng-repeat="tag in create.tags">
+                    <span ng-hide="create.costumeelement.tags | contains:tag.url" ng-click="create.addTag(tag.url, element=true)" class="btn btn-default btn-sm">{{tag.name}}</span>
+                    <span ng-show="create.costumeelement.tags | contains:tag.url" ng-click="create.removeTag(tag.url, element=true)" class="btn btn-primary btn-sm">{{tag.name}}</span>
+                  </span>
+                  <button class="btn btn-info btn-sm" ng-click="create.elementTagIsCollapsed = !create.elementTagIsCollapsed">Create a New Tag</button>
+                </div>
+              </div>
+            </div>
+<!-- add new tag form.  -->
+            <div class="form-group">  
+              <div uib-collapse="create.elementTagIsCollapsed" >
+                <div class="well well-lg container-fluid">
+                  <div class="form-group">
+                    <input class="form-control"
+                           placeholder="eg. 'blue', 'mini length', 'striped'"
+                           ng-model="create.tag.name"
+                           type="text"
+                           id="elementtagname"
+                           required>
+                    <span ng-click="create.createTag(true)" class="btn btn-default btn-sm">Add</span>
+                    <span ng-click="create.elementTagIsCollapsed = !create.elementTagIsCollapsed" class="btn btn-default btn-sm">Cancel</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <span ng-click="create.createCostumeElement()" class="btn btn-default">Submit</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+<!-- PUBLIC -->
+    <div class="form-group">
+      <label class="control-label col-sm-2">Public/ Private</label>
       <div class="col-sm-8">
         <div class="checkbox">
           <label>
-            <input ng-model="create.costume.public" type="checkbox"> Public
+            <input ng-model="create.costume.public" type="checkbox"> Publish to Public Feed
           </label>
         </div>
       </div>
     </div>
-    <!-- tags select -->
-    <h3>Tags</h3>
+    <hr>
+<!-- Submit Button -->
     <div class="form-group">
-      <div class="col-sm-8">
-      <span ng-repeat="tag in create.tags">
-        <span ng-hide="create.costume.tags | contains:tag.url" ng-click="create.addTag(tag.url)" class="btn btn-default">{{tag.name}}</span>
-        <span ng-show="create.costume.tags | contains:tag.url" ng-click="create.removeTag(tag.url)" class="btn btn-primary">{{tag.name}}
-        </span>
-      </span>
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8 text-right">
+          <button ng-click="create.createCostume()" class="btn btn-primary">Create Costume</button>
+      </div>
     </div>
-    <!-- add a tag: modal -->
-    <!-- add a costume element: modal -->
-      <!-- add tags to the costume element -->
-    <div class="text-right">
-        <button type="submit" class="btn btn-primary">Create Costume</button>
-    </div>
-  </form>
+
+  </div> <!-- End of create costume div. -->
+  <div class="col col-sm-1"></div>
 </div>
 
-
-
-<div class="container">
-  <h1 class="text-center">Create a Tag</h1>
-  <form ng-submit="create.createTag()"
-        class="form-horizontal col-sm-6 col-sm-offset-2">
-    <div class="form-group">
-        <label class="control-label col-sm-4">Tag Name:</label>
-        <div class="col-sm-8">
-            <input class="form-control"
-                   placeholder="eg. 'blue', 'mini length', 'striped'"
-                   ng-model="create.tag.name"
-                   required>
-        </div>
-    </div>
-    <div class="text-right">
-        <button type="submit" class="btn btn-primary">Create Tag</button>
-    </div>
-  </form>
-</div>
-
-<div class="container">
-  <h1 class="text-center">Create an Element</h1>
-  <form ng-submit="create.createElement()"
-        class="form-horizontal col-sm-6 col-sm-offset-2">
-    <div class="form-group">
-        <label class="control-label col-sm-4">Element Name:</label>
-        <div class="col-sm-8">
-            <input class="form-control"
-                   placeholder="eg. 'hat', 'skirt', 'leggings'"
-                   ng-model="create.element.name"
-                   required>
-        </div>
-    </div>
-    <div class="text-right">
-        <button type="submit" class="btn btn-primary">Create Element</button>
-    </div>
-  </form>
-</div>
 
 
 

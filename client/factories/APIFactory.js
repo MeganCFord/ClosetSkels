@@ -67,8 +67,10 @@ app.factory( "APIFactory", [
         return getApiRoot()
         .then((root) => {
           return $http.post(`${root.tags}`, data);
-        }, errorHandle);
+        }, errorHandle)
+        .then((res) => res.data);
       }, 
+
 
       //// ELEMENTS ////
     
@@ -85,7 +87,8 @@ app.factory( "APIFactory", [
         return getApiRoot()
         .then((root) => {
           return $http.post(`${root.elements}`, data);
-        }, errorHandle);
+        }, errorHandle)
+        .then((res)=> res.data);
       }, 
 
       //// COSTUMES ////
@@ -112,6 +115,29 @@ app.factory( "APIFactory", [
       deleteCostume: (costumeurl) => {
         return $http.delete(`${costumeurl}`)
         .then(() => true, errorHandle);
-      } 
+      }, 
+
+      //// COSTUME ELEMENTS ////
+
+      createCostumeElement: (data) => {
+        return getApiRoot()
+        .then((root) => {
+          return $http.post(`${root.costumeelements}`, data);
+        }, errorHandle)
+        .then((res) => res.data);
+      }, 
+      getCostumeElements: (costume = null) => {
+        return getApiRoot()
+        .then((root) => {
+          if (costume===null) {
+            return $http.get(`${root.costumeelements}`);
+          } else {
+            return $http.get(`${root.costumeelements}?costume=${costume}`);
+          }
+        }, errorHandle)
+        .then((res)=> res.data);
+      }
     }; 
+
+
   }]);
