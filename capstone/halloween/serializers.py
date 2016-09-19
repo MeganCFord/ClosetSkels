@@ -6,15 +6,14 @@ from halloween.models import *
 class ElementSerializer(serializers.HyperlinkedModelSerializer):
   class Meta: 
     model = Element
-    fields = ("id", "name")
+    fields = ("url", "name")
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
    class Meta: 
     model = Tag
-    fields = ("url", "name")
+    fields = ("url", "name", "costumes", "costumeelements")
 
 class BooSerializer(serializers.HyperlinkedModelSerializer):
-  # user = UserSerializer()
   
   class Meta: 
     model = Boo
@@ -22,10 +21,11 @@ class BooSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CostumeElementSerializer(serializers.HyperlinkedModelSerializer):
-  tags = TagSerializer(many=True)
   class Meta:
     model = CostumeElement
-    fields = ("id", "url", "costume", "element", "description", 'tags')
+    fields = ("url", "costume", "element", "description", "tags")
+    extra_kwargs = {'costume': {'required': 'False'}}
+
 
 class CostumeSerializer(serializers.HyperlinkedModelSerializer):
   tags = TagSerializer(many=True)
@@ -33,14 +33,14 @@ class CostumeSerializer(serializers.HyperlinkedModelSerializer):
   boos=BooSerializer(many=True)
   class Meta: 
     model = Costume
-    fields = ("id", 'url', 'owner', 'name', 'description', 'datecreated', 'public', 'costume_elements', 'tags', 'boos')
+    fields = ('url', 'owner', 'name', 'description', 'datecreated', 'public', 'costume_elements', 'tags', 'boos')
 
-  def create(self, data):
-    costume_elements_data = data.pop("costume_elements")
-    # user_url=User.objects.get(username=data["owner"])
-    # print(user_url)
-    new_costume = Costume.objects.create(name = data["name"], description = data["description"], tags = data["tags"], costume_elements = [], boos = [])
-    new_costume.save()
+  # def create(self, data):
+  #   costume_elements_data = data.pop("costume_elements")
+  #   # user_url=User.objects.get(username=data["owner"])
+  #   # print(user_url)
+  #   new_costume = Costume.objects.create(name = data["name"], description = data["description"], tags = data["tags"], costume_elements = [], boos = [])
+  #   new_costume.save()
     
     # for costume_element_data in costume_elements_data:
     #   # This is an explicit join table between costume and element. 

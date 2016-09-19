@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 
 import json
 
-from halloween.models import *
+from halloween.models import Tag as DjangoTag, Costume as DjangoCostume, Boo as DjangoBoo, Element as DjangoElement, CostumeElement as DjangoCostumeElement
 from halloween.serializers import *
 from halloween.permissions import IsOwnerOrReadOnly
 
@@ -33,29 +33,42 @@ class User(viewsets.ModelViewSet):
 
 
 class Tag(viewsets.ModelViewSet):
-  queryset = Tag.objects.all()
+  queryset = DjangoTag.objects.all()
   serializer_class = TagSerializer
 
 
 class Costume(viewsets.ModelViewSet):
-  queryset = Costume.objects.all()
+  queryset = DjangoCostume.objects.all()
   serializer_class = CostumeSerializer
  
   permission_classes = (IsOwnerOrReadOnly,)
 
 class Boo(viewsets.ModelViewSet):
-  queryset = Boo.objects.all()
+  queryset = DjangoBoo.objects.all()
   serializer_class = BooSerializer
 
   permission_classes = (IsOwnerOrReadOnly,)
 
 class Element(viewsets.ModelViewSet):
-  queryset = Element.objects.all()
+  queryset = DjangoElement.objects.all()
   serializer_class = ElementSerializer
 
 class CostumeElement(viewsets.ModelViewSet):
-  queryset = CostumeElement.objects.all()
+  queryset = DjangoCostumeElement.objects.all()
   serializer_class = CostumeElementSerializer
+
+  def get_queryset(self):
+    """
+    Optionally restricts the returned queryset to a given user,
+    by filtering against a `username` query parameter in the URL.
+    """
+    queryset = DjangoCostumeElement.objects.all()
+    costume = self.request.query_params.get('costume', None)
+    if costume is not None:
+        queryset = queryset.filter(costume=costume)
+    else: 
+        queryset = queryset.filter(costume=None)
+    return queryset
 
 
 

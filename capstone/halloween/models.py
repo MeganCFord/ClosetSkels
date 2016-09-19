@@ -9,10 +9,9 @@ class Costume(models.Model):
     # This will always be now.
     datecreated = models.DateTimeField(default=timezone.now)
     public = models.BooleanField(default=False)
-    # Allowing owner to be null in case a users wants to delete their private version of a published costume- then the public version will still be available if they've published it. 
-    owner = models.ForeignKey('auth.User',on_delete=models.SET_NULL, related_name ="costumes", null=True)
-    # tags are on CostumeTag.
+    owner = models.ForeignKey('auth.User',on_delete=models.CASCADE, related_name ="costumes")
     # costume elements are on costumeElement.
+    # tags are on tag.
 
     def __str__(self):
         return "{}: {}".format(self.id, self.name)
@@ -39,10 +38,11 @@ class Element(models.Model):
         return "{}".format(self.name)
 
 class CostumeElement(models.Model):
-  description = models.CharField(max_length=1000, blank=True)
+  name = models.CharField(max_length=55)
+  description = models.CharField(max_length=1000, blank=True, null=True)
   element = models.ForeignKey('element', on_delete=models.CASCADE, related_name="costume_elements")
-  costume = models.ForeignKey('costume', on_delete=models.CASCADE, related_name="costume_elements")
-  # Do I need a through field here?
+  costume = models.ForeignKey('costume', blank=True, null=True, on_delete=models.CASCADE, related_name="costume_elements")
+  #tags are on tag.
 
   def __str__(self):
         return "{}".format(self.description)
