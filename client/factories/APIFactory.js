@@ -21,15 +21,9 @@ app.factory( "APIFactory", [
     };
 
     return {
-      getCostumes: () => {
-        return getApiRoot()
-        .then((root) => {
-          return $http.get(`${root.costumes}`);
-        }, errorHandle)
-        .then((res) => {
-          return res.data;
-        }, errorHandle);
-      }, 
+  
+      //// USERS ////
+
       getUserUrl: (username) => {
         return getUser(username)
         .then((res) => {
@@ -43,17 +37,23 @@ app.factory( "APIFactory", [
           return res[0].costumes;
         }, errorHandle);
       },
+
+      //// BOOS ////
+  
       addBoo: (userUrl, costumeUrl) => {
         return getApiRoot()
         .then((root)=> {
           return $http.post(`${root.boos}`, {"owner": userUrl, "costume": costumeUrl});
         }, errorHandle)
-        .then((res) => console.log(res), errorHandle);
+        .then(() => true, errorHandle);
       }, 
       deleteBoo: (booUrl) => {
         return $http.delete(`${booUrl}`)
-        .then((res)=> console.log(res), errorHandle);
+        .then(()=> true, errorHandle);
       },
+
+      //// TAGS ////
+  
       getTags: () => {
         return getApiRoot()
         .then((root) => {
@@ -69,6 +69,9 @@ app.factory( "APIFactory", [
           return $http.post(`${root.tags}`, data);
         }, errorHandle);
       }, 
+
+      //// ELEMENTS ////
+    
       getElements: () => {
         return getApiRoot()
         .then((root) => {
@@ -83,6 +86,32 @@ app.factory( "APIFactory", [
         .then((root) => {
           return $http.post(`${root.elements}`, data);
         }, errorHandle);
-      }
-    };  
+      }, 
+
+      //// COSTUMES ////
+
+      getCostumes: () => {
+        return getApiRoot()
+        .then((root) => {
+          return $http.get(`${root.costumes}`);
+        }, errorHandle)
+        .then((res) => {
+          return res.data;
+        }, errorHandle);
+      }, 
+      createCostume: (data) => {
+        return getApiRoot()
+        .then((root) => {
+          return $http.post(`${root.costumes}`, data);
+        }, errorHandle)
+        .then(()=> true, errorHandle);
+      },
+      updateCostume: (data) => {
+        console.log(data);
+      }, 
+      deleteCostume: (costumeurl) => {
+        return $http.delete(`${costumeurl}`)
+        .then(() => true, errorHandle);
+      } 
+    }; 
   }]);
