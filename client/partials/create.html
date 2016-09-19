@@ -1,6 +1,50 @@
 <div ng-include="'partials/navbar.html'" class="navbar navbar-default" ng-controller="Nav as nav"></div>
 
 <div class="container">
+  <h1 class="text-center">Create a Costume</h1>
+  <form ng-submit="create.createCostume()"
+        class="form-horizontal col-sm-6 col-sm-offset-2">
+    <!-- Costume Name -->
+    <div class="form-group">
+        <label class="control-label col-sm-4">Costume Name</label>
+        <div class="col-sm-8">
+            <input class="form-control"
+                   placeholder="eg. 'Harley Quinn', 'Gumball Machine'"
+                   ng-model="create.costume.name"
+                   required>
+        </div>
+    </div>
+    <!-- Costume Description -->
+    <div class="form-group">
+        <label class="control-label col-sm-4">Costume Description</label>
+        <div class="col-sm-8">
+            <textarea class="form-control"
+                   placeholder="talk about some features of your costume or special instructions here."
+                   ng-model="create.costume.description"></textarea>
+        </div>
+    </div>
+    <!-- public Boolean -->
+    <div class="form-group">
+      <div class="col-sm-8">
+        <div class="checkbox">
+          <label>
+            <input ng-model="create.costume.public" type="checkbox"> Public
+          </label>
+        </div>
+      </div>
+    </div>
+    <!-- tags select -->
+    <!-- add a costume element -->
+    <!-- add tags to the costume element -->
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary">Create Costume</button>
+    </div>
+  </form>
+</div>
+
+
+
+<div class="container">
   <h1 class="text-center">Create a Tag</h1>
   <form ng-submit="create.createTag()"
         class="form-horizontal col-sm-6 col-sm-offset-2">
