@@ -5,18 +5,25 @@ app.controller("Create",[
   function($scope, APIFactory, $timeout) {
     const create = this;
     create.title="create page";
-    
-    $scope.$on("username", function(event, data) {
-      create.username = data;
-    });
+
     create.tags = [];
     create.elements = [];
 
     create.tag = {"name": "", "costumes": [], "costumeelements": []};
     create.element = {"name": ""};
+    create.costumeelement = {"costume": "", "element": "", "description": ""};
 
-    APIFactory.getTags().then((res)=> {create.tags = res; console.log("initial tags", create.tags); $timeout();}, e => console.error);
-    APIFactory.getElements().then((res)=> {create.elements = res; console.log("initial elements", create.elements); $timeout();}, e => console.error);
+    $scope.$on("username", function(event, data) {
+      $timeout().then(() => {
+        create.username = data; 
+        return data;
+      }).then(() => {
+        return APIFactory.getUserUrl(create.username);
+      }).then((res) => {
+        create.userUrl = res; 
+        $timeout();
+      }, e=> console.error);
+    });
 
     create.costume = {
       "name": "",
@@ -26,6 +33,29 @@ app.controller("Create",[
       "owner": create.username, 
       "tags": [],
       "costumeelements": []
+    };
+
+    APIFactory.getTags()
+    .then((res)=> {
+      create.tags = res; 
+      console.log("initial tags", create.tags); 
+      $timeout();
+    }, e => console.error);
+
+    APIFactory.getElements()
+    .then((res)=> {
+      create.elements = res; 
+      console.log("initial elements", create.elements); 
+      $timeout();
+    }, e => console.error);
+
+
+    create.addTag = (url) => {
+      create.costume.tags.push(url);
+      console.log("adding tag", create.costume.tags);
+    };
+    create.removeTag = (url) => {
+      create.costume.tags.remove(url);
     };
 
     create.createTag = () => {

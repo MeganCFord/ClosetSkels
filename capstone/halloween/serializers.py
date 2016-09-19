@@ -11,7 +11,7 @@ class ElementSerializer(serializers.HyperlinkedModelSerializer):
 class TagSerializer(serializers.HyperlinkedModelSerializer):
    class Meta: 
     model = Tag
-    fields = ("id", "name")
+    fields = ("url", "name")
 
 class BooSerializer(serializers.HyperlinkedModelSerializer):
   # user = UserSerializer()

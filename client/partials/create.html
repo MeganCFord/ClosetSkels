@@ -34,8 +34,18 @@
       </div>
     </div>
     <!-- tags select -->
-    <!-- add a costume element -->
-    <!-- add tags to the costume element -->
+    <h3>Tags</h3>
+    <div class="form-group">
+      <div class="col-sm-8">
+      <span ng-repeat="tag in create.tags">
+        <span ng-hide="create.costume.tags | contains:tag.url" ng-click="create.addTag(tag.url)" class="btn btn-default">{{tag.name}}</span>
+        <span ng-show="create.costume.tags | contains:tag.url" ng-click="create.removeTag(tag.url)" class="btn btn-primary">{{tag.name}}
+        </span>
+      </span>
+    </div>
+    <!-- add a tag: modal -->
+    <!-- add a costume element: modal -->
+      <!-- add tags to the costume element -->
     <div class="text-right">
         <button type="submit" class="btn btn-primary">Create Costume</button>
     </div>

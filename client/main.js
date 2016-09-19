@@ -1,4 +1,4 @@
-const app = angular.module("Halloween", ["ngRoute", "ngCookies"]);
+const app = angular.module("Halloween", ["ngRoute", "ngCookies", 'angular.filter']);
 
 app.constant("apiUrl", "http://localhost:8000");
 
