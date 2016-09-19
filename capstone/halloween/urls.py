@@ -1,6 +1,6 @@
 from rest_framework import routers
 from django.conf.urls import url, include
-from halloween import views
+from halloween import views as views
 from rest_framework_nested import routers
 
 router = routers.DefaultRouter()
