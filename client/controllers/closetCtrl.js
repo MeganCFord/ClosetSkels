@@ -2,10 +2,10 @@ app.controller("Closet",[
   "$scope",
   "APIFactory",
   "$timeout",
-  function($scope, APIFactory, $timeout) {
+  "$http",
+  function($scope, APIFactory, $timeout, $http) {
     const closet = this;
     closet.title="closet page";
-    // closet.costumes = [];
     
     $scope.$on("username", function(event, data) {
       // wrapped in a timeout to ensure the scope emitter gets here before we try to use its data.
@@ -17,8 +17,20 @@ app.controller("Closet",[
           closet.costumes = res;
           $timeout();
           console.log("user costumes", closet.costumes);
-        }, (e) => console.log(e));
+        }, (e) => console.error);
       });
     });
+
+    closet.deleteCostume = (costumeurl) => {
+      return $http.delete(costumeurl)
+      .then(()=> {
+        for(const u in closet.costumes) {
+          if (closet.costumes[u].url === costumeurl) {
+            closet.costumes.splice(u, 1);
+          }
+        }
+        $timeout();
+      }, e => console.error);
+    }
 
   }]);

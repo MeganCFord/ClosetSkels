@@ -1,21 +1,34 @@
 <div ng-include="'partials/navbar.html'" class="navbar navbar-default" ng-controller="Nav as nav"></div>
 
 
-<h1 class="text-center">My Closet</h1> 
 <div class="container">
-  <div class="col col-sm-3">
+  <div class="col col-sm-2">
     Filter Sidebar will go here.
   </div>
-  <div class="col col-sm-9">
-    <div  ng-hide="closet.costumes | isEmpty" ng-repeat="costume in closet.costumes">
-      <p>Costume name: {{costume.name}}</p>
-      <p>{{costume.boos.length}} <i class="em em-ghost"></i>s</p>
-      <a href="#/{{costume.id}}/edit" class="btn btn-info">Edit</a>
-    </div>
-    <div ng-show="closet.costumes | isEmpty">
-      <p>No costumes are in your closet yet!</p>
-      <a class="btn btn-default" href="#/home">Browse all costumes</a>
-      <a class="btn btn-default" href="#/search">Search for costumes</a>
+  <div class="col col-sm-10">
+    <div class="container-fluid">
+      <h1 style="padding-left: 15px">Closet</h1> 
+      <hr>
+      <div class="col col-sm-6" ng-hide="closet.costumes | isEmpty" ng-repeat="costume in closet.costumes">
+        <div class="well well-lg">
+          <h4>{{costume.name}}</h4>
+          <a href="#/{{costume.id}}" class="btn btn-default">View</a>
+          <a href="#/{{costume.id}}/edit" class="btn btn-info">Edit</a>
+          <button ng-click="closet.deleteCostume(costume.url)" class="btn btn-danger">Delete</button>
+        </div>
+      </div>
+      <div class="col col-sm-6" ng-show="closet.costumes | isEmpty">
+        <div class="well well-lg">
+          <h4>No costumes are in your closet yet!</h4>
+          <a class="btn btn-default" href="#/home">Browse all costumes</a>
+          <a class="btn btn-default" href="#/search">Search for costumes</a>
+        </div>
+      </div>
+      <div class="col col-sm-6">
+        <div class="well well-lg">
+          <a class="btn btn-info" href="/create">Create a new Costume</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
