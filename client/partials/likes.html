@@ -2,11 +2,19 @@
 
 
 <h3 class="text-center">My <i class="em em-ghost"></i>s</h3>
-<div ng-repeat="boo in likes.boos">
-  <div ng-repeat="costume in likes.boodCostumes | filterBy:['url']:boo.costume">
-    {{costume.name}}
-    <button class="btn btn-default" ng-click="likes.unBoo(boo.url)">un<i class="em em-ghost"></i></button>
-    <!-- TODO: add a 'save to my closet for editing' button -->
-  </div>
 
+<div class="container">
+  <div class="col col-sm-3">
+    Filter sidebar will go here.
+  </div>
+  <div class="col col-sm-9">
+    <!-- Costume Repeater -->
+    <div ng-repeat="boo in likes.boos">
+      <div ng-repeat="costume in likes.boodCostumes | filterBy:['url']:boo.costume">
+        {{costume.name}}
+        <button class="btn btn-default" ng-click="likes.unBoo(boo.url)">un<i class="em em-ghost"></i></button>
+        <!-- TODO: add a 'save to my closet for editing' button -->
+      </div>
+    </div>
+  </div>  
 </div>
