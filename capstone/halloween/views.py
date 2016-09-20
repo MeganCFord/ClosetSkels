@@ -43,6 +43,17 @@ class Costume(viewsets.ModelViewSet):
  
   permission_classes = (IsOwnerOrReadOnly,)
 
+  def get_queryset(self):
+    queryset = DjangoCostume.objects.all()
+    username = self.request.query_params.get("username", None)
+    if username is not None:
+      queryset = queryset.filter(owner=username)
+    else:
+      public = self.request.query_params.get("public", None)
+      if public is not None:
+        queryset = queryset.filter(public=True)
+    return queryset
+
 class Boo(viewsets.ModelViewSet):
   queryset = DjangoBoo.objects.all()
   serializer_class = BooSerializer

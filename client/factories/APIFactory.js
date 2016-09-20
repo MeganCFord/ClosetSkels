@@ -96,7 +96,7 @@ app.factory( "APIFactory", [
       getCostumes: () => {
         return getApiRoot()
         .then((root) => {
-          return $http.get(`${root.costumes}`);
+          return $http.get(`${root.costumes}?public=true`);
         }, errorHandle)
         .then((res) => {
           return res.data;
