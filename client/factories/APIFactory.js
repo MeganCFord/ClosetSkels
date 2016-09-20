@@ -146,6 +146,12 @@ app.factory( "APIFactory", [
           }
         }, errorHandle)
         .then((res)=> res.data);
+      }, 
+      editCostumeElement: (data) => {
+        return $http.put(`${data.url}`, data)
+        .then((res) => {
+          return res.data;
+        }, errorHandle);
       }
     }; 
 

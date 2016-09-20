@@ -72,7 +72,7 @@ app.controller("Create",[
 
     //grabs updated data from edit modal.
     $rootScope.$on("editedSupply", function(event, value) { 
-      console.log("got the newly created supply", value);
+      console.log("got the edited supply", value);
       //remove old value.
       for(const u in create.costumeelements) {
         if(create.costumeelements[u].url === value.url) {
@@ -117,14 +117,15 @@ app.controller("Create",[
     }; 
 
 
-    create.openEditModal = (url) => {
+    create.openEditModal = (supply) => {
+      //Sending the entire object into modal.
       const modalInstance = $uibModal.open({
         size: "lg",
         templateUrl: "/partials/editSupply.html", 
-        controller: "editSupply",
+        controller: "EditSupply",
         controllerAs: "editSupply", 
         resolve: {
-          "url": url
+          "supply": supply
         }
       });
     };

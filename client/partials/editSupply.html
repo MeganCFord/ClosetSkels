@@ -1,67 +1,69 @@
-  <div class="col-sm-6" ng-repeat="supply in create.costumeelements" ng-hide="create.costumeelements | isEmpty">
-            <div class="form-group">
-              <h3>Edit Supply</h3>
-            </div>
-            <div class="form-group">
-              <label for="name">Supply Name</label>
-              <input type="text" class="form-control" id="name" ng-model="supply.name">
-            </div>
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea class="form-control" id="description" ng-model="supply.description" rows="6"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="element">Supply</label>
-              <p class="help-block">This field is used to help find parts of your costume beyond tags.</p>
-              <div uib-collapse="!create.editelementIsCollapsed">
-                <select class="form-control" ng-model="supply.element">
-                  <option ng-selected="element.url == supply.element" ng-repeat="element in create.elements" value="{{element.url}}">{{element.name}}</option>
-                </select>
-                <button class="btn btn-sm btn-info" ng-click="create.editelementIsCollapsed = !create.editelementIsCollapsed">Create a New Supply</button>
-              </div>
-<!-- add new supply form. -->
-              <div uib-collapse = "create.editelementIsCollapsed">
-                <div class="well well-lg">
-                  <input type="text" class="form-control" id="name" ng-model="create.element.name" placeholder=" Name">
-                  <!-- TODO: find a way to close the div when this is done. -->
-                  <span class="btn btn-default btn-sm" ng-click="create.createElement(ceindex=$index)">Add</span>
-                  <span class="btn btn-default btn-sm" ng-click="create.editelementIsCollapsed=!create.editelementIsCollapsed">Cancel</span>
-                </div>
-              </div>
-            </div>
-<!-- ELEMENT TAGS -->
-            <div class="form-group">
-              <label>Tags</label>
-              <div uib-collapse="!create.editelementTagIsCollapsed">
-                <div class="well well-lg">
-                  <span ng-repeat="tag in create.tags">
-                  <!-- TODO: FIX THIS. the buttons don't update for some reason- it looks like the 'contains' flter is looking inside ALL of the supply tag arrays? or something? -->
-                    <span ng-hide="supply.tags | contains:tag.url" ng-click="create.addTag(tag.url, element=true, supply=supply.url)" class="btn btn-default btn-sm">{{tag.name}}</span>
-                    <span ng-show="supply.tags | contains:tag.url" ng-click="create.removeTag(tag.url, element=true, supply=supply.url)" class="btn btn-primary btn-sm">{{tag.name}}</span>
-                  </span>
-                  <span class="btn btn-info btn-sm" ng-click="create.editelementTagIsCollapsed = !create.editelementTagIsCollapsed">Create a New Tag</span>
-                </div>
-              </div>
-            </div>
-<!-- add new tag form.  -->
-            <div class="form-group">  
-              <div uib-collapse="create.editelementTagIsCollapsed" >
-                <div class="well well-lg container-fluid">
-                  <div class="form-group">
-                    <input class="form-control"
-                           placeholder="eg. 'blue', 'mini length', 'striped'"
-                           ng-model="create.tag.name"
-                           type="text"
-                           id="elementtagname"
-                           required>
-                    <!--  TODO: add an ng-click here for adding new element to selected supply.-->
-                    <span class="btn btn-default btn-sm" ng-click="create.createTag(element=true, index=$index)">Add</span>
-                    <span ng-click="create.editelementTagIsCollapsed = !create.editelementTagIsCollapsed" class="btn btn-default btn-sm">Cancel</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <span ng-click="create.editCostumeElement()" class="btn btn-default">Save Changes</span>
-            </div>
-          </div>
+<div class="modal-header">  
+  <h3>New Supply</h3>
+</div>
+  <!-- since there are three forms here, the DOM gets confused on which form to submit on 'enter' if they're in 'form' elements. so no 'forms'. TODO: add validation. -->
+<div class="modal-body">
+  <!-- NAME -->
+  <div class="form-group">
+    <label for="name">Supply Name</label>
+    <input type="text" class="form-control" id="name" ng-model="editSupply.costumeelement.name" placeholder="eg. 'red and white baseball tee', 'gold spray paint'" required>
+  </div>
+  <!-- DESCRIPTION -->
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" id="description" ng-model="editSupply.costumeelement.description" placeholder="add some instructions or additional info here." rows="4"></textarea>
+  </div>
+  <!-- SUPPLY TYPE -->
+  <div class="form-group">
+    <label for="element">Supply Type</label>
+    <div uib-collapse="!editSupply.elementIsCollapsed">
+      <select class="form-control" ng-model="editSupply.costumeelement.element">
+        <option disabled selected value> -- select an option -- </option>
+        <option ng-selected="element.url == editSupply.costumeelement.element" ng-repeat="element in editSupply.elements" value="{{element.url}}">{{element.name}}</option>
+      </select>
+      <button class="btn btn-info" ng-click="editSupply.elementIsCollapsed = !editSupply.elementIsCollapsed">Create a New Supply</button>
+    </div>
+    <!-- add new supply form. -->
+    <div uib-collapse = "editSupply.elementIsCollapsed">
+      <div class="well well-lg">
+        <input type="text" class="form-control" id="name" ng-model="editSupply.element.name" placeholder=" Name">
+        <span class="btn btn-default" ng-click="editSupply.createElement()">Add</span>
+        <span class="btn btn-default" ng-click="editSupply.elementIsCollapsed =! editSupply.elementIsCollapsed">Cancel</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAGS -->
+  <div class="form-group">
+    <label>Tags</label>
+    <div uib-collapse="!editSupply.tagIsCollapsed">
+      <div class="well well-lg">
+        <span ng-repeat="tag in editSupply.tags">
+          <span ng-hide="editSupply.costumeelement.tags | contains:tag.url" ng-click="editSupply.addTag(tag.url)" class="btn btn-default">{{tag.name}}</span>
+          <span ng-show="editSupply.costumeelement.tags | contains:tag.url" ng-click="editSupply.removeTag(tag.url)" class="btn btn-primary">{{tag.name}}</span>
+        </span>
+        <button class="btn btn-info" ng-click="editSupply.tagIsCollapsed = !editSupply.tagIsCollapsed">Create a New Tag</button>
+      </div>
+    </div>
+    <!-- add new tag form.  -->
+    <div uib-collapse="editSupply.tagIsCollapsed" >
+      <div class="well well-lg container-fluid">
+        <div class="form-group">
+          <input class="form-control"
+                 placeholder="eg. 'blue', 'mini length', 'striped'"
+                 ng-model="editSupply.tag.name"
+                 type="text"
+                 id="elementtagname"
+                 required>
+          <span ng-click="editSupply.createTag()" class="btn btn-default">Add</span>
+          <span ng-click="editSupply.tagIsCollapsed = !editSupply.tagIsCollapsed" class="btn btn-default">Cancel</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<div class="modal-footer">
+  <span ng-click="editSupply.ok()" class="btn btn-primary">Submit</span>
+  <span ng-click="editSupply.cancel()" class="btn btn-default">Cancel</span>
+</div>
