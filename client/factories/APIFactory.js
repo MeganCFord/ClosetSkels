@@ -24,10 +24,10 @@ app.factory( "APIFactory", [
   
       //// USERS ////
 
-      getUserUrl: (username) => {
+      getUserInfo: (username) => {
         return getUser(username)
         .then((res) => {
-          return res[0].url;
+          return res[0];
         }, errorHandle);
       },
       getUserCostumes: (username) => {
@@ -39,7 +39,17 @@ app.factory( "APIFactory", [
       },
 
       //// BOOS ////
-  
+      
+      getUserBoos: (id) => {
+        console.log("user id I'm going to send for boos", id);
+        return getApiRoot()
+        .then((root)=> {
+          return $http.get(`${root.boos}?userid=${id}`);
+        }, errorHandle)
+        .then((res) => {
+          return res.data;
+        });
+      },
       addBoo: (userUrl, costumeUrl) => {
         return getApiRoot()
         .then((root)=> {
