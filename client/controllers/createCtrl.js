@@ -3,18 +3,33 @@ app.controller("Create",[
   "APIFactory",
   "$timeout",
   "$location",
-  function($scope, APIFactory, $timeout, $location) {
+  "$uibModal",
+  "$rootScope", // need this because the  uib-Modal scope is not actually nested inside this scope- it's randomly off to one corner or whatever.
+  function($scope, APIFactory, $timeout, $location, $uibModal, $rootScope) {
     const create = this;
     create.title="create page";
 
-    // Toggle 'create tag' divs in various places.
+    // Toggle 'create tag' div.
     create.tagIsCollapsed=true;
 
     create.tags = [];
-    // the costume list just saves the URL so I'm saving the full objects here.
     create.costumeelements = [];
 
-    create.tag = {"name": "", "costumes": [], "costumeelements": []};
+    create.tag = {
+      "name": "", 
+      "costumes": [], 
+      "costumeelements": []
+    };
+
+    create.costume = {
+      "name": "",
+      "description": "", 
+      "public": false, 
+      "owner": "" ,
+      "costumeelements": [], 
+      "tags": [], 
+      "boos": []
+    };
 
     // On load, get the username and user info. 
     $scope.$on("username", function(event, data) {
@@ -30,28 +45,16 @@ app.controller("Create",[
       }, e=> console.error);
     });
 
-    create.costume = {
-      "name": "",
-      "description": "", 
-      "public": false, 
-      "owner": "" ,
-      "costumeelements": [], 
-      "tags": [], 
-      "boos": []
-    };
-
-    // Load all tags.
+    // On load, also load all tags.
     APIFactory.getTags()
     .then((res)=> {
       create.tags = res; 
       $timeout();
-      console.log("initial tags", create.tags);
     }, e => console.error);
 
     // In case of refresh. Gets all costume elements with no costume url assigned (meaning the costume has not been completed) and pushes their urls back into the costume object.
     APIFactory.getCostumeElements()
     .then((res) => {
-      console.log("supply data", res);
       create.costumeelements = res;
       for(const index in create.costumeelements) {
         create.costume.costumeelements.push(create.costumeelements[index].url);
@@ -59,7 +62,27 @@ app.controller("Create",[
       $timeout();
     }, e => console.error);
 
+    //grabs new data from the create modal.
+    $rootScope.$on("createdSupply", function(event, value) { 
+      console.log("got the newly created supply", value);
+      create.costumeelements.push(value);
+      create.costume.costumeelements.push(value.url);
+      $timeout(); //Just in case.
+    });
 
+    //grabs updated data from edit modal.
+    $rootScope.$on("editedSupply", function(event, value) { 
+      console.log("got the newly created supply", value);
+      //remove old value.
+      for(const u in create.costumeelements) {
+        if(create.costumeelements[u].url === value.url) {
+          create.costumeelements.splice(u, 1);
+        }
+      } 
+      //replace with new value.
+      create.costumeelements.push(value);
+      $timeout(); //Just in case.
+    });
 
     create.addTag = (url) => {
       create.costume.tags.push(url);
@@ -76,7 +99,7 @@ app.controller("Create",[
     create.createTag = () => {
       APIFactory.createTag(create.tag).then((res) => {
         create.tags.push(res);
-        create.costumetags.push(res.url);
+        create.costume.tags.push(res.url);
         create.tagIsCollapsed = true;
         create.tag.name="";
         $timeout();
@@ -84,12 +107,26 @@ app.controller("Create",[
     };
 
 
-    create.openCreateModal= () => {
-      console.log("opening create modal.");
-    };
+    create.openCreateModal = () => {
+      const modalInstance = $uibModal.open({
+        size: "lg",
+        templateUrl: "/partials/createSupply.html", 
+        controller: "CreateSupply",
+        controllerAs: "createSupply"   
+      });
+    }; 
+
 
     create.openEditModal = (url) => {
-      console.log("opening edit modal for", url);
+      const modalInstance = $uibModal.open({
+        size: "lg",
+        templateUrl: "/partials/editSupply.html", 
+        controller: "editSupply",
+        controllerAs: "editSupply", 
+        resolve: {
+          "url": url
+        }
+      });
     };
 
     create.createCostume = () => {
