@@ -130,6 +130,25 @@ app.controller("Create",[
       });
     };
 
+    create.deleteSupply = (url) => {
+      APIFactory.deleteSomething(url)
+      .then(() => {
+        // remove from costume
+        for (const u in create.costume.costumeelements) {
+          if (create.costume.costumeelements[u] === url) {
+            create.costume.costumeelements.splice(u, 1);
+          }
+        }
+        // remove from costume element list
+        for (const u in create.costumeelements) {
+          if (create.costumeelements[u].url === url) {
+            create.costumeelements.splice(u, 1);
+          }
+        }
+        $timeout();
+      }, e => console.error);
+    };
+
     create.createCostume = () => {
       APIFactory.createCostume(create.costume).then((res)=> {
         console.log(res);

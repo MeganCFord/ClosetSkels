@@ -44,5 +44,33 @@ app.config(function($routeProvider) {
       controller: "Search", 
       controllerAs: "search"
     })
+    .when("/closet/:id", {
+      templateUrl: "partials/edit.html", 
+      controller: "Edit", 
+      controllerAs: "edit", 
+      resolve: {
+        costumeToEdit: function(APIFactory, $route, $http){
+          return APIFactory.getApiRoot()
+          .then((root) => {
+            return $http.get(`${root.costumes}${$route.current.params.id}`);
+          }, e => console.error)
+          .then(costume => costume.data, e => console.error);
+        }
+      }
+    })
+    .when("/:id", {
+      templateUrl: "partials/detail.html", 
+      controller: "Detail", 
+      controllerAs: "detail", 
+      resolve: {
+        costumeToView: function(APIFactory, $route, $http){
+          return APIFactory.getApiRoot()
+          .then((root) => {
+            return $http.get(`${root.costumes}${$route.current.params.id}`);
+          }, e => console.error)
+          .then(costume => costume.data, e => console.error);
+        }
+      }
+    } )
     .otherwise("/login");
 });

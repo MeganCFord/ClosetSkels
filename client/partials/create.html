@@ -73,17 +73,26 @@
     <!-- SUPPLIES -->
     <div class="form-group">
       <label class="control-label col-sm-2">Supplies</label>
-      <div class="col-sm-8">
-        <div class="container-fluid">
+      <div class="col-sm-8" style="padding-right: 0px; padding-left: 0px">
+        <div class="container-fluid" style="padding-right: 0px; padding-left: 0px">
           <!-- EDIT SUPPLIES -->
-          <div class="col-sm-6" ng-hide="create.costumeelements | isEmpty">
-            <span class="btn btn-default" ng-repeat="element in create.costumeelements" ng-click="create.openEditModal(element)">Edit {{element.name}}</span>
+          <div class="col-sm-6" ng-hide="create.costumeelements | isEmpty" ng-repeat="element in create.costumeelements">
+            <div class="well well-lg">
+              <h5>{{element.name}}</h5>
+              <span class="btn btn-default" ng-click="create.openEditModal(element)">Edit </span>
+              <span class="btn btn-danger" ng-click="create.deleteSupply(element.url)">Delete</span>
+            </div>
           </div>          
-          <div class="col-sm-6" ng-show="create.costumeelements | isEmpty"><p>No Supplies Added Yet!</p>
+          <div class="col-sm-6" ng-show="create.costumeelements | isEmpty">
+            <div class="well well-lg"> 
+              <h5>No Supplies Added Yet!</h5>
+            </div>
           </div>
             <!-- CREATE SUPPLY- Always shows next to created supply buttons. -->
           <div class="col-sm-6">
-            <span class="btn btn-info" ng-click="create.openCreateModal()">Create New Supply</span>
+            <div class="well well-lg">
+              <span class="btn btn-info" ng-click="create.openCreateModal()">Add a New Supply</span>
+            </div>
           </div>
         </div>
       </div>
@@ -105,7 +114,7 @@
     <div class="form-group">
       <div class="col-sm-2"></div>
       <div class="col-sm-8 text-right">
-          <button ng-click="create.createCostume()" class="btn btn-primary">Create Costume</button>
+          <button ng-click="create.createCostume()" class="btn btn-primary btn-lg">Create Costume</button>
       </div>
     </div>
 

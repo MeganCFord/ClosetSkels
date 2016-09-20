@@ -152,6 +152,12 @@ app.factory( "APIFactory", [
         .then((res) => {
           return res.data;
         }, errorHandle);
+      }, 
+
+      // DELETING THE THINGS!
+  
+      deleteSomething: (url) => {
+        return $http.delete(`${url}`);
       }
     }; 
 
