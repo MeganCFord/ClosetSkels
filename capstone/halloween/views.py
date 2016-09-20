@@ -89,7 +89,7 @@ class CostumeElement(viewsets.ModelViewSet):
     queryset = DjangoCostumeElement.objects.all()
     costume = self.request.query_params.get('costume', None)
     if costume is not None:
-        queryset = queryset.filter(costume=costume)
+        queryset = queryset.filter(costume__id=costume)
     else: 
         queryset = queryset.filter(costume=None)
     return queryset
