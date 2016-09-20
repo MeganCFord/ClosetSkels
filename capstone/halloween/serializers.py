@@ -23,17 +23,17 @@ class BooSerializer(serializers.HyperlinkedModelSerializer):
 class CostumeElementSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = CostumeElement
-    fields = ("url", "costume", "element", "description", "tags")
+    fields = ("url", "costume", "element", "description", "tags", "name")
     extra_kwargs = {'costume': {'required': 'False'}}
 
 
 class CostumeSerializer(serializers.HyperlinkedModelSerializer):
-  tags = TagSerializer(many=True)
-  costume_elements=CostumeElementSerializer(many=True)
-  boos=BooSerializer(many=True)
+  # tags = TagSerializer(many=True)
+  # costumeelements=CostumeElementSerializer(many=True)
+  boos=BooSerializer(many=True, read_only=True)
   class Meta: 
     model = Costume
-    fields = ('url', 'owner', 'name', 'description', 'datecreated', 'public', 'costume_elements', 'tags', 'boos')
+    fields = ('url', 'owner', 'name', 'description', 'public', 'costumeelements', 'tags', 'boos')
 
   # def create(self, data):
   #   costume_elements_data = data.pop("costume_elements")

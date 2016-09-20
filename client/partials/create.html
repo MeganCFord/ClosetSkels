@@ -9,7 +9,7 @@
         <h1>Create a Costume</h1>
       </div>
     </div>
-<!-- NAME -->
+    <!-- NAME -->
     <div class="form-group">
         <label class="control-label col-sm-2">Title</label>
         <div class="col-sm-8">
@@ -20,7 +20,7 @@
         </div>
     </div>
     <hr>
-<!-- DESCRIPTION -->
+    <!-- DESCRIPTION -->
     <div class="form-group">
         <label class="control-label col-sm-2">Description</label>
         <div class="col-sm-8">
@@ -32,9 +32,9 @@
         </div>
     </div>
     <hr>
-<!-- TAGS -->
+    <!-- TAGS -->
     <div class="form-group">
-    <label class="control-label col-sm-2">Tags</label>
+      <label class="control-label col-sm-2">Tags</label>
       <div class="col-sm-8">
         <div  uib-collapse="!create.tagIsCollapsed">
           <div class="well well-lg container-fluid">
@@ -70,20 +70,20 @@
       </div>
     </div>
     <hr>
-<!-- SUPPLIES -->
+    <!-- SUPPLIES -->
     <div class="form-group">
       <label class="control-label col-sm-2">Supplies</label>
       <div class="col-sm-8">
         <div class="container-fluid">
-        <!-- EDIT SUPPLIES -->
+          <!-- EDIT SUPPLIES -->
           <div ng-include="'partials/createEditElement.html'"></div>
           
           <div class="col-sm-6" ng-show="create.costumeelements | isEmpty"><p>No Supplies Added Yet!</p>
           </div>
-<!-- create Supply form. Always shows next to created elements. -->
+            <!-- create Supply form. Always shows next to created elements. -->
           <div class="col-sm-6">
             <div class="form-group">
-              <h3>New Supply</h5>
+              <h3>New Supply</h3>
             </div>
             <div class="form-group">
               <label for="name">Supply Name</label>
@@ -103,7 +103,7 @@
                 </select>
                 <button class="btn btn-sm btn-info" ng-click="create.elementIsCollapsed = !create.elementIsCollapsed">Create a New Supply</button>
               </div>
-<!-- add new supply form. -->
+              <!-- add new supply form. -->
               <div uib-collapse = "create.elementIsCollapsed">
                 <div class="well well-lg">
                   <input type="text" class="form-control" id="name" ng-model="create.element.name" placeholder=" Name">
@@ -112,7 +112,7 @@
                 </div>
               </div>
             </div>
-<!-- ELEMENT TAGS -->
+            <!-- SUPPLY TAGS -->
             <div class="form-group">
               <label>Tags</label>
               <div uib-collapse="!create.elementTagIsCollapsed">
@@ -125,7 +125,7 @@
                 </div>
               </div>
             </div>
-<!-- add new tag form.  -->
+            <!-- add new tag form.  -->
             <div class="form-group">  
               <div uib-collapse="create.elementTagIsCollapsed" >
                 <div class="well well-lg container-fluid">
@@ -150,7 +150,7 @@
       </div>
     </div>
     <hr>
-<!-- PUBLIC -->
+    <!-- PUBLIC -->
     <div class="form-group">
       <label class="control-label col-sm-2">Public/ Private</label>
       <div class="col-sm-8">
@@ -162,7 +162,7 @@
       </div>
     </div>
     <hr>
-<!-- Submit Button -->
+    <!-- Submit Button -->
     <div class="form-group">
       <div class="col-sm-2"></div>
       <div class="col-sm-8 text-right">

@@ -7,7 +7,6 @@ class Costume(models.Model):
     name = models.CharField(max_length=55)
     description = models.CharField(max_length=1000, blank=True)
     # This will always be now.
-    datecreated = models.DateTimeField(default=timezone.now)
     public = models.BooleanField(default=False)
     owner = models.ForeignKey('auth.User',on_delete=models.CASCADE, related_name ="costumes")
     # costume elements are on costumeElement.
@@ -20,8 +19,8 @@ class Costume(models.Model):
 
 
 class Boo(models.Model):
-  owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name="boos")
-  costume = models.ForeignKey('costume', on_delete=models.CASCADE, related_name="boos")
+  owner = models.ForeignKey('auth.User', null=True, blank=True, on_delete=models.CASCADE, related_name="boos")
+  costume = models.ForeignKey('costume', null=True, blank=True, on_delete=models.CASCADE, related_name="boos")
 
   def __str__(self):
         return "{}".format(self.id)
@@ -40,8 +39,8 @@ class Element(models.Model):
 class CostumeElement(models.Model):
   name = models.CharField(max_length=55)
   description = models.CharField(max_length=1000, blank=True, null=True)
-  element = models.ForeignKey('element', on_delete=models.CASCADE, related_name="costume_elements")
-  costume = models.ForeignKey('costume', blank=True, null=True, on_delete=models.CASCADE, related_name="costume_elements")
+  element = models.ForeignKey('element', on_delete=models.CASCADE, related_name="costumeelements")
+  costume = models.ForeignKey('costume', blank=True, null=True, on_delete=models.CASCADE, related_name="costumeelements")
   #tags are on tag.
 
   def __str__(self):
