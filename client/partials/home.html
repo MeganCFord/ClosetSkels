@@ -5,9 +5,9 @@
   <div class="row">
     <div class="col col-xs-6" ng-repeat="costume in home.costumes">
       <h5>{{costume.name}}</h5>
-      <p>{{costume.boos.length}} Boos</p>
-      <button ng-repeat="boo in costume.boos" class="btn btn-default" ng-show="boo.owner==home.userUrl" ng-click="home.unBoo(boo.url)">Unboo</button>
-      <button class="btn btn-default" ng-hide="home.hasUserBood(costume.boos)==true" ng-click="home.boo(costume.url)">Boo</button>
+      <p>{{costume.boos.length}} <i class="em em-ghost"></i>s</p>
+      <button ng-repeat="boo in costume.boos" class="btn btn-default" ng-show="boo.owner==home.userUrl" ng-click="home.unBoo(boo.url)">Un<i class="em em-ghost"></i></button>
+      <button class="btn btn-default" ng-hide="home.hasUserBood(costume.boos)==true" ng-click="home.boo(costume.url)"><i class="em em-ghost"></i></button>
     </div>
 
   </div>

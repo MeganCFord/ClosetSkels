@@ -16,9 +16,9 @@ app.controller("Home",[
         home.username = data; 
         return data;
       }).then(() => {
-        return APIFactory.getUserUrl(home.username);
+        return APIFactory.getUserInfo(home.username);
       }).then((res) => {
-        home.userUrl = res; 
+        home.userUrl = res.url; 
         $timeout();
       }, e=> console.error);
     });

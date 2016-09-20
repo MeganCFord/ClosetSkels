@@ -2,9 +2,13 @@ app.controller("Likes",[
   "$scope",
   "$timeout",
   "APIFactory",
-  function($scope, $timeout, APIFactory) {
+  "$http",
+  function($scope, $timeout, APIFactory, $http) {
     const likes = this;
     likes.title="likes page";
+
+    likes.boos = [];
+    likes.boodCostumes = [];
     
     $scope.$on("username", function(event, data) {
       $timeout().then(()=> {
@@ -12,12 +16,10 @@ app.controller("Likes",[
         $timeout();
         return data;
       }).then((data)=> {
-        console.log("sending username to get info", data);
         return APIFactory.getUserInfo(data);
       }).then((res)=> {
         likes.userInfo = res;
         $timeout();
-        console.log("user info set", likes.userInfo);
       }, e => console.error)
       .then((res)=> {
         return APIFactory.getUserBoos(likes.userInfo.id);
@@ -25,7 +27,31 @@ app.controller("Likes",[
         console.log("user boos", res);
         likes.boos = res;
         $timeout();
+        return res;
+      }, e=> console.error)
+      .then((boos) => {
+        const booPromises = boos.map((magic) => {
+          return $http.get(magic.costume).then((res) => {
+            likes.boodCostumes.push(res.data);
+            $timeout();
+            console.log("bood costumes", likes.boodCostumes);
+          }, e=> console.error);
+        });
       }, e=> console.error);
     });
 
+    likes.unBoo = (boourl) => {
+      console.log("unbooing", boourl);
+      return $http.delete(boourl)
+      .then(()=> {
+        for (const index in likes.boos) {
+          if (likes.boos[index].url ===boourl) {
+            likes.boos.splice(index, 1);
+            console.log("new bood costumes", likes.boos);
+          }
+        }
+        $timeout();
+      }, e=> console.error);
+    };
   }]);
+
