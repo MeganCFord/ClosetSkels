@@ -105,7 +105,7 @@ app.controller("Create",[
           }
         } else {
           for (const index in create.costumeelements) {
-            for (u in create.costumeelements[index].tags) {
+            for (const u in create.costumeelements[index].tags) {
               if(create.costumeelements[index].tags[u] === url) {
                 create.costumeelements[index].tags.splice(u, 1);
               }
