@@ -10,6 +10,7 @@
     <div  ng-hide="closet.costumes | isEmpty" ng-repeat="costume in closet.costumes">
       <p>Costume name: {{costume.name}}</p>
       <p>{{costume.boos.length}} <i class="em em-ghost"></i>s</p>
+      <a href="#/{{costume.id}}/edit" class="btn btn-info">Edit</a>
     </div>
     <div ng-show="closet.costumes | isEmpty">
       <p>No costumes are in your closet yet!</p>
