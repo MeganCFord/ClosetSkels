@@ -43,7 +43,7 @@ class Costume(viewsets.ModelViewSet):
  
   permission_classes = (IsOwnerOrReadOnly,)
 
-  
+
   def get_queryset(self):
     queryset = DjangoCostume.objects.all()
     username = self.request.query_params.get("username", None)
@@ -53,6 +53,10 @@ class Costume(viewsets.ModelViewSet):
       public = self.request.query_params.get("public", None)
       if public is not None:
         queryset = queryset.filter(public=True)
+      else: 
+        costumeid = self.request.query_params.get("costumeid", None)
+        if costumeid is not None:
+          queryset = queryset.filter(id = costumeid)
     return queryset
 
 class Boo(viewsets.ModelViewSet):
