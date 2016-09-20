@@ -43,6 +43,7 @@ class Costume(viewsets.ModelViewSet):
  
   permission_classes = (IsOwnerOrReadOnly,)
 
+  
   def get_queryset(self):
     queryset = DjangoCostume.objects.all()
     username = self.request.query_params.get("username", None)
@@ -59,6 +60,14 @@ class Boo(viewsets.ModelViewSet):
   serializer_class = BooSerializer
 
   permission_classes = (IsOwnerOrReadOnly,)
+
+  # You can get a user's boos by their ID (a number).
+  def get_queryset(self): 
+    queryset = DjangoBoo.objects.all()
+    userid = self.request.query_params.get("userid", None)
+    if userid is not None:
+      queryset = queryset.filter(owner=userid)
+    return queryset
 
 class Element(viewsets.ModelViewSet):
   queryset = DjangoElement.objects.all()
