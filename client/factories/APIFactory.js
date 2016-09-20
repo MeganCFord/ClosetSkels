@@ -112,6 +112,15 @@ app.factory( "APIFactory", [
           return res.data;
         }, errorHandle);
       }, 
+      getOneCostume: (id) => {
+        return getApiRoot()
+        .then((root) => {
+          return $http.get(`${root.costumes}?costumeid=${id}`);
+        }, errorHandle)
+        .then((res)=> {
+          return res.data[0];
+        }, errorHandle);
+      },
       createCostume: (data) => {
         return getApiRoot()
         .then((root) => {
