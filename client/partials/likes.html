@@ -1,20 +1,25 @@
 <div ng-include="'partials/navbar.html'" class="navbar navbar-default" ng-controller="Nav as nav"></div>
 
 
-<h3 class="text-center">My <i class="em em-ghost"></i>s</h3>
-
-<div class="container">
+<div class="container-fluid">
   <div class="col col-sm-3">
-    Filter sidebar will go here.
+    Filter Sidebar will go here.
   </div>
   <div class="col col-sm-9">
-    <!-- Costume Repeater -->
-    <div ng-repeat="boo in likes.boos">
-      <div ng-repeat="costume in likes.boodCostumes | filterBy:['url']:boo.costume">
-        {{costume.name}}
-        <button class="btn btn-default" ng-click="likes.unBoo(boo.url)">un<i class="em em-ghost"></i></button>
-        <!-- TODO: add a 'save to my closet for editing' button -->
+    <div class="container-fluid">
+      <h1 style="padding-left: 15px">Boos</h1> 
+      <hr>
+      <div class="col col-sm-6" ng-repeat="boo in likes.boos">
+        <div ng-repeat="costume in likes.boodCostumes | filterBy:['url']:boo.costume">
+          <div class="well well-lg card">
+            <h4>{{costume.name}}</h4>
+            <hr>
+            <a href="#/{{costume.id}}" class="btn btn-default">View</a>
+            <button class="btn btn-info" ng-click="likes.saveToCloset(costume.url)">Save</button>
+            <button class="btn btn-danger" ng-click="likes.unBoo(boo.url)">un<i class="em em-ghost"></i></button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>  
+  </div>
 </div>

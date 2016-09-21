@@ -15,7 +15,7 @@ app.controller("CreateSupply",[
 
     createSupply.element = {"name": ""};
     createSupply.tag = {"name": "", "costumes": [], "costumeelements": []};
-    createSupply.costumeelement = {"name": "", "costume": null, "element": "", "description": "", "tags": []};
+    createSupply.costumeelement = {"name": "", "costume": "", "element": "", "description": "", "tags": []};
 
 
     // Get all elements for select.

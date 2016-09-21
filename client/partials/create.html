@@ -1,14 +1,10 @@
 <div ng-include="'partials/navbar.html'" class="navbar navbar-default" ng-controller="Nav as nav"></div>
 
 <div class="container-fluid">
-  <div class="col col-sm-1"></div>
-  <div class="form-horizontal col-sm-10">
-    <div class="form-group">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-8">
-        <h1>Create a Costume</h1>
-      </div>
-    </div>
+  <div class="col col-sm-3"></div>
+  <div class="form-horizontal col-sm-9">
+  <h1 style="padding-left: 30px">Create a Costume</h1>
+  <hr>
     <!-- NAME -->
     <div class="form-group">
         <label class="control-label col-sm-2">Title</label>
@@ -37,34 +33,23 @@
       <label class="control-label col-sm-2">Tags</label>
       <div class="col-sm-8">
         <div  uib-collapse="!create.tagIsCollapsed">
-          <div class="well well-lg container-fluid">
-            <span ng-repeat="tag in create.tags">
+          <div class="well well-lg">
+            <span class="tagform" ng-repeat="tag in create.tags">
               <span ng-hide="create.costume.tags | contains:tag.url" ng-click="create.addTag(tag.url)" class="btn btn-default">{{tag.name}}</span>
               <span ng-show="create.costume.tags | contains:tag.url" ng-click="create.removeTag(tag.url)" class="btn btn-primary">{{tag.name}}</span>
             </span>
+            <hr>
             <button type="button" class="btn btn-info" ng-click="create.tagIsCollapsed = !create.tagIsCollapsed">Add a New Tag</button>
           </div>
         </div>
         <div uib-collapse="create.tagIsCollapsed">
-          <div class="well well-lg container-fluid">
-            <div class="form-group">
-              <div class="col-sm-2"></div>
-              <div class="col-sm-10">
-              </div>
-            </div>
-            <form ng-submit="create.createTag()" class="form-group">
-              <label class="control-label col-sm-2"></label>
-              <div class="col-sm-10">
-                  <input class="form-control"
+          <div class="well well-lg container-fluid addtagform form-inline">
+                  <input class="form-group form-control" 
                          placeholder="eg. 'blue', 'mini length', 'striped'"
                          ng-model="create.tag.name"
                          required>
-                <div class="text-right">
-                    <button type="submit" class="btn btn-default">Add</button>
-                    <span ng-click="create.tagIsCollapsed = !create.tagIsCollapsed" class="btn btn-default">Cancel</span>
-                </div>
-              </div>
-            </form>
+              <span style="margin-left: 20px" ng-click="create.createTag()" class="btn btn-default">Add</span>
+              <span ng-click="create.tagIsCollapsed = !create.tagIsCollapsed" class="btn btn-default">Cancel</span>
           </div>
         </div>
       </div>
@@ -79,18 +64,21 @@
           <div class="col-sm-6" ng-hide="create.costumeelements | isEmpty" ng-repeat="element in create.costumeelements">
             <div class="well well-lg">
               <h5>{{element.name}}</h5>
+              <hr>
               <span class="btn btn-default" ng-click="create.openEditModal(element)">Edit </span>
               <span class="btn btn-danger" ng-click="create.deleteSupply(element.url)">Delete</span>
             </div>
           </div>          
-          <div class="col-sm-6" ng-show="create.costumeelements | isEmpty">
-            <div class="well well-lg"> 
+        <!--   <div class="col-sm-6" ng-show="create.costumeelements | isEmpty">
+            <div class="well well-lg elementcard"> 
               <h5>No Supplies Added Yet!</h5>
             </div>
-          </div>
+          </div> -->
             <!-- CREATE SUPPLY- Always shows next to created supply buttons. -->
           <div class="col-sm-6">
-            <div class="well well-lg">
+            <div class="well well-lg elementcard">
+              <div style="height:25px"></div>
+              <hr>
               <span class="btn btn-info" ng-click="create.openCreateModal()">Add a New Supply</span>
             </div>
           </div>

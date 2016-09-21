@@ -16,7 +16,7 @@
   <!-- SUPPLY TYPE -->
   <div class="form-group">
     <label for="element">Supply Type</label>
-    <div uib-collapse="!editSupply.elementIsCollapsed">
+    <div class="elementform" uib-collapse="!editSupply.elementIsCollapsed">
       <select class="form-control" ng-model="editSupply.costumeelement.element">
         <option disabled selected value> -- select an option -- </option>
         <option ng-selected="element.url == editSupply.costumeelement.element" ng-repeat="element in editSupply.elements" value="{{element.url}}">{{element.name}}</option>
@@ -25,7 +25,7 @@
     </div>
     <!-- add new supply form. -->
     <div uib-collapse = "editSupply.elementIsCollapsed">
-      <div class="well well-lg">
+      <div class="elementform well well-lg">
         <input type="text" class="form-control" id="name" ng-model="editSupply.element.name" placeholder=" Name">
         <span class="btn btn-default" ng-click="editSupply.createElement()">Add</span>
         <span class="btn btn-default" ng-click="editSupply.elementIsCollapsed =! editSupply.elementIsCollapsed">Cancel</span>

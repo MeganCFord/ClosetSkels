@@ -1,1 +1,21 @@
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.card {
+  height: 155px;
+}
+
+.elementform {
+  height: 116px;
+}
+
+.tagform {
+  height: 184px;
+  overflow-y: scroll;
+}
+.addtagform {
+  height: 327px;
+}
+
+.elementcard {
+  height: 148px;
+}

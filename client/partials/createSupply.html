@@ -16,7 +16,7 @@
   <!-- SUPPLY TYPE -->
   <div class="form-group">
     <label for="element">Supply Type</label>
-    <div uib-collapse="!createSupply.elementIsCollapsed">
+    <div class="elementform" uib-collapse="!createSupply.elementIsCollapsed">
       <select class="form-control" ng-model="createSupply.costumeelement.element">
         <option disabled selected value> -- select an option -- </option>
         <option ng-selected="element.url == createSupply.costumeelement.element" ng-repeat="element in createSupply.elements" value="{{element.url}}">{{element.name}}</option>
@@ -25,8 +25,10 @@
     </div>
     <!-- add new supply form. -->
     <div uib-collapse = "createSupply.elementIsCollapsed">
-      <div class="well well-lg">
-        <input type="text" class="form-control" id="name" ng-model="createSupply.element.name" placeholder=" Name">
+      <div class="elementform well well-lg form-inline">
+        <div class="form-group">
+          <input type="text" class="form-control" id="name" ng-model="createSupply.element.name" placeholder="Supply">
+        </div>
         <span class="btn btn-default" ng-click="createSupply.createElement()">Add</span>
         <span class="btn btn-default" ng-click="createSupply.elementIsCollapsed =! createSupply.elementIsCollapsed">Cancel</span>
       </div>
@@ -38,26 +40,24 @@
     <label>Tags</label>
     <div uib-collapse="!createSupply.tagIsCollapsed">
       <div class="well well-lg">
-        <span ng-repeat="tag in createSupply.tags">
+        <span class="tagform" ng-repeat="tag in createSupply.tags">
           <span ng-hide="createSupply.costumeelement.tags | contains:tag.url" ng-click="createSupply.addTag(tag.url)" class="btn btn-default">{{tag.name}}</span>
           <span ng-show="createSupply.costumeelement.tags | contains:tag.url" ng-click="createSupply.removeTag(tag.url)" class="btn btn-primary">{{tag.name}}</span>
         </span>
+        <hr>
         <button class="btn btn-info" ng-click="createSupply.tagIsCollapsed = !createSupply.tagIsCollapsed">Create a New Tag</button>
       </div>
     </div>
     <!-- add new tag form.  -->
     <div uib-collapse="createSupply.tagIsCollapsed" >
-      <div class="well well-lg container-fluid">
-        <div class="form-group">
-          <input class="form-control"
-                 placeholder="eg. 'blue', 'mini length', 'striped'"
-                 ng-model="createSupply.tag.name"
-                 type="text"
-                 id="elementtagname"
-                 required>
-          <span ng-click="createSupply.createTag()" class="btn btn-default">Add</span>
-          <span ng-click="createSupply.tagIsCollapsed = !createSupply.tagIsCollapsed" class="btn btn-default">Cancel</span>
-        </div>
+      <div class="well well-lg addtagform container-fluid form-inline">
+        <input class="form-group"
+               placeholder="tag"
+               ng-model="createSupply.tag.name"
+               type="text"
+               required>
+        <span ng-click="createSupply.createTag()" class="btn btn-default">Add</span>
+        <span ng-click="createSupply.tagIsCollapsed = !createSupply.tagIsCollapsed" class="btn btn-default">Cancel</span>
       </div>
     </div>
   </div>

@@ -27,7 +27,6 @@ class CostumeSerializer(serializers.HyperlinkedModelSerializer):
     fields = ( 'id', 'url', 'owner', 'name', 'description', 'public', 'costumeelements', 'tags', 'boos')
 
 class CostumeElementSerializer(serializers.HyperlinkedModelSerializer):
-  costume = CostumeSerializer()
   class Meta:
     model = CostumeElement
     fields = ("url", "costume", "element", "description", "tags", "name")
