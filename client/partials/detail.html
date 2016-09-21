@@ -14,8 +14,10 @@
         <!-- TODO: make this not do the hover thing, but not using disabled -->
         {{tag.name}}
         </span>
+        <span class="btn btn-default nohoverdefault" ng-if="supply.tags | isEmpty">No Tags</span>
       </div>
     </div>
+    <div class="well well-lg" style="margin-top: 15px" ng-if="detail.supplies | isEmpty">No Supplies</div>
   </div>
   <div class="col col-sm-9">
     <div class="container-fluid fixedheightmain">
@@ -35,6 +37,7 @@
               {{tag.name}}
               <!-- TODO: make this not do the hover thing, but not using disabled -->
             </span>
+            <span class="btn btn-default nohoverdefault" ng-if="detail.costume.tags | isEmpty">No Tags</span>
           </div>
         </div>
       </div>
