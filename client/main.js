@@ -45,9 +45,9 @@ app.config(function($routeProvider) {
       controllerAs: "detail"
     })
     .when("/:id/edit", {
-      templateUrl: "partials/edit.html", 
+      templateUrl: "partials/create.html", 
       controller: "Edit", 
-      controllerAs: "edit"
+      controllerAs: "create"
     })
     .otherwise("/login");
 });

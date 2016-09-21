@@ -129,7 +129,10 @@ app.factory( "APIFactory", [
         .then(()=> true, errorHandle);
       },
       updateCostume: (data) => {
-        console.log(data);
+        return $http.put(`${data.url}`, data)
+        .then((res) => {
+          return res.data;
+        }, errorHandle)
       }, 
       deleteCostume: (costumeurl) => {
         return $http.delete(`${costumeurl}`)

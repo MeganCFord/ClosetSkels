@@ -56,8 +56,8 @@
             <div class="form-group">
               <div uib-collapse="!create.tagIsCollapsed" class="well well-lg scrollthetags">
                 <span class="tagform" ng-repeat="tag in create.tags">
-                  <span ng-hide="create.costume.tags | contains:tag.url" ng-click="create.addTag(tag.url)" class="btn btn-default">{{tag.name}}</span>
-                  <span ng-show="create.costume.tags | contains:tag.url" ng-click="create.removeTag(tag.url)" class="btn btn-primary">{{tag.name}}</span>
+                  <span ng-hide="create.costume.tags | contains:tag" ng-click="create.addTag(tag)" class="btn btn-default">{{tag.name}}</span>
+                  <span ng-show="create.costume.tags | contains:tag" ng-click="create.removeTag(tag)" class="btn btn-primary">{{tag.name}}</span>
                 </span>
                 <button type="button" class="btn btn-info" ng-click="create.tagIsCollapsed = !create.tagIsCollapsed">Add a New Tag</button>
               </div>

@@ -7,7 +7,7 @@ app.controller("Create",[
   "$rootScope", // need this because the  uib-Modal scope is not actually nested inside this scope- it's randomly off to one corner or whatever.
   function($scope, APIFactory, $timeout, $location, $uibModal, $rootScope) {
     const create = this;
-    create.title="create page";
+    create.title="Create a Costume";
 
     // Toggle 'create tag' div.
     create.tagIsCollapsed=true;
@@ -45,13 +45,6 @@ app.controller("Create",[
       }, e=> console.error);
     });
 
-    // On load, also load all tags.
-    APIFactory.getTags()
-    .then((res)=> {
-      create.tags = res; 
-      $timeout();
-    }, e => console.error);
-
     // In case of refresh. Gets all costume elements with no costume url assigned (meaning the costume has not been completed) and pushes their urls back into the costume object.
     APIFactory.getCostumeElements()
     .then((res) => {
@@ -61,6 +54,14 @@ app.controller("Create",[
       }
       $timeout();
     }, e => console.error);
+    
+    // On load, also load all tags.
+    APIFactory.getTags()
+    .then((res)=> {
+      create.tags = res; 
+      $timeout();
+    }, e => console.error);
+
 
     //grabs new data from the create modal.
     $rootScope.$on("createdSupply", function(event, value) { 
