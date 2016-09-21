@@ -13,6 +13,7 @@ app.controller("Edit",[
 
     // Toggle 'create tag' div.
     create.tagIsCollapsed=true;
+    create.deleteButton="Delete";
 
     create.tags = [];
     create.costumeelements = [];
@@ -141,6 +142,13 @@ app.controller("Edit",[
         // TODO: pop up with a success modal or something for a second. 
         $location.path("/closet");
       }, e => console.error);
+    };
+
+    create.deleteCostume = () => {
+      APIFactory.deleteCostume(create.costume.url)
+      .then(() => {
+        $location.path("/closet");
+      }, e=> console.error);
     };
 
   }]);

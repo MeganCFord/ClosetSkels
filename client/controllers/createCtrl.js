@@ -11,6 +11,7 @@ app.controller("Create",[
 
     // Toggle 'create tag' div.
     create.tagIsCollapsed=true;
+    create.deleteButton = "Discard";
 
     create.tags = [];
     create.costumeelements = [];
@@ -156,5 +157,9 @@ app.controller("Create",[
         // TODO: pop up with a success modal or something for a second. 
         $location.path("/closet");
       });
+    };
+
+    create.deleteCostume = () => {
+      $location.path("/closet");
     };
   }]);
