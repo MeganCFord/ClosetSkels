@@ -19,3 +19,24 @@
 .elementcard {
   height: 148px;
 }
+
+.scrollingsidebar {
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  height: 85vh;
+  overflow-y: scroll;
+}
+
+.fixedheightmain {
+  height: 74vh;
+}
+.fixedheightsub {
+  height: 26vh;
+  overflow-y: scroll;
+}
+
+.nohoverprimary:hover {
+  background-color: #337ab7;
+  border-color: #2e6da4;
+  cursor: default;
+}
