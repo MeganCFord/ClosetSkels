@@ -41,8 +41,8 @@
     <div uib-collapse="!createSupply.tagIsCollapsed">
       <div class="well well-lg">
         <span class="tagform" ng-repeat="tag in createSupply.tags">
-          <span ng-hide="createSupply.costumeelement.tags | contains:tag.url" ng-click="createSupply.addTag(tag.url)" class="btn btn-default">{{tag.name}}</span>
-          <span ng-show="createSupply.costumeelement.tags | contains:tag.url" ng-click="createSupply.removeTag(tag.url)" class="btn btn-primary">{{tag.name}}</span>
+          <span ng-hide="createSupply.costumeelement.tags | contains:tag" ng-click="createSupply.addTag(tag)" class="btn btn-default">{{tag.name}}</span>
+          <span ng-show="createSupply.costumeelement.tags | contains:tag" ng-click="createSupply.removeTag(tag)" class="btn btn-primary">{{tag.name}}</span>
         </span>
         <hr>
         <button class="btn btn-info" ng-click="createSupply.tagIsCollapsed = !createSupply.tagIsCollapsed">Create a New Tag</button>

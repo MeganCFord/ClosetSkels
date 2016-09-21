@@ -11,7 +11,6 @@ app.controller("CreateSupply",[
     createSupply.tagIsCollapsed = true;
 
     createSupply.elements= [];
-    createSupply.tags = [];
 
     createSupply.element = {"name": ""};
     createSupply.tag = {"name": "", "costumes": [], "costumeelements": []};
@@ -44,13 +43,13 @@ app.controller("CreateSupply",[
       }, e => console.error);
     };
 
-    createSupply.addTag = (url) => {
-      createSupply.costumeelement.tags.push(url);
+    createSupply.addTag = (tag) => {
+      createSupply.costumeelement.tags.push(tag);
     };
 
-    createSupply.removeTag = (url) => {
+    createSupply.removeTag = (tag) => {
       for(const u in createSupply.costumeelement.tags) {
-        if(createSupply.costumeelement.tags[u] === url) {
+        if(createSupply.costumeelement.tags[u] === tag) {
           createSupply.costumeelement.tags.splice(u, 1);
         }
       }
@@ -59,7 +58,7 @@ app.controller("CreateSupply",[
     createSupply.createTag = () => {
       APIFactory.createTag(createSupply.tag).then((res) => {
         createSupply.tags.push(res);
-        createSupply.costumeelement.tags.push(res.url);
+        createSupply.costumeelement.tags.push(res);
         // Reset form.
         createSupply.tag.name="";
         createSupply.tagIsCollapsed = true;

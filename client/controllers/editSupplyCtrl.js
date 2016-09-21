@@ -45,13 +45,13 @@ app.controller("EditSupply",[
       }, e => console.error);
     };
 
-    editSupply.addTag = (url) => {
-      editSupply.costumeelement.tags.push(url);
+    editSupply.addTag = (tag) => {
+      editSupply.costumeelement.tags.push(tag);
     };
 
-    editSupply.removeTag = (url) => {
+    editSupply.removeTag = (tag) => {
       for(const u in editSupply.costumeelement.tags) {
-        if(editSupply.costumeelement.tags[u] === url) {
+        if(editSupply.costumeelement.tags[u] === tag) {
           editSupply.costumeelement.tags.splice(u, 1);
         }
       }
@@ -60,7 +60,7 @@ app.controller("EditSupply",[
     editSupply.createTag = () => {
       APIFactory.createTag(editSupply.tag).then((res) => {
         editSupply.tags.push(res);
-        editSupply.costumeelement.tags.push(res.url);
+        editSupply.costumeelement.tags.push(res);
         // Reset form.
         editSupply.tag.name="";
         editSupply.tagIsCollapsed = true;
