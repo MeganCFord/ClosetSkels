@@ -2,14 +2,14 @@
 
 
 <div class="container-fluid">
-  <div class="col col-sm-3">
-    Filter Sidebar will go here.
+  <div class="col col-sm-3 filtersidebar">
+    <div ng-include="'partials/filter.html'"></div>
   </div>
   <div class="col col-sm-9">
     <div class="container-fluid">
       <h1 style="padding-left: 15px">Browse</h1> 
       <hr>
-      <div class="col col-sm-6" ng-repeat="costume in home.costumes">
+      <div class="col col-sm-6" ng-repeat="costume in home.costumes | filter:home.search | unique: 'id'">
         <div class="well well-lg card">
           <h4>{{costume.name}}</h4>
           <hr>
