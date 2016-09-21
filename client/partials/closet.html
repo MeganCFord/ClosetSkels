@@ -11,7 +11,9 @@
       <hr>
       <div class="col col-sm-6" ng-hide="closet.costumes | isEmpty" ng-repeat="costume in closet.costumes">
         <div class="well well-lg card">
-          <h4>{{costume.name}}</h4>
+          <h4>{{costume.name}}
+            <button class="btn btn-default boobutton floatingboo nohoverdefault pull-right">{{costume.boos.length}}   <i class="em em-ghost"></i>s</button>
+          </h4>
           <hr>
           <a href="#/{{costume.id}}" class="btn btn-default">View</a>
           <a href="#/{{costume.id}}/edit" class="btn btn-info">Edit</a>

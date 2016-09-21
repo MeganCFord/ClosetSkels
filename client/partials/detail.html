@@ -44,14 +44,16 @@
     </div>
     <hr>
     <div class="text-right">
-      <!-- TODO: store the previous path in the resolve for the detail view. -->
-      <button class="btn btn-default">back</button>
+    <!-- how many boos. -->
+     <button class="btn btn-default boobutton nohoverdefault">{{detail.costume.boos.length}}   <i class="em em-ghost"></i>s</button>
       <!-- unboo button -->
-      <button ng-if="detail.userBoo" ng-click="detail.unBoo()" class="btn btn-danger">Un <i class="em em-ghost"></i></button>
+      <button ng-if="detail.userBoo" ng-click="detail.unBoo()" class="btn btn-danger boobutton">Un <i class="em em-ghost"></i></button>
       <!-- boo button -->
-      <button ng-if="!detail.userBoo" ng-click="detail.boo()" class="btn btn-success"><i class="em em-ghost"></i></button>
+      <button ng-if="!detail.userBoo" ng-click="detail.boo()" class="btn btn-success boobutton"><i class="em em-ghost"></i></button>
       <!-- TODO: save button -->
       <button ng-click="detail.copyToCloset()" class="btn btn-info">Copy to Closet</button>
+      <!-- TODO: store the previous path in the resolve for the detail view. -->
+      <button class="btn btn-default">back</button>
     </div>
   </div>
 </div>

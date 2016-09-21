@@ -12,11 +12,13 @@
       <div class="col col-sm-6" ng-repeat="boo in likes.boos">
         <div ng-repeat="costume in likes.boodCostumes | filterBy:['url']:boo.costume">
           <div class="well well-lg card">
-            <h4>{{costume.name}}</h4>
+            <h4>{{costume.name}}
+             <button class="btn btn-default boobutton floatingboo nohoverdefault pull-right">{{costume.boos.length}}   <i class="em em-ghost"></i>s</button>
+            </h4>
             <hr>
             <a href="#/{{costume.id}}" class="btn btn-default">View</a>
             <button class="btn btn-info" ng-click="likes.saveToCloset(costume.url)">Save</button>
-            <button class="btn btn-danger" ng-click="likes.unBoo(boo.url)">un<i class="em em-ghost"></i></button>
+            <button class="btn btn-danger boobutton" ng-click="likes.unBoo(boo.url)">un<i class="em em-ghost"></i></button>
           </div>
         </div>
       </div>
