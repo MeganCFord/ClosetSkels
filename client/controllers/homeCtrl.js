@@ -1,20 +1,4 @@
 
-app.filter('unique', function() {
-  return function(array, valueToCheck) {
-    const output = [], 
-        keys = [];
-
-    angular.forEach(array, function(item) {
-      const key = item[valueToCheck];
-      if(keys.indexOf(key) === -1) {
-        keys.push(key);
-        output.push(item);
-      }
-    });
-    return output;
-  };
-});
-
 app.controller("Home",[
   "$scope",
   "APIFactory",
