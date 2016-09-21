@@ -37,12 +37,10 @@
           <div class="fixedheightsub">
             <!-- NAME -->
             <div class="form-group">
-              <!-- <label>Title</label> -->
               <input class="form-control" placeholder="Costume Title" ng-model="create.costume.name">
             </div>
             <!-- DESCRIPTION -->
             <div class="form-group">
-                <!-- <label>Description</label> -->
                 <textarea style="margin-top: -2px" class="form-control"
                        placeholder="talk about some features of your costume or special instructions here."
                        ng-model="create.costume.description"
@@ -55,7 +53,7 @@
            <!-- TAGS -->
             <div class="form-group">
               <div uib-collapse="!create.tagIsCollapsed" class="well well-lg scrollthetags">
-                <span class="tagform" ng-repeat="tag in create.tags">
+                <span ng-repeat="tag in create.tags">
                   <span ng-hide="create.costume.tags | contains:tag" ng-click="create.addTag(tag)" class="btn btn-default">{{tag.name}}</span>
                   <span ng-show="create.costume.tags | contains:tag" ng-click="create.removeTag(tag)" class="btn btn-primary">{{tag.name}}</span>
                 </span>
