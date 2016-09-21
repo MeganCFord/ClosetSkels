@@ -73,6 +73,20 @@ app.controller("Detail",[
       }, e=>console.error);
     };
 
+    detail.copyToCloset = () => {
+      delete detail.costume["url"];
+      delete detail.costume["id"];
+      detail.costume.owner = detail.userInfo.url;
+      detail.costume.public = false;
+      console.log("costume I'm sending", detail.costume);
+
+      APIFactory.createCostume(detail.costume)
+      .then((res) => {
+        console.log("new costume", res);
+        $location.path("/closet");
+      }, e=>console.error);
+
+    };
   
   }]);
 
