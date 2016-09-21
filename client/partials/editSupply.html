@@ -39,8 +39,8 @@
     <div uib-collapse="!editSupply.tagIsCollapsed">
       <div class="well well-lg">
         <span ng-repeat="tag in editSupply.tags">
-          <span ng-hide="editSupply.costumeelement.tags | contains:tag.url" ng-click="editSupply.addTag(tag.url)" class="btn btn-default">{{tag.name}}</span>
-          <span ng-show="editSupply.costumeelement.tags | contains:tag.url" ng-click="editSupply.removeTag(tag.url)" class="btn btn-primary">{{tag.name}}</span>
+          <span ng-hide="editSupply.costumeelement.tags | contains:tag" ng-click="editSupply.addTag(tag)" class="btn btn-default">{{tag.name}}</span>
+          <span ng-show="editSupply.costumeelement.tags | contains:tag" ng-click="editSupply.removeTag(tag)" class="btn btn-primary">{{tag.name}}</span>
         </span>
         <button class="btn btn-info" ng-click="editSupply.tagIsCollapsed = !editSupply.tagIsCollapsed">Create a New Tag</button>
       </div>
