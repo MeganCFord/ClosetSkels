@@ -1,117 +1,81 @@
 <div ng-include="'partials/navbar.html'" class="navbar navbar-default" ng-controller="Nav as nav"></div>
 
+
 <div class="container-fluid">
-  <div class="col col-sm-3"></div>
-  <div class="form-horizontal col-sm-9">
-  <h1 style="padding-left: 30px">Create a Costume</h1>
-  <hr>
-    <!-- NAME -->
-    <div class="form-group">
-        <label class="control-label col-sm-2">Title</label>
-        <div class="col-sm-8">
-            <input class="form-control"
-                   placeholder="eg. 'Harley Quinn', 'Gumball Machine'"
-                   ng-model="create.costume.name"
-                   required>
-        </div>
+  <div class="col col-sm-3 scrollingsidebar">
+
+    <div ng-hide="create.costumeelements | isEmpty" ng-repeat="element in create.costumeelements">
+      <div class="well well-lg">
+        <h5>{{element.name}}</h5>
+        <hr>
+        <span class="btn btn-default" ng-click="create.openEditModal(element)">Edit </span>
+        <span class="btn btn-danger" ng-click="create.deleteSupply(element.url)">Delete</span>
+      </div>
+      <hr>
     </div>
-    <hr>
-    <!-- DESCRIPTION -->
-    <div class="form-group">
-        <label class="control-label col-sm-2">Description</label>
-        <div class="col-sm-8">
-            <textarea class="form-control"
-                   placeholder="talk about some features of your costume or special instructions here."
-                   ng-model="create.costume.description"
-                   rows="8">
-           </textarea>
-        </div>
-    </div>
-    <hr>
-    <!-- TAGS -->
-    <div class="form-group">
-      <label class="control-label col-sm-2">Tags</label>
-      <div class="col-sm-8">
-        <div  uib-collapse="!create.tagIsCollapsed">
-          <div class="well well-lg">
-            <span class="tagform" ng-repeat="tag in create.tags">
-              <span ng-hide="create.costume.tags | contains:tag.url" ng-click="create.addTag(tag.url)" class="btn btn-default">{{tag.name}}</span>
-              <span ng-show="create.costume.tags | contains:tag.url" ng-click="create.removeTag(tag.url)" class="btn btn-primary">{{tag.name}}</span>
-            </span>
-            <hr>
-            <button type="button" class="btn btn-info" ng-click="create.tagIsCollapsed = !create.tagIsCollapsed">Add a New Tag</button>
-          </div>
-        </div>
-        <div uib-collapse="create.tagIsCollapsed">
-          <div class="well well-lg container-fluid addtagform form-inline">
-                  <input class="form-group form-control" 
-                         placeholder="eg. 'blue', 'mini length', 'striped'"
-                         ng-model="create.tag.name"
-                         required>
-              <span style="margin-left: 20px" ng-click="create.createTag()" class="btn btn-default">Add</span>
-              <span ng-click="create.tagIsCollapsed = !create.tagIsCollapsed" class="btn btn-default">Cancel</span>
-          </div>
-        </div>
+   
+    <div class="well well-lg elementcard">
+      <hr>
+      <div class="text-center">
+        <span class="btn btn-info" ng-click="create.openCreateModal()">New Supply</span>
       </div>
     </div>
-    <hr>
-    <!-- SUPPLIES -->
-    <div class="form-group">
-      <label class="control-label col-sm-2">Supplies</label>
-      <div class="col-sm-8" style="padding-right: 0px; padding-left: 0px">
-        <div class="container-fluid" style="padding-right: 0px; padding-left: 0px">
-          <!-- EDIT SUPPLIES -->
-          <div class="col-sm-6" ng-hide="create.costumeelements | isEmpty" ng-repeat="element in create.costumeelements">
-            <div class="well well-lg">
-              <h5>{{element.name}}</h5>
-              <hr>
-              <span class="btn btn-default" ng-click="create.openEditModal(element)">Edit </span>
-              <span class="btn btn-danger" ng-click="create.deleteSupply(element.url)">Delete</span>
-            </div>
-          </div>          
-        <!--   <div class="col-sm-6" ng-show="create.costumeelements | isEmpty">
-            <div class="well well-lg elementcard"> 
-              <h5>No Supplies Added Yet!</h5>
-            </div>
-          </div> -->
-            <!-- CREATE SUPPLY- Always shows next to created supply buttons. -->
-          <div class="col-sm-6">
-            <div class="well well-lg elementcard">
-              <div style="height:25px"></div>
-              <hr>
-              <span class="btn btn-info" ng-click="create.openCreateModal()">Add a New Supply</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <!-- PUBLIC -->
-    <div class="form-group">
-      <label class="control-label col-sm-2">Public/ Private</label>
-      <div class="col-sm-8">
-        <div class="checkbox">
-          <label>
-            <input ng-model="create.costume.public" type="checkbox"> Publish to Public Feed
+  </div>
+  <div class="col col-sm-9">
+    <div class="container-fluid fixedheightmain">
+      <h1 class="pagetitle">{{create.title}}</h1> 
+        <div style="margin-top: -31px" class="pull-right">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="create.costume.public"> <p>Public</p>
           </label>
         </div>
+      <hr>
+        <div class="col col-sm-6">
+          <!-- IMAGE HERE -->
+        </div>
+        <div class="col col-sm-6">
+          <div class="fixedheightsub">
+            <!-- NAME -->
+            <div class="form-group">
+              <!-- <label>Title</label> -->
+              <input class="form-control" placeholder="Costume Title" ng-model="create.costume.name">
+            </div>
+            <!-- DESCRIPTION -->
+            <div class="form-group">
+                <!-- <label>Description</label> -->
+                <textarea style="margin-top: -2px" class="form-control"
+                       placeholder="talk about some features of your costume or special instructions here."
+                       ng-model="create.costume.description"
+                       rows="5">
+               </textarea>
+            </div>
+          </div>
+          <hr>
+          <div class="fixedheightsub">
+           <!-- TAGS -->
+            <div class="form-group">
+              <div uib-collapse="!create.tagIsCollapsed" class="well well-lg scrollthetags">
+                <span class="tagform" ng-repeat="tag in create.tags">
+                  <span ng-hide="create.costume.tags | contains:tag.url" ng-click="create.addTag(tag.url)" class="btn btn-default">{{tag.name}}</span>
+                  <span ng-show="create.costume.tags | contains:tag.url" ng-click="create.removeTag(tag.url)" class="btn btn-primary">{{tag.name}}</span>
+                </span>
+                <button type="button" class="btn btn-info" ng-click="create.tagIsCollapsed = !create.tagIsCollapsed">Add a New Tag</button>
+              </div>
+              <!-- ADD TAG -->
+              <div uib-collapse="create.tagIsCollapsed" class="well well-lg scrollthetags form-group">
+                <input class="form-control" ng-model="create.tag.name" placeholder="Tag name">
+                <span ng-click="create.createTag()" class="btn btn-default">Add</span>
+                <span ng-click="create.tagIsCollapsed = !create.tagIsCollapsed" class="btn btn-default">Cancel</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+        <hr>
+        <div class="text-right">
+          <a href="#/closet" class="btn btn-default">Back to Closet</a>
+          <button ng-click="create.createCostume()" class="btn btn-primary">Submit</button>
+        </div>
     </div>
-    <hr>
-    <!-- Submit Button -->
-    <div class="form-group">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-8 text-right">
-          <a href="#/closet" class="btn btn-default btn-lg">Back to Closet</a>
-          <button ng-click="create.createCostume()" class="btn btn-primary btn-lg">Create Costume</button>
-      </div>
-    </div>
-
-  </div> <!-- End of create costume div. -->
-  <div class="col col-sm-1"></div>
+  </div>
 </div>
-
-
-
-
-

@@ -17,6 +17,7 @@
 }
 
 .elementcard {
+  margin-top: 15px;
   height: 148px;
 }
 
@@ -62,4 +63,10 @@
 
 .topofscrollingsidebar {
   margin-top: 15px;
+}
+
+.scrollthetags {
+  height: 23vh;
+  overflow-y: scroll;
+  margin-bottom: 0;
 }
