@@ -39,11 +39,6 @@ app.config(function($routeProvider) {
       controller: "Create", 
       controllerAs: "create"
     })
-    .when("/search", {
-      templateUrl: "partials/search.html", 
-      controller: "Search", 
-      controllerAs: "search"
-    })
     .when("/:id", {
       templateUrl: "partials/detail.html", 
       controller: "Detail", 
