@@ -55,7 +55,7 @@ app.factory( "APIFactory", [
         .then((root)=> {
           return $http.post(`${root.boos}`, {"owner": userUrl, "costume": costumeUrl});
         }, errorHandle)
-        .then(() => true, errorHandle);
+        .then((res) => res.data, errorHandle);
       }, 
       deleteBoo: (booUrl) => {
         return $http.delete(`${booUrl}`)
