@@ -21,12 +21,15 @@ class BooSerializer(serializers.HyperlinkedModelSerializer):
 
 class CostumeSerializer(serializers.HyperlinkedModelSerializer):
   boos=BooSerializer(many=True, read_only=True)
+  tags = TagSerializer(many=True, read_only=True)
 
   class Meta: 
     model = Costume
     fields = ( 'id', 'url', 'owner', 'name', 'description', 'public', 'costumeelements', 'tags', 'boos')
 
 class CostumeElementSerializer(serializers.HyperlinkedModelSerializer):
+  tags = TagSerializer(many=True, read_only=True)
+  element = ElementSerializer(read_only=True)
   class Meta:
     model = CostumeElement
     fields = ("url", "costume", "element", "description", "tags", "name")
