@@ -3,26 +3,76 @@ app.controller("Detail",[
   "APIFactory",
   "$timeout",
   "$location",
-  "$rootScope", // need this because the  uib-Modal scope is not actually nested inside this scope- it's randomly off to one corner or whatever.
   "$routeParams", 
-  function($scope, APIFactory, $timeout, $location, $rootScope, $routeParams) {
+  function($scope, APIFactory, $timeout, $location, $routeParams) {
     const detail = this;
 
     detail.costume = {};
+    detail.supplies = [];
+    detail.userInfo = {};
+    detail.userBoo = false;
 
-    //On load, set costume from route params.
-    APIFactory.getOneCostume($routeParams.costumename)
+    // Get the costume info.
+    APIFactory.getOneCostume($routeParams.id)
     .then((res) => {
-      detail.costume = res.data;
+      detail.costume = res;
       $timeout();
-      console.log("costume gotten", detail.costume);
+    }, e => console.error)
+    .then(()=> {
+      // Query for just the supplies that belong to this costume.
+      return APIFactory.getCostumeElements(detail.costume.id);
+    }).then((res)=> {
+      detail.supplies = res;
+      $timeout();
     }, e => console.error);
 
-    // On load, also load all tags.
-    APIFactory.getTags()
-    .then((res)=> {
-      detail.tags = res; 
-      $timeout();
-    }, e => console.error);
+    // Get the user URL for boo'ing.
+    $scope.$on("username", function(event, data) {
+      $timeout().then(() => {
+        return APIFactory.getUserInfo(data);
+      }).then((res) => {
+        detail.userInfo = res; 
+        $timeout();
+      }, e=> console.error)
+      .then(() => {
+        // Set user boo variable.
+        for (const index in detail.costume.boos) {
+          // two equals signs here because the userInfo url is an expression not a string.
+          if (detail.costume.boos[index].owner == detail.userInfo.url) {
+            detail.userBoo = true;
+            break;
+          }
+        }
+      });
+    });
+
+    
+    // Boo functionality
+
+    detail.boo = () => {
+      APIFactory.addBoo(detail.userInfo.url, detail.costume.url)
+      .then((res) => {
+        detail.costume.boos.push(res);
+        detail.userBoo = true;
+        $timeout();
+      }, e=>console.error);
+    };
+
+    detail.unBoo = () => {
+      let boourl = "";
+      for(const index in detail.costume.boos) {
+        if (detail.costume.boos[index].owner == detail.userInfo.url) {
+          boourl = detail.costume.boos[index].url;
+          detail.costume.boos.splice(index, 1);
+        }
+      }
+      APIFactory.deleteBoo(boourl)
+      .then(() => {
+        detail.userBoo = false;
+        $timeout();
+      }, e=>console.error);
+    };
+
   
   }]);
+

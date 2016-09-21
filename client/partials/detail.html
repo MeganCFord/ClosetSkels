@@ -1,0 +1,54 @@
+<div ng-include="'partials/navbar.html'" class="navbar navbar-default" ng-controller="Nav as nav"></div>
+
+
+<div class="container-fluid">
+  <div class="col col-sm-3 scrollingsidebar">
+    <!-- TODO: make this the height of the screen and then overflow-y scroll. -->
+    <div ng-repeat="supply in detail.supplies">
+      <hr>
+      <h3>{{supply.name}}</h3>
+      <h5>{{supply.element.name}}</h5>
+      <p>{{supply.description}}</p>
+      <div class="well well-lg">
+        <span class="btn btn-primary nohoverprimary" ng-repeat="tag in supply.tags">
+        <!-- TODO: make this not do the hover thing, but not using disabled -->
+        {{tag.name}}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="col col-sm-9">
+    <div class="container-fluid fixedheightmain">
+      <h1 style="padding-left: 15px">{{detail.costume.name}}</h1> 
+      <hr>
+      <div class="container-fluid">
+        <div class="col col-sm-6">
+          <!-- image here -->
+        </div>
+        <div class="col col-sm-6">
+          <p class="fixedheightsub">{{detail.costume.description}}</p>
+          <hr>
+          <div class="well well-lg fixedheightsub">
+            <!-- tags here -->
+            <span class="btn btn-primary nohoverprimary" ng-repeat="tag in detail.costume.tags">
+              <!-- TODO: get the tag details. -->
+              {{tag.name}}
+              <!-- TODO: make this not do the hover thing, but not using disabled -->
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="text-right">
+      <!-- TODO: store the previous path in the resolve for the detail view. -->
+      <button class="btn btn-default">back</button>
+      <!-- unboo button -->
+      <button ng-if="detail.userBoo" ng-click="detail.unBoo()" class="btn btn-danger">Un <i class="em em-ghost"></i></button>
+      <!-- boo button -->
+      <button ng-if="!detail.userBoo" ng-click="detail.boo()" class="btn btn-success"><i class="em em-ghost"></i></button>
+      <!-- TODO: save button -->
+      <button class="btn btn-info">Copy to Closet</button>
+    </div>
+  </div>
+</div>
