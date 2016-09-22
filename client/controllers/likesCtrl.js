@@ -10,6 +10,7 @@ app.controller("Likes",[
 
     likes.boos = [];
     likes.boodCostumes = [];
+    likes.search = "";
     
     $scope.$on("username", function(event, data) {
       $timeout().then(()=> {
@@ -63,7 +64,8 @@ app.controller("Likes",[
         controller: "Detail",
         controllerAs: "detail", 
         resolve: {
-          "costume": costume
+          "costume": costume, 
+          "userInfo": likes.userInfo
         }
       });
     };
