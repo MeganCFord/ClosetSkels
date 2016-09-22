@@ -142,11 +142,15 @@ app.factory( "APIFactory", [
       //// COSTUME ELEMENTS ////
 
       createCostumeElement: (data) => {
+        // WHY IS THE ELEMENT OBJECT AND TAG OBJECTS NOT SAVING?
         return getApiRoot()
         .then((root) => {
           return $http.post(`${root.costumeelements}`, data);
         }, errorHandle)
-        .then((res) => res.data);
+        .then((res) => {
+          console.log("created object", res.data);
+          return res.data;}
+          );
       }, 
       getCostumeElements: (costume = null) => {
         return getApiRoot()

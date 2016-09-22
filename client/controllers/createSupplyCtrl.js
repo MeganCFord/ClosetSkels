@@ -19,8 +19,9 @@ app.controller("CreateSupply",[
     createSupply.tag = {"name": "", "costumes": [], "costumeelements": []};
     
     if(supply === null) {
-      createSupply.costumeelement = {"name": "", "costume": "", "element": {}, "description": "", "tags": []};
+      createSupply.costumeelement = {"name": "", "costume": "", "element": "", "description": "", "tags": []};
     } else {
+      console.log("I got sent a supply", supply);
       createSupply.costumeelement = supply;
     }
 
@@ -43,7 +44,7 @@ app.controller("CreateSupply",[
       APIFactory.createElement(createSupply.element).then((res) => {
         // Add new element to list of elements, and select it.
         createSupply.elements.push(res);
-        createSupply.costumeelement.element = res;
+        createSupply.selectedElement = createSupply.elements.indexOf(res);
         // Reset form.
         createSupply.element.name = "";
         createSupply.elementIsCollapsed = true;
@@ -75,8 +76,15 @@ app.controller("CreateSupply",[
     };
 
     createSupply.ok = function () {
-      createSupply.costumeelement.element = createSupply.elements[createSupply.selectedElement];
+      createSupply.costumeelement.element = createSupply.elements[createSupply.selectedElement].id;
+      const tagids = [];
+      for (const index in createSupply.costumeelement.tags) {
+        tagids.push(createSupply.costumeelement.tags[index].id);
+      }
+      createSupply.costumeelement.tags = tagids;
+
       console.log("supply!", createSupply.costumeelement);
+
       if(supply != null) {
         APIFactory.editCostumeElement(createSupply.costumeelement)
         .then((res) => { 

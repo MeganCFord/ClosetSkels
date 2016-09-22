@@ -86,13 +86,13 @@ app.controller("Create",[
       $timeout(); //Just in case.
     });
 
-    create.addTag = (url) => {
-      create.costume.tags.push(url);
+    create.addTag = (tag) => {
+      create.costume.tags.push(tag);
     };
 
-    create.removeTag = (url) => {
+    create.removeTag = (tag) => {
       for(const u in create.costume.tags) {
-        if(create.costume.tags[u] === url) {
+        if(create.costume.tags[u] === tag) {
           create.costume.tags.splice(u, 1);
         }
       }
@@ -101,7 +101,7 @@ app.controller("Create",[
     create.createTag = () => {
       APIFactory.createTag(create.tag).then((res) => {
         create.tags.push(res);
-        create.costume.tags.push(res.url);
+        create.costume.tags.push(res);
         create.tagIsCollapsed = true;
         create.tag.name="";
         $timeout();

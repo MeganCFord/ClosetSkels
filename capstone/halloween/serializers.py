@@ -6,12 +6,12 @@ from halloween.models import *
 class ElementSerializer(serializers.HyperlinkedModelSerializer):
   class Meta: 
     model = Element
-    fields = ("url", "name")
+    fields = ("id", "url", "name")
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
    class Meta: 
     model = Tag
-    fields = ("url", "name", "costumes", "costumeelements")
+    fields = ("id", "url", "name", "costumes", "costumeelements")
 
 class BooSerializer(serializers.HyperlinkedModelSerializer):
   
@@ -29,7 +29,7 @@ class CostumeSerializer(serializers.HyperlinkedModelSerializer):
 
 class CostumeElementSerializer(serializers.HyperlinkedModelSerializer):
   tags = TagSerializer(many=True, read_only=True)
-  element = ElementSerializer(read_only=True)
+  element = ElementSerializer()
   class Meta:
     model = CostumeElement
     fields = ("url", "costume", "element", "description", "tags", "name")

@@ -33,7 +33,7 @@ app.controller("Closet",[
     });
 
     closet.deleteCostume = (costumeurl) => {
-      return $http.delete(costumeurl)
+      return APIFactory.deleteSomething(costumeurl)
       .then(()=> {
         for(const u in closet.costumes) {
           if (closet.costumes[u].url === costumeurl) {

@@ -1,10 +1,10 @@
-from rest_framework import viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 # was pulling from another User in another file so aliased it to prevent program confusion.
 from django.contrib.auth.models import User as DjangoUser
@@ -15,6 +15,7 @@ import json
 from halloween.models import Tag as DjangoTag, Costume as DjangoCostume, Boo as DjangoBoo, Element as DjangoElement, CostumeElement as DjangoCostumeElement
 from halloween.serializers import *
 from halloween.permissions import IsOwnerOrReadOnly
+from django.core import serializers
 
 class User(viewsets.ModelViewSet):
   serializer_class = UserSerializer
@@ -93,6 +94,23 @@ class CostumeElement(viewsets.ModelViewSet):
     else: 
         queryset = queryset.filter(costume=None)
     return queryset
+
+  def create(self, request): 
+    existing_element = DjangoElement.objects.get(id=request.data["element"])
+    new_costume_element = DjangoCostumeElement(element = existing_element, name=request.data["name"], description=request.data["description"])
+
+    new_costume_element.save()
+
+    for tag_id in request.data["tags"]:
+      tag_to_add = DjangoTag.objects.get(id=tag_id)
+      print("tag_to_add", new_costume_element.tags)
+      new_costume_element.tags.add(tag_to_add)
+    # new_costume_element.save()
+    
+    data = serializers.serialize("json", (new_costume_element,))
+    return HttpResponse(data, status=status.HTTP_201_CREATED)
+
+
 
 
 

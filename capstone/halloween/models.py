@@ -39,8 +39,8 @@ class Element(models.Model):
 class CostumeElement(models.Model):
   name = models.CharField(max_length=55)
   description = models.CharField(max_length=1000, blank=True, null=True)
-  element = models.ForeignKey('element', on_delete=models.CASCADE, related_name="costumeelements")
   costume = models.ForeignKey('costume', null=True, blank=True, on_delete=models.CASCADE, related_name="costumeelements")
+  element = models.ForeignKey('element', blank=True, null=True, on_delete=models.CASCADE, related_name="costumeelements")
   #tags are on tag.
 
   def __str__(self):

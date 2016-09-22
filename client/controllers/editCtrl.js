@@ -29,7 +29,7 @@ app.controller("Edit",[
     //On load, set costume from route params.
     APIFactory.getOneCostume($routeParams.id)
     .then((res) => {
-      console.log("costume gotten", res);
+      // console.log("costume gotten", res);
       create.costume = res;
       $timeout();
     }, e => console.error)
@@ -39,6 +39,7 @@ app.controller("Edit",[
     }).then((res)=> {
       create.costumeelements = res;
       $timeout();
+      console.log("costume elements", create.costumeelements);
     }, e => console.error);
 
     // On load, also load all tags.
