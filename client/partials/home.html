@@ -12,9 +12,10 @@
       <hr>
       <div class="col col-sm-6" ng-repeat="costume in home.costumes | filter:home.search" ng-if="!home.filtering">
         <div class="well well-lg card">
-          <h4>{{costume.name}}</h4>
+          <h4>{{costume.name}}
+            <button class="btn btn-default boobutton floatingboo nohoverdefault pull-right">{{costume.boos.length}}   <i class="em em-ghost"></i>s</button>
+          </h4>
           <hr>
-          <button class="btn btn-default boobutton nohoverdefault">{{costume.boos.length}}   <i class="em em-ghost"></i>s</button>
            <button ng-repeat="boo in costume.boos" class="btn btn-danger boobutton" ng-show="boo.owner==home.userInfo.url" ng-click="home.unBoo(boo.url)">Un<i class="em em-ghost"></i></button>
           <button class="btn btn-success boobutton" ng-hide="home.hasUserBood(costume.boos)==true" ng-click="home.boo(costume.url)"><i class="em em-ghost"></i></button>
           <a ng-click="home.openModal(costume)" class="btn btn-default">View</a>
