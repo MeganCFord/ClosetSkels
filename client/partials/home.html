@@ -7,17 +7,21 @@
   </div>
   <div class="col col-sm-9">
     <div class="container-fluid">
-      <h1 style="padding-left: 15px">Browse</h1> 
+      <h1 ng-if="!home.filtering" style="padding-left: 15px">Browse</h1> 
+      <h1 ng-if="home.filtering" style="padding-left: 15px">Search</h1> 
       <hr>
-      <div class="col col-sm-6" ng-repeat="costume in home.costumes | filter:home.search | unique: 'id'">
+      <div class="col col-sm-6" ng-repeat="costume in home.costumes | filter:home.search" ng-if="!home.filtering">
         <div class="well well-lg card">
           <h4>{{costume.name}}</h4>
           <hr>
           <button class="btn btn-default boobutton nohoverdefault">{{costume.boos.length}}   <i class="em em-ghost"></i>s</button>
-           <button ng-repeat="boo in costume.boos" class="btn btn-danger boobutton" ng-show="boo.owner==home.userUrl" ng-click="home.unBoo(boo.url)">Un<i class="em em-ghost"></i></button>
+           <button ng-repeat="boo in costume.boos" class="btn btn-danger boobutton" ng-show="boo.owner==home.userInfo.url" ng-click="home.unBoo(boo.url)">Un<i class="em em-ghost"></i></button>
           <button class="btn btn-success boobutton" ng-hide="home.hasUserBood(costume.boos)==true" ng-click="home.boo(costume.url)"><i class="em em-ghost"></i></button>
-          <a href="#/{{costume.id}}" class="btn btn-default">View</a>
+          <a ng-click="home.openModal(costume)" class="btn btn-default">View</a>
         </div>
+      </div>
+      <div ng-if="home.filtering" ng-include="'partials/filteredhome.html'">
+        <!-- including filtered results. -->
       </div>
     </div>
   </div>

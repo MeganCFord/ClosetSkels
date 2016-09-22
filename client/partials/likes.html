@@ -16,7 +16,7 @@
              <button class="btn btn-default boobutton floatingboo nohoverdefault pull-right">{{costume.boos.length}}   <i class="em em-ghost"></i>s</button>
             </h4>
             <hr>
-            <a href="#/{{costume.id}}" class="btn btn-default">View</a>
+            <a ng-click="likes.openModal(costume)" class="btn btn-default">View</a>
             <button class="btn btn-info" ng-click="likes.saveToCloset(costume.url)">Save</button>
             <button class="btn btn-danger boobutton" ng-click="likes.unBoo(boo.url)">un<i class="em em-ghost"></i></button>
           </div>

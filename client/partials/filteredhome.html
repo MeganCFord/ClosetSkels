@@ -1,0 +1,22 @@
+<div class="col col-xs-6" ng-repeat="(matchname, stuff) in home.matches">
+
+
+  <div ng-repeat="costume in home.costumes | filterBy: ['name']:matchname">
+    <div  class="well well-lg card" style="height: 200px">
+      <h4>{{costume.name}}</h4>
+      <p>Matches: <span class="btn btn-primary nohoverprimary" ng-repeat="match in stuff.matches">{{match}} </span> </p>
+      <hr>
+      <button class="btn btn-default boobutton nohoverdefault">{{costume.boos.length}}   <i class="em em-ghost"></i>s</button>
+       <button ng-repeat="boo in costume.boos" class="btn btn-danger boobutton" ng-show="boo.owner==home.userUrl" ng-click="home.unBoo(boo.url)">Un<i class="em em-ghost"></i></button>
+      <button class="btn btn-success boobutton" ng-hide="home.hasUserBood(costume.boos)==true" ng-click="home.boo(costume.url)"><i class="em em-ghost"></i></button>
+      <a href="home.openModal(costume)" class="btn btn-default">View</a>
+    </div>
+  </div>
+
+<!-- div to show if there are no matches. -->
+</div>
+  <div class="well well-lg card" ng-show="home.matches | isEmpty">
+    <h4>No Matches!</h4>
+    <hr>
+    <p>Try broadening your search parameters.</p>
+  </div>

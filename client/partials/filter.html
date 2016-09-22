@@ -2,7 +2,7 @@
   <input class="form-control" placeholder="Search by title" ng-model="home.search">
   <hr>
   <div class="text-center">
-    <h4>Filters</h4>
+    <h4>Filter by Tag</h4>
   </div>
   <!-- tag filter -->
   <div class="well well-lg scrollthetags">
@@ -13,9 +13,12 @@
   </div>
   <hr>
   <!-- supply filter- just make this a select. -->
+  <div class="text-center">
+    <h4>Filter by Supply</h4>
+  </div>
   <select class="form-control" ng-model="home.filterer.supply">
     <option disabled selected value> -- select an option -- </option>
-    <option ng-selected="element.url == home.filterer.supply" ng-repeat="element in home.supplies" value="{{element.url}}">{{element.name}}</option>
+    <option ng-selected="supply.url == home.filterer.supply" ng-repeat="supply in home.supplies" value="{{supply.url}}">{{supply.name}}</option>
   </select>
   <!-- supply-tag filter TODO disable this unless the supply has been chosen.-->
   <div class="well well-lg scrollthetags">

@@ -1,4 +1,4 @@
-<div ng-include="'partials/navbar.html'" class="navbar navbar-default" ng-controller="Nav as nav"></div>
+<!-- <div ng-include="'partials/navbar.html'" class="navbar navbar-default" ng-controller="Nav as nav"></div> -->
 
 
 <div class="container-fluid">
@@ -37,7 +37,7 @@
         </div>
     </div>
     <hr>
-    <div class="text-right">
+    <div  style="padding-bottom: 5px" class="text-right">
     <!-- how many boos. -->
      <button class="btn btn-default boobutton nohoverdefault">{{detail.costume.boos.length}}   <i class="em em-ghost"></i>s</button>
       <!-- unboo button -->
@@ -45,9 +45,9 @@
       <!-- boo button -->
       <button ng-if="!detail.userBoo" ng-click="detail.boo()" class="btn btn-success boobutton"><i class="em em-ghost"></i></button>
       <button ng-hide="detail.costume.owner === detail.userInfo.url" ng-click="detail.copyToCloset()" class="btn btn-info">Copy to Closet</button>
-      <a ng-show="detail.costume.owner === detail.userInfo.url" href="#/{detail.costume.id}/edit"class="btn btn-info">Edit</a>
+      <a ng-show="detail.costume.owner === detail.userInfo.url" ng-click="detail.goToEdit()"class="btn btn-info">Edit</a>
       <!-- TODO: store the previous path in the resolve for the detail view. -->
-      <button class="btn btn-default">back</button>
+      <button class="btn btn-default" ng-click="detail.cancel()">back</button>
     </div>
   </div>
 </div>

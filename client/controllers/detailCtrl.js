@@ -4,27 +4,28 @@ app.controller("Detail",[
   "$timeout",
   "$location",
   "$routeParams", 
-  function($scope, APIFactory, $timeout, $location, $routeParams) {
+  "$uibModalInstance",
+  "costume",
+  "userInfo",
+  "$cookies",
+  function($scope, APIFactory, $timeout, $location, $routeParams, $uibModalInstance, costume, userInfo, $cookies) {
     const detail = this;
 
-    detail.costume = {};
+    detail.costume = costume;
+    console.log("costume", detail.costume);
     detail.supplies = [];
-    detail.userInfo = {};
+    detail.userInfo = userInfo;
+    console.log("user info", detail.userInfo);
     detail.userBoo = false;
 
-    // Get the costume info.
-    APIFactory.getOneCostume($routeParams.id)
-    .then((res) => {
-      detail.costume = res;
-      $timeout();
-    }, e => console.error)
-    .then(()=> {
-      // Query for just the supplies that belong to this costume.
-      return APIFactory.getCostumeElements(detail.costume.id);
-    }).then((res)=> {
+
+    APIFactory.getCostumeElements(detail.costume.id)
+    .then((res)=> {
       detail.supplies = res;
       $timeout();
     }, e => console.error);
+
+        
 
     // Get the user URL for boo'ing.
     $scope.$on("username", function(event, data) {
@@ -78,15 +79,24 @@ app.controller("Detail",[
       delete detail.costume["id"];
       detail.costume.owner = detail.userInfo.url;
       detail.costume.public = false;
-      console.log("costume I'm sending", detail.costume);
 
       APIFactory.createCostume(detail.costume)
-      .then((res) => {
-        console.log("new costume", res);
+      .then(() => {
         $location.path("/closet");
+        $uibModalInstance.close();
       }, e=>console.error);
 
     };
+
+    detail.goToEdit = (costumeid) => {
+      $location.path(`/${costumeid}/edit`);
+      $uibModalInstance.close();
+    };
   
+
+    detail.cancel = function () {
+      // Closes the modal, doing nothing.
+      $uibModalInstance.dismiss("cancel");
+    };
   }]);
 

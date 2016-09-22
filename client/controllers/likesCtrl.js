@@ -3,7 +3,8 @@ app.controller("Likes",[
   "$timeout",
   "APIFactory",
   "$http",
-  function($scope, $timeout, APIFactory, $http) {
+  "$uibModal",
+  function($scope, $timeout, APIFactory, $http, $uibModal) {
     const likes = this;
     likes.title="likes page";
 
@@ -52,6 +53,19 @@ app.controller("Likes",[
         }
         $timeout();
       }, e=> console.error);
+    };
+
+    likes.openModal = (costume) => {
+    //Sending the entire object into modal.
+      const modalInstance = $uibModal.open({
+        size: "lg",
+        templateUrl: "/partials/detail.html", 
+        controller: "Detail",
+        controllerAs: "detail", 
+        resolve: {
+          "costume": costume
+        }
+      });
     };
   }]);
 

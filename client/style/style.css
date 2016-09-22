@@ -3,6 +3,15 @@
 .card {
   height: 155px;
 }
+.modal-dialog {
+  width: 125vh;
+}
+
+.filtersidebar {
+  height:85vh; 
+  padding-right: 0px; 
+  border-right: 1px solid #ccc
+}
 
 .elementform {
   height: 116px;

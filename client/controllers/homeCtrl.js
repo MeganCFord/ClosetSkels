@@ -3,21 +3,23 @@ app.controller("Home",[
   "$scope",
   "APIFactory",
   "$timeout",
-  function($scope, APIFactory, $timeout) {
+  "$uibModal",
+  function($scope, APIFactory, $timeout, $uibModal) {
     const home = this;
     home.title="home page";
-    home.allCostumes = [];
     //Filtered costumes.
     home.costumes = [];
     home.username="";
-    home.userUrl="";
+    home.userInfo={};
 
     home.search = "";
     // tags and supply tags are objects, supply is a url.
+    home.filtering = false;
     home.filterer = {"tags": [], "supply": "", "supplytags": []};
     home.tags = [];
     home.supplies = []; 
     
+    home.matches = {};
 
     // assign the username for DOM, get the user URL for passing to boos.
     $scope.$on("username", function(event, data) {
@@ -27,7 +29,7 @@ app.controller("Home",[
       }).then(() => {
         return APIFactory.getUserInfo(home.username);
       }).then((res) => {
-        home.userUrl = res.url; 
+        home.userInfo = res; 
         $timeout();
       }, e=> console.error);
     });
@@ -35,13 +37,12 @@ app.controller("Home",[
     // Load costumes.
     APIFactory.getCostumes()
     .then((res) => {
-      home.allCostumes = res;
       home.costumes = res;
       $timeout();
     }, e=>console.error);
 
     // Load all supplies.
-    APIFactory.getCostumeElements()
+    APIFactory.getElements()
     .then((res)=> {
       home.supplies = res;
       $timeout();
@@ -60,7 +61,7 @@ app.controller("Home",[
     home.hasUserBood = (costumeBoos) => {
       let userBoo = false;
       for (const index in costumeBoos) {
-        if (costumeBoos[index].owner==home.userUrl) {
+        if (costumeBoos[index].owner==home.userInfo.url) {
           userBoo= true;
           break;
         }
@@ -70,7 +71,7 @@ app.controller("Home",[
 
     // Boo functionality
     home.boo = (costumeurl) => {
-      APIFactory.addBoo(home.userUrl, costumeurl)
+      APIFactory.addBoo(home.userInfo.url, costumeurl)
       .then(()=> {
         return APIFactory.getCostumes();
       }, e=>console.error)
@@ -113,55 +114,126 @@ app.controller("Home",[
         }
       }
     };
-
-    home.applyFilter = () => {
-      home.costumes = [];
-      home.allCostumes.forEach((costume)=> {
-        // tag: full object.
-        if(home.filterer.tags.length > 0) {
-          for(const u in home.filterer.tags) {
-            for (const p in costume.tags) {
-              if (home.filterer.tags[u].name === costume.tags[p].name) {
-              console.log("tag match", home.filterer.tags[u].name, costume.tags[p].name, home.costumes);
-              home.costumes.push(costume); 
+    
+    home.checkForTags = (costume) => {
+      if(home.filterer.tags.length > 0) {
+        for(const s in costume.tags) {
+          for(const t in home.filterer.tags) {
+            if(costume.tags[s].name === home.filterer.tags[t].name) {
+              if (home.matches[costume.name] != undefined) {
+                home.matches[costume.name].matches.push(home.filterer.tags[t].name);
+                console.log("matches!!", home.matches);
               } else {
-                console.log("no match, costumes should remain the same", home.costumes.length);
-              } 
+                home.matches[costume.name] = {};
+                home.matches[costume.name].matches = [];
+                home.matches[costume.name].object = costume;
+                home.matches[costume.name].matches.push(home.filterer.tags[t].name);
+                console.log("matches!!", home.matches);
+              }
+            } else {
+              console.log("no match, matches", home.matches);
             }
-          }
-        }
-        console.log("here should be the list of matches", home.costumes);
-        // supply: url
-        if(home.filterer.supply !== "") {
-            if(costume.supplies.includes(home.filterer.supply)) {
-              // supply tag: full object.
-              if(home.filterer.supplytags.length > 0) {
-                let supplies = [];
-                APIFactory.getCostumeElements(costume.id)
-                .then((res)=> {
-                  supplies = res;
-                  supplies.forEach((supply) => {
-                    for(const u in home.filterer.supplytags) {
-                      if(supply.tags.includes(home.filterer.supplytags[u])) {
-                        console.log("supply tag match");
-                        home.tempCostumes.push(costume);
-                      }
-                    }
-                  });
-                });
-              } else {
-                console.log('supply match');
-                home.tempCostumes.push(costume);
+          } //for
+        } //for
+      } else {
+        console.log("no tags selected.");
+      }
+    };
+    
+    home.checkForSupply = (costume) => {
+      if (home.filterer.supply.length > 0) {
+        for (const s in costume.costumeelements) {
+          if (costume.costumeelements[s] === home.filterer.supply) {
+            console.log("supply tag match", costume.costumeelements[s], home.filterer.supply);
+            for(s in home.supplies) {
+              if(home.supplies[s].url === home.filterer.supply) {
+                console.log("supply name", home.supplies[s].name);
+                if (home.matches[costume.name] != undefined) {
+                  home.matches[costume.name].matches.push(home.supplies[s].name);
+                  console.log("matches!", home.matches);
+                } else {
+                  home.matches[costume.name] = {};
+                  home.matches[costume.name].matches = [];
+                  home.matches[costume.name].object = costume;
+                  home.matches[costume.name].matches.push(home.supplies[s].name);
+                  console.log("matches!", home.matches);
+                }
               }
             }
-        }
+          } else {
+        console.log("no supply tag match, matches:", home.matches);
+          }
+        } 
+      } else {
+        console.log("no supply selected.");
+      }  
+    };
+    
+
+    home.checkForSupplyTags = (costume) => {
+      if(home.filterer.supplytags.length > 0) {
+        let supplies = [];
+        APIFactory.getCostumeElements(costume.id)
+        .then((res)=> {
+          supplies = res;
+          console.log("supplies for costume", supplies);
+          for(const u in supplies) {
+            for (const p in home.filterer.supplytags) {
+              if (supplies[u].name === home.filterer.supplytags[p].name) {
+                console.log("supply tag match", supplies[u].name, home.filterer.supplytags[p].name);
+                if (home.matches[costume.name] != undefined) {
+                  home.matches[costume.name].matches.push(home.filterer.supplytags[u]);
+                  console.log(home.matches, "matches");
+                } else {
+                  home.matches[costume.name] = {};
+                  home.matches[costume.name].matches = [];
+                  home.matches[costume.name].object = costume;
+                  home.matches[costume.name].matches.push(`Supply: ${home.filterer.supplytags[u].name}`);
+                  console.log(home.matches, "matches");
+                }
+              } else {
+                console.log("no supply tag match, matches:", home.matches);
+              }
+            }
+          }
+        }, e => console.error);
+      } else {
+        // console.log("no supply tags selected.");
+      }  
+    };
+
+
+    home.applyFilter = () => {
+      home.matches = {};
+      home.filtering = true;
+      home.costumes.forEach((costume) => {
+        home.checkForTags(costume);
+        home.checkForSupply(costume);
+        home.checkForSupplyTags(costume);
       });
+      console.log("final matches", home.matches);
     };
 
     home.resetFilter = () => {
       home.filterer = {"tags": [], "supply": "", "supplytags": []};
-      home.costumes = home.allCostumes;
+      home.matches = [];
+      home.filtering = false;
       $timeout();
+    };
+
+    home.openModal = (costume) => {
+      console.log("costume I'm sending", costume);
+    //Sending the entire object into modal.
+      const modalInstance = $uibModal.open({
+        size: "lg",
+        templateUrl: "/partials/detail.html", 
+        controller: "Detail",
+        controllerAs: "detail", 
+        resolve: {
+          "costume": costume, 
+          "userInfo": home.userInfo
+        }
+      });
     };
 
   }]);
