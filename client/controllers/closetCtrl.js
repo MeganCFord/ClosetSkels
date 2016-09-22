@@ -3,21 +3,32 @@ app.controller("Closet",[
   "APIFactory",
   "$timeout",
   "$http",
-  function($scope, APIFactory, $timeout, $http) {
+  "$uibModal",
+  function($scope, APIFactory, $timeout, $http, $uibModal) {
     const closet = this;
-    closet.title="closet page";
+
+    closet.userInfo = {};
+    closet.costumes = [];
+    closet.search="";
     
     $scope.$on("username", function(event, data) {
       // wrapped in a timeout to ensure the scope emitter gets here before we try to use its data.
-      $timeout().then(() => {closet.username = data; return data;})
+      $timeout().then(() => {
+        closet.username = data;
+      }).then(() => {
+        return APIFactory.getUserInfo(closet.username)
       .then((data) => {
-        // API will only return the costumes for the current user.
-        APIFactory.getUserCostumes(data)
-        .then((res) => {
-          closet.costumes = res;
-          $timeout();
-          console.log("user costumes", closet.costumes);
-        }, (e) => console.error);
+        closet.userInfo = data;
+        $timeout();
+      }, e=>console.error)
+      .then(() => {
+        // only get the costumes for the current user.
+        return APIFactory.getUserCostumes(closet.username);
+      }).then((res) => {
+        closet.costumes = res;
+        $timeout();
+        console.log("user costumes", closet.costumes);
+      }, (e) => console.error);
       });
     });
 
@@ -31,6 +42,21 @@ app.controller("Closet",[
         }
         $timeout();
       }, e => console.error);
-    }
+    };
+
+    closet.openModal = (costume) => {
+      console.log("costume I'm sending", costume);
+    //Sending the entire object into modal.
+      const modalInstance = $uibModal.open({
+        size: "lg",
+        templateUrl: "/partials/detail.html", 
+        controller: "Detail",
+        controllerAs: "detail", 
+        resolve: {
+          "costume": costume, 
+          "userInfo": closet.userInfo
+        }
+      });
+    };
 
   }]);
