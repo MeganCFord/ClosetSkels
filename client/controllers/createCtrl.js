@@ -28,8 +28,7 @@ app.controller("Create",[
       "public": false, 
       "owner": "" ,
       "costumeelements": [], 
-      "tags": [], 
-      "boos": []
+      "tags": []
     };
 
     // On load, get the username and user info. 
@@ -41,17 +40,17 @@ app.controller("Create",[
         return APIFactory.getUserInfo(create.username);
       }).then((res) => {
         create.userInfo = res; 
-        create.costume.owner = create.userInfo.url;
+        create.costume.owner = create.userInfo.id;
         $timeout();
       }, e=> console.error);
     });
 
-    // In case of refresh. Gets all costume elements with no costume url assigned (meaning the costume has not been completed) and pushes their urls back into the costume object.
+    // In case of refresh. Gets all costume elements with no costume url assigned (meaning the costume has not been completed) and pushes their ids back into the costume object.
     APIFactory.getCostumeElements()
     .then((res) => {
       create.costumeelements = res;
       for(const index in create.costumeelements) {
-        create.costume.costumeelements.push(create.costumeelements[index].url);
+        create.costume.costumeelements.push(create.costumeelements[index].id);
       }
       $timeout();
     }, e => console.error);
@@ -64,11 +63,10 @@ app.controller("Create",[
     }, e => console.error);
 
 
-    //grabs new data from the create modal.
+    //grabs new data from the create modal. Since I had to write a custom nested serializer, this returns only the primary key of the object created. Dealing with this here right now, but eventually can move this into the factory.
     $rootScope.$on("createdSupply", function(event, value) { 
-      // console.log("got the newly created supply", value);
+      create.costume.costumeelements.push(value.id);
       create.costumeelements.push(value);
-      create.costume.costumeelements.push(value.url);
       $timeout(); //Just in case.
     });
 
@@ -77,7 +75,7 @@ app.controller("Create",[
       // console.log("got the edited supply", value);
       //remove old value.
       for(const u in create.costumeelements) {
-        if(create.costumeelements[u].url === value.url) {
+        if(create.costumeelements[u].id === value.id) {
           create.costumeelements.splice(u, 1);
         }
       } 
@@ -123,7 +121,7 @@ app.controller("Create",[
 
 
     create.openEditModal = (supply) => {
-      //Sending the entire object into modal.
+      //Sending the entire supply object into modal.
       const modalInstance = $uibModal.open({
         size: "lg",
         templateUrl: "/partials/createSupply.html", 
@@ -135,18 +133,18 @@ app.controller("Create",[
       });
     };
 
-    create.deleteSupply = (url) => {
-      APIFactory.deleteSomething(url)
+    create.deleteSupply = (object) => {
+      APIFactory.deleteSomething(object.url)
       .then(() => {
         // remove from costume
         for (const u in create.costume.costumeelements) {
-          if (create.costume.costumeelements[u] === url) {
+          if (create.costume.costumeelements[u] === object.id) {
             create.costume.costumeelements.splice(u, 1);
           }
         }
         // remove from costume element list
         for (const u in create.costumeelements) {
-          if (create.costumeelements[u].url === url) {
+          if (create.costumeelements[u] === object) {
             create.costumeelements.splice(u, 1);
           }
         }
@@ -155,6 +153,13 @@ app.controller("Create",[
     };
 
     create.createCostume = () => {
+      const tagIds = [];
+      for(const index in create.costume.tags) {
+        tagIds.push(create.costume.tags[index].id);
+      }
+      create.costume.tags = tagIds;
+      console.log("costume I am sending", create.costume);
+
       APIFactory.createCostume(create.costume).then((res)=> {
         console.log(res);
         // TODO: pop up with a success modal or something for a second. 

@@ -39,23 +39,32 @@ app.controller("Edit",[
     }).then((res)=> {
       create.costumeelements = res;
       $timeout();
-      console.log("costume elements", create.costumeelements);
     }, e => console.error);
 
     // On load, also load all tags.
     APIFactory.getTags()
     .then((res)=> {
-      create.tags = res; 
+      create.tags = res;
       $timeout();
-    }, e => console.error);
+    }, e => console.error)
+    .then(()=> {
+      const actualtags = [];
+      for (const p in create.tags) {
+        for (const u in create.costume.tags) {
+          if (create.tags[p].name == create.costume.tags[u].name) {
+            actualtags.push(create.tags[p]);
+          }
+        }
+      }
+      create.costume.tags = actualtags;
+    });
     
 
 
     //grabs new data from the create modal.
     $rootScope.$on("createdSupply", function(event, value) { 
-      console.log("got the newly created supply", value);
+      create.costume.costumeelements.push(value.id);
       create.costumeelements.push(value);
-      create.costume.costumeelements.push(value.url);
       $timeout(); //Just in case.
     });
 
@@ -64,7 +73,7 @@ app.controller("Edit",[
       console.log("got the edited supply", value);
       //remove old value.
       for(const u in create.costumeelements) {
-        if(create.costumeelements[u] === value) {
+        if(create.costumeelements[u].id === value.id) {
           create.costumeelements.splice(u, 1);
         }
       } 
@@ -121,18 +130,18 @@ app.controller("Edit",[
       });
     };
 
-    create.deleteSupply = (url) => {
-      APIFactory.deleteSomething(url)
+    create.deleteSupply = (object) => {
+      APIFactory.deleteSomething(object.url)
       .then(() => {
         // remove from costume
         for (const u in create.costume.costumeelements) {
-          if (create.costume.costumeelements[u] === url) {
+          if (create.costume.costumeelements[u] === object.id) {
             create.costume.costumeelements.splice(u, 1);
           }
         }
         // remove from costume element list
         for (const u in create.costumeelements) {
-          if (create.costumeelements[u].url === url) {
+          if (create.costumeelements[u] === object) {
             create.costumeelements.splice(u, 1);
           }
         }
@@ -141,8 +150,15 @@ app.controller("Edit",[
     };
 
     create.createCostume = () => {
+      const tagIds = [];
+      for(const index in create.costume.tags) {
+        tagIds.push(create.costume.tags[index].id);
+      }
+      create.costume.tags = tagIds;
+      console.log("costume I am sending", create.costume);
+
       APIFactory.updateCostume(create.costume)
-      .then((res)=> {
+      .then(()=> {
         // TODO: pop up with a success modal or something for a second. 
         $location.path("/closet");
       }, e => console.error);

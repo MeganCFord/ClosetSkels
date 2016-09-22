@@ -7,7 +7,6 @@ app.controller("CreateSupply",[
   "supply",
   function($scope, APIFactory, $timeout, $location, $uibModalInstance, supply) {
     const createSupply = this;
-    createSupply.title = "Create Supply";
     
     createSupply.elementIsCollapsed = true;
     createSupply.tagIsCollapsed = true;
@@ -20,9 +19,11 @@ app.controller("CreateSupply",[
     
     if(supply === null) {
       createSupply.costumeelement = {"name": "", "costume": "", "element": "", "description": "", "tags": []};
+      createSupply.title = "Create Supply";
     } else {
-      console.log("I got sent a supply", supply);
       createSupply.costumeelement = supply;
+      createSupply.title = "Edit Supply";
+      $timeout();
     }
 
 
@@ -31,6 +32,17 @@ app.controller("CreateSupply",[
     .then((res)=> {
       createSupply.elements = res;
       $timeout();
+    }).then(()=> {
+      // set selected element.
+      if(supply != null) {
+        for(const index in createSupply.elements) {
+          if (createSupply.elements[index].id === createSupply.costumeelement.element.id) {
+            createSupply.selectedElement = createSupply.costumeelement[index];
+          } 
+        }
+      } else {
+        createSupply.selectedElement = null;
+      }
     });
 
     // Get all tags for selection.
@@ -38,13 +50,24 @@ app.controller("CreateSupply",[
     .then((res)=> {
       createSupply.tags = res;
       $timeout();
+    }).then(()=> {
+      const actualtags = [];
+      for(const index in createSupply.tags) {
+        for (const u in createSupply.costumeelement.tags) {
+          if(createSupply.costumeelement.tags[u].name == createSupply.tags[index].name) {
+            actualtags.push(createSupply.tags[index]);
+          }
+        }
+      }
+      createSupply.costumeelement.tags = actualtags;
+      console.log("actual tags", createSupply.costumeelement.tags);
     });
 
     createSupply.createElement = () => {
       APIFactory.createElement(createSupply.element).then((res) => {
         // Add new element to list of elements, and select it.
         createSupply.elements.push(res);
-        createSupply.selectedElement = createSupply.elements.indexOf(res);
+        createSupply.selectedElement = res;
         // Reset form.
         createSupply.element.name = "";
         createSupply.elementIsCollapsed = true;
@@ -54,6 +77,7 @@ app.controller("CreateSupply",[
 
     createSupply.addTag = (tag) => {
       createSupply.costumeelement.tags.push(tag);
+      console.log("should have added to tags", createSupply.costumeelement.tags);
     };
 
     createSupply.removeTag = (tag) => {
@@ -76,16 +100,14 @@ app.controller("CreateSupply",[
     };
 
     createSupply.ok = function () {
-      createSupply.costumeelement.element = createSupply.elements[createSupply.selectedElement].id;
-      const tagids = [];
-      for (const index in createSupply.costumeelement.tags) {
-        tagids.push(createSupply.costumeelement.tags[index].id);
-      }
-      createSupply.costumeelement.tags = tagids;
 
-      console.log("supply!", createSupply.costumeelement);
+
 
       if(supply != null) {
+        createSupply.costumeelement.element = createSupply.selectedElement;
+        delete createSupply.costumeelement.element.$$hashKey;
+        console.log("supply to edit", createSupply.costumeelement);
+          
         APIFactory.editCostumeElement(createSupply.costumeelement)
         .then((res) => { 
           // Emit the edited supply to the costume controller.
@@ -94,6 +116,14 @@ app.controller("CreateSupply",[
           $uibModalInstance.close();
         }, e => console.error);
       } else {
+
+        createSupply.costumeelement.element = createSupply.selectedElement.id;
+        const tagids = [];
+        for (const index in createSupply.costumeelement.tags) {
+          tagids.push(createSupply.costumeelement.tags[index].id);
+        }
+        createSupply.costumeelement.tags = tagids;
+        console.log("supply to create", createSupply.costumeelement);
         APIFactory.createCostumeElement(createSupply.costumeelement)
         .then((res) => { 
           // Emit the newly created supply to the costume controller.

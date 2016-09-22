@@ -44,6 +44,26 @@ class Costume(viewsets.ModelViewSet):
  
   permission_classes = (IsOwnerOrReadOnly,)
 
+  def create(self, request): 
+    existing_owner = DjangoUser.objects.get(id=request.data["owner"])
+    new_costume = DjangoCostume(owner = existing_owner, name=request.data["name"], description=request.data["description"], public=request.data["public"])
+
+    new_costume.save()
+
+    for tag_id in request.data["tags"]:
+      tag_to_add = DjangoTag.objects.get(id=tag_id)
+      new_costume.tags.add(tag_to_add)
+
+    for ce_id in request.data["costumeelements"]:
+      ce_to_add = DjangoCostumeElement.objects.get(id=ce_id)
+      ce_to_add["costume"] = new_costume["pk"]
+      new_costume.costumeelements.add(ce_to_add)
+    
+    data = serializers.serialize("json", (new_costume,))
+    return HttpResponse(data, status=status.HTTP_201_CREATED)
+
+
+
 
   def get_queryset(self):
     queryset = DjangoCostume.objects.all()
@@ -92,7 +112,11 @@ class CostumeElement(viewsets.ModelViewSet):
     if costume is not None:
         queryset = queryset.filter(costume__id=costume)
     else: 
-        queryset = queryset.filter(costume=None)
+        key = self.request.query_params.get("key", None)
+        if key is not None:
+          queryset=queryset.filter(pk = key)
+        else:
+          queryset = queryset.filter(costume=None)
     return queryset
 
   def create(self, request): 
@@ -103,14 +127,12 @@ class CostumeElement(viewsets.ModelViewSet):
 
     for tag_id in request.data["tags"]:
       tag_to_add = DjangoTag.objects.get(id=tag_id)
-      print("tag_to_add", new_costume_element.tags)
       new_costume_element.tags.add(tag_to_add)
-    # new_costume_element.save()
     
     data = serializers.serialize("json", (new_costume_element,))
     return HttpResponse(data, status=status.HTTP_201_CREATED)
 
-
+  
 
 
 

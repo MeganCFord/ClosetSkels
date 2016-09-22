@@ -19,9 +19,16 @@
       <label for="element">Supply Type</label>
       <div class="elementform">
         <div uib-collapse="!createSupply.elementIsCollapsed">
-          <select class="form-control" ng-model="createSupply.selectedElement" ng-options="createSupply.elements.indexOf(selectedElement) as selectedElement.name for selectedElement in createSupply.elements" style="margin-bottom: 20px">
-            <option disabled selected value> -- select an option -- </option>
+
+
+
+          <select class="form-control" ng-model="createSupply.selectedElement" ng-options="element as element.name for element in createSupply.elements" style="margin-bottom: 20px">
+            <option disabled ng-if="!createSupply.selectedElement"> -- select an option -- </option>
           </select>
+
+
+
+
           <button class="btn btn-info" ng-click="createSupply.elementIsCollapsed = !createSupply.elementIsCollapsed">Create a New Supply</button>
         </div>
         <!-- add new supply form. -->

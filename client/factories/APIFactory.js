@@ -142,15 +142,20 @@ app.factory( "APIFactory", [
       //// COSTUME ELEMENTS ////
 
       createCostumeElement: (data) => {
-        // WHY IS THE ELEMENT OBJECT AND TAG OBJECTS NOT SAVING?
         return getApiRoot()
         .then((root) => {
           return $http.post(`${root.costumeelements}`, data);
         }, errorHandle)
         .then((res) => {
-          console.log("created object", res.data);
-          return res.data;}
-          );
+          return getApiRoot()
+          .then((root) => {
+            return $http.get(`${root.costumeelements}?key=${res.data[0].pk}`)
+          }, errorHandle);
+        }, errorHandle)
+        .then((res)=> {
+          console.log("newly created costume element.");
+          return res.data[0];
+        });
       }, 
       getCostumeElements: (costume = null) => {
         return getApiRoot()
@@ -164,11 +169,8 @@ app.factory( "APIFactory", [
         .then((res)=> res.data);
       }, 
       editCostumeElement: (data) => {
-        console.log("data I'm getting", data);
-          // SOMEWHERE IN HERE IT'S DELETING THE ELEMENT OBJECT OFF THE COSTUME ELEMENT.
         return $http.put(`${data.url}`, data)
         .then((res) => {
-          console.log("got data back", res);
           return res.data;
         }, errorHandle);
       }, 
