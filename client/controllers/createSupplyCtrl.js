@@ -4,17 +4,25 @@ app.controller("CreateSupply",[
   "$timeout",
   "$location",
   "$uibModalInstance",
-  function($scope, APIFactory, $timeout, $location, $uibModalInstance) {
+  "supply",
+  function($scope, APIFactory, $timeout, $location, $uibModalInstance, supply) {
     const createSupply = this;
     createSupply.title = "Create Supply";
+    
     createSupply.elementIsCollapsed = true;
     createSupply.tagIsCollapsed = true;
 
     createSupply.elements= [];
+    createSupply.tags = [];
 
     createSupply.element = {"name": ""};
     createSupply.tag = {"name": "", "costumes": [], "costumeelements": []};
-    createSupply.costumeelement = {"name": "", "costume": "", "element": "", "description": "", "tags": []};
+    
+    if(supply === null) {
+      createSupply.costumeelement = {"name": "", "costume": "", "element": {}, "description": "", "tags": []};
+    } else {
+      createSupply.costumeelement = supply;
+    }
 
 
     // Get all elements for select.
@@ -35,7 +43,7 @@ app.controller("CreateSupply",[
       APIFactory.createElement(createSupply.element).then((res) => {
         // Add new element to list of elements, and select it.
         createSupply.elements.push(res);
-        createSupply.costumeelement.element = res.url;
+        createSupply.costumeelement.element = res;
         // Reset form.
         createSupply.element.name = "";
         createSupply.elementIsCollapsed = true;
@@ -67,15 +75,25 @@ app.controller("CreateSupply",[
     };
 
     createSupply.ok = function () {
-      //Submit the form.
-      APIFactory.createCostumeElement(createSupply.costumeelement)
-      .then((res) => { 
-        // Emit the newly created supply to the costume controller.
-        console.log("created supply", res);
-        $scope.$emit("createdSupply", res);
-      }, e => console.error);
-        //Close modal.
-      $uibModalInstance.close();
+      createSupply.costumeelement.element = createSupply.elements[createSupply.selectedElement];
+      console.log("supply!", createSupply.costumeelement);
+      if(supply != null) {
+        APIFactory.editCostumeElement(createSupply.costumeelement)
+        .then((res) => { 
+          // Emit the edited supply to the costume controller.
+          console.log("edit: ", res);
+          $scope.$emit("editedSupply", res);
+          $uibModalInstance.close();
+        }, e => console.error);
+      } else {
+        APIFactory.createCostumeElement(createSupply.costumeelement)
+        .then((res) => { 
+          // Emit the newly created supply to the costume controller.
+          $scope.$emit("createdSupply", res);
+          $uibModalInstance.close();
+        }, e => console.error);
+          //Close modal.
+      }
     };
 
     createSupply.cancel = function () {

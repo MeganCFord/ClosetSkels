@@ -160,8 +160,11 @@ app.factory( "APIFactory", [
         .then((res)=> res.data);
       }, 
       editCostumeElement: (data) => {
+        console.log("data I'm getting", data);
+          // SOMEWHERE IN HERE IT'S DELETING THE ELEMENT OBJECT OFF THE COSTUME ELEMENT.
         return $http.put(`${data.url}`, data)
         .then((res) => {
+          console.log("got data back", res);
           return res.data;
         }, errorHandle);
       }, 

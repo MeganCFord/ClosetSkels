@@ -99,7 +99,10 @@ app.controller("Edit",[
         size: "lg",
         templateUrl: "/partials/createSupply.html", 
         controller: "CreateSupply",
-        controllerAs: "createSupply"   
+        controllerAs: "createSupply",
+        resolve: {
+          "supply": null
+        }   
       });
     }; 
 
@@ -109,7 +112,7 @@ app.controller("Edit",[
       const modalInstance = $uibModal.open({
         size: "lg",
         templateUrl: "/partials/createSupply.html", 
-        controller: "EditSupply",
+        controller: "CreateSupply",
         controllerAs: "createSupply", 
         resolve: {
           "supply": supply

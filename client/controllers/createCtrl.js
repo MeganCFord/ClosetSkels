@@ -66,7 +66,7 @@ app.controller("Create",[
 
     //grabs new data from the create modal.
     $rootScope.$on("createdSupply", function(event, value) { 
-      console.log("got the newly created supply", value);
+      // console.log("got the newly created supply", value);
       create.costumeelements.push(value);
       create.costume.costumeelements.push(value.url);
       $timeout(); //Just in case.
@@ -74,7 +74,7 @@ app.controller("Create",[
 
     //grabs updated data from edit modal.
     $rootScope.$on("editedSupply", function(event, value) { 
-      console.log("got the edited supply", value);
+      // console.log("got the edited supply", value);
       //remove old value.
       for(const u in create.costumeelements) {
         if(create.costumeelements[u].url === value.url) {
@@ -114,7 +114,10 @@ app.controller("Create",[
         size: "lg",
         templateUrl: "/partials/createSupply.html", 
         controller: "CreateSupply",
-        controllerAs: "createSupply"   
+        controllerAs: "createSupply",
+        resolve: {
+          "supply": null
+        }   
       });
     }; 
 
@@ -123,9 +126,9 @@ app.controller("Create",[
       //Sending the entire object into modal.
       const modalInstance = $uibModal.open({
         size: "lg",
-        templateUrl: "/partials/editSupply.html", 
-        controller: "EditSupply",
-        controllerAs: "editSupply", 
+        templateUrl: "/partials/createSupply.html", 
+        controller: "CreateSupply",
+        controllerAs: "createSupply", 
         resolve: {
           "supply": supply
         }
