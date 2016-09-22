@@ -50,13 +50,14 @@ class Costume(viewsets.ModelViewSet):
 
     new_costume.save()
 
+
     for tag_id in request.data["tags"]:
       tag_to_add = DjangoTag.objects.get(id=tag_id)
       new_costume.tags.add(tag_to_add)
 
     for ce_id in request.data["costumeelements"]:
       ce_to_add = DjangoCostumeElement.objects.get(id=ce_id)
-      ce_to_add["costume"] = new_costume["pk"]
+      setattr(ce_to_add, 'costume', new_costume)
       new_costume.costumeelements.add(ce_to_add)
     
     data = serializers.serialize("json", (new_costume,))

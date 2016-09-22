@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from halloween.models import *
 from django.shortcuts import get_object_or_404
+import requests
 
 
 class ElementSerializer(serializers.HyperlinkedModelSerializer):
@@ -33,19 +34,22 @@ class CostumeSerializer(serializers.HyperlinkedModelSerializer):
     instance.name = validated_data.get("name")
     instance.description = validated_data.get("description")
     instance.public = validated_data.get("public")
+    instance.save()
     
     ces_data = validated_data.pop("costumeelements", None)
     if ces_data: 
       instance.costumeeelements = [];
       for ce_data in ces_data:
-        element_to_add = get_object_or_404(CostumeElement, name=ce_data["name"])
-        instance.costumeelements.add(element_to_add)
-    instance.save()
+        ce_name = getattr(ce_data, "name")
+        element_to_add = get_object_or_404(CostumeElement, name=ce_name)
+        # id_to_add = getattr(element_to_add, "id")
+        # instance.costumeelements.add(element_to_add)
+        setattr(element_to_add, "costume", instance )
 
     tags_data = validated_data.pop("tags", None)
     if tags_data: 
+      instance.tags = [];
       for tag_data in tags_data:
-        instance.tags = [];
         tag_to_add = get_object_or_404(Tag, name=tag_data["name"])
         instance.tags.add(tag_to_add)
     instance.save()
@@ -67,6 +71,7 @@ class CostumeElementSerializer(serializers.HyperlinkedModelSerializer):
     
     element_data = validated_data.pop('element', None)
     if element_data:
+        # element_name = getattr(element_data, "name")
         element = get_object_or_404(Element, name=element_data["name"])
         validated_data['element'] = element
     instance.element = validated_data["element"]
@@ -75,7 +80,8 @@ class CostumeElementSerializer(serializers.HyperlinkedModelSerializer):
     if tags_data: 
       instance.tags = [];
       for tag_data in tags_data:
-        tag_to_add = get_object_or_404(Tag, name=tag_data["name"])
+        tag_name = geattr(tag_data, "name")
+        tag_to_add = get_object_or_404(Tag, name=tag_name)
         instance.tags.add(tag_to_add)
     instance.save()
 

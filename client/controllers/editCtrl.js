@@ -39,15 +39,16 @@ app.controller("Edit",[
     }).then((res)=> {
       create.costumeelements = res;
       $timeout();
-    }, e => console.error);
-
-    // On load, also load all tags.
-    APIFactory.getTags()
-    .then((res)=> {
+    }, e => console.error)
+    .then(()=> {
+      // On load, also load all tags.
+      return APIFactory.getTags();
+    }).then((res)=> {
       create.tags = res;
       $timeout();
     }, e => console.error)
     .then(()=> {
+      // reassign the costume tags to the actual tag objects, so they will match. the costume tags return with some kind of hashkey.
       const actualtags = [];
       for (const p in create.tags) {
         for (const u in create.costume.tags) {
@@ -57,6 +58,8 @@ app.controller("Edit",[
         }
       }
       create.costume.tags = actualtags;
+      console.log("actual tags", actualtags);
+      console.log("thetags", create.tags);
     });
     
 
@@ -150,11 +153,11 @@ app.controller("Edit",[
     };
 
     create.createCostume = () => {
-      const tagIds = [];
-      for(const index in create.costume.tags) {
-        tagIds.push(create.costume.tags[index].id);
-      }
-      create.costume.tags = tagIds;
+      // const tagIds = [];
+      // for(const index in create.costume.tags) {
+      //   tagIds.push(create.costume.tags[index].id);
+      // }
+      // create.costume.tags = tagIds;
       console.log("costume I am sending", create.costume);
 
       APIFactory.updateCostume(create.costume)
