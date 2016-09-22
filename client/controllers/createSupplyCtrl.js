@@ -6,7 +6,7 @@ app.controller("CreateSupply",[
   "$uibModalInstance",
   function($scope, APIFactory, $timeout, $location, $uibModalInstance) {
     const createSupply = this;
-
+    createSupply.title = "Create Supply";
     createSupply.elementIsCollapsed = true;
     createSupply.tagIsCollapsed = true;
 
