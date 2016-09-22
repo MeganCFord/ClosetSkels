@@ -88,8 +88,8 @@ app.controller("Detail",[
 
     };
 
-    detail.goToEdit = (costumeid) => {
-      $location.path(`/${costumeid}/edit`);
+    detail.goToEdit = () => {
+      $location.path(`/${detail.costume.id}/edit`);
       $uibModalInstance.close();
     };
   
