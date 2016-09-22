@@ -44,7 +44,7 @@
       <button ng-if="detail.userBoo" ng-click="detail.unBoo()" class="btn btn-danger boobutton">Un <i class="em em-ghost"></i></button>
       <!-- boo button -->
       <button ng-if="!detail.userBoo" ng-click="detail.boo()" class="btn btn-success boobutton"><i class="em em-ghost"></i></button>
-      <button ng-hide="detail.costume.owner === detail.userInfo.url" ng-click="detail.copyToCloset()" class="btn btn-info">Copy to Closet</button>
+      <button ng-hide="detail.costume.owner === detail.userInfo.url" ng-click="detail.copyToCloset()" class="btn btn-info">Save to Closet</button>
       <a ng-show="detail.costume.owner === detail.userInfo.url" ng-click="detail.goToEdit()"class="btn btn-info">Edit</a>
       <!-- TODO: store the previous path in the resolve for the detail view. -->
       <button class="btn btn-default" ng-click="detail.cancel()">back</button>
