@@ -2,15 +2,18 @@
 
 
 <div class="container-fluid">
-  <div class="col col-sm-3">
-    Filter Sidebar will go here.
+  <div class="col col-sm-3 filtersidebar">
+    <div style="margin-right: 15px">
+      <input class="form-control" placeholder="Search by title" ng-model="likes.search">
+      <hr>      
+    </div>
   </div>
   <div class="col col-sm-9">
     <div class="container-fluid">
       <h1 style="padding-left: 15px">Boos</h1> 
       <hr>
       <div class="col col-sm-6" ng-repeat="boo in likes.boos">
-        <div ng-repeat="costume in likes.boodCostumes | filterBy:['url']:boo.costume">
+        <div ng-repeat="costume in likes.boodCostumes | filterBy:['url']:boo.costume | filter:likes.search">
           <div class="well well-lg card">
             <h4>{{costume.name}}
              <button class="btn btn-default boobutton floatingboo nohoverdefault pull-right">{{costume.boos.length}}   <i class="em em-ghost"></i>s</button>
