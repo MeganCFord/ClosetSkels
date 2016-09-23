@@ -1,7 +1,7 @@
 <div class="col col-xs-6" ng-repeat="(matchname, stuff) in home.matches">
 
 
-  <div ng-repeat="costume in home.costumes | filterBy: ['name']:matchname">
+  <div ng-repeat="costume in home.costumes">
     <div  class="well well-lg">
       <h4>{{costume.name}}
         <button class="btn btn-default boobutton floatingboo nohoverdefault pull-right">{{costume.boos.length}}   <i class="em em-ghost"></i>s</button>
