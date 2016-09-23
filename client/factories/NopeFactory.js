@@ -1,3 +1,19 @@
+  // Initialize Firebase
+var config = {
+  apiKey: "AIzaSyBPlrwFlbxXy8_b_yWtgQ9Ufxmlu3p1I4Y",
+  authDomain: "closet-skels.firebaseapp.com",
+  databaseURL: "https://closet-skels.firebaseio.com",
+  storageBucket: "gs://closet-skels.appspot.com/",
+  messagingSenderId: "1091164121744"
+};
+firebase.initializeApp(config);
+
+// firebase.app().delete().then(function() {
+//   console.log("[DEFAULT] App is Gone Now");
+// });
+
+
+
 app.factory( "NopeFactory", [  
   "$http",
   "apiUrl",

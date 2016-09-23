@@ -57,10 +57,13 @@ app.controller("CreateSupply",[
         for (const u in createSupply.costumeelement.tags) {
           if(createSupply.costumeelement.tags[u].name == createSupply.tags[index].name) {
             actualtags.push(createSupply.tags[index]);
+          } else {
+            console.log("no match",createSupply.costumeelement.tags[u].name == createSupply.tags[index].name )
           }
         }
       }
       createSupply.costumeelement.tags = actualtags;
+      console.log("actual tags", createSupply.costumeelement.tags, createSupply.tags);
     });
 
     createSupply.createElement = () => {
@@ -100,6 +103,7 @@ app.controller("CreateSupply",[
     };
 
     createSupply.ok = function () {
+      let amInew=true;
       // TEMP SOLUTION: completely recreating the supply with the selected costume set. Some weird error is happening where the costume elements are unreachable after a refresh.
       createSupply.costumeelement.element = createSupply.selectedElement.id;
 
@@ -111,9 +115,9 @@ app.controller("CreateSupply",[
         delete createSupply.costumeelement.url; 
       }
       if (createSupply.costumeelement.id) {
+        amInew=false;
         delete createSupply.costumeelement.id;
       }
-      $scope.$emit("editedSupply", createSupply.costumeelement);
       
       const tagids = [];
       for (const index in createSupply.costumeelement.tags) {
@@ -121,10 +125,11 @@ app.controller("CreateSupply",[
       }
       createSupply.costumeelement.tags = tagids;
         
-      console.log("supply to edit/create", createSupply.costumeelement);
+      console.log("supply to edit/create", createSupply.costumeelement, newness=amInew);
       APIFactory.createCostumeElement(createSupply.costumeelement)
-      .then(() => { 
+      .then((res) => { 
         // Emit the edited supply to the costume controller.
+        $scope.$emit("editedSupply", createSupply.costumeelement);
         $uibModalInstance.close();
       }, e => console.error);
     };
