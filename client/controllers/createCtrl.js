@@ -5,13 +5,16 @@ app.controller("Create",[
   "$location",
   "$uibModal",
   "$rootScope", // need this because the  uib-Modal scope is not actually nested inside this scope- it's randomly off to one corner or whatever.
-  function($scope, APIFactory, $timeout, $location, $uibModal, $rootScope) {
+  "FirebaseFactory",
+  function($scope, APIFactory, $timeout, $location, $uibModal, $rootScope, FirebaseFactory) {
     const create = this;
     create.title="Create a Costume";
 
     // Toggle 'create tag' div.
     create.tagIsCollapsed=true;
     create.deleteButton = "Discard";
+    create.currentFileName = "No File Selected"; 
+
 
     create.tags = [];
     create.costumeelements = [];
@@ -28,7 +31,8 @@ app.controller("Create",[
       "public": false, 
       "owner": "" ,
       "costumeelements": [], 
-      "tags": []
+      "tags": [], 
+      "image": ""
     };
 
     // On load, get the username and user info. 
@@ -84,6 +88,38 @@ app.controller("Create",[
       $timeout(); //Just in case.
     });
 
+
+
+
+    create.uploadPhoto = function() {
+      console.log("hey!");
+      //find the file. Angular doesn't really do this automatically.
+      const input = document.querySelector('[type="file"]');
+      const file = input.files[0];
+
+      FirebaseFactory.uploadImage(file)
+      .then(res => {
+        // const actualImage = res.downloadURL.substring(0, res.downloadURL.indexOf('?'));
+        // console.log("actual image", actualImage)
+        create.costume.image = res.downloadURL;
+        // return res.downloadURL;
+      }, e=>console.error)
+      .then(()=> {
+        console.log("costume image", create.costume.image);
+        $timeout();
+
+      });
+    };
+      //displays file name on DOM before upload. 
+    $scope.photoChanged = function(files) {
+      if (files !== null ) {
+        create.currentFileName = files[0].name;
+        console.log("file name:", create.currentFileName);
+        create.uploadPhoto();
+        $scope.$apply();
+      }
+    };
+
     create.addTag = (tag) => {
       create.costume.tags.push(tag);
     };
@@ -95,6 +131,7 @@ app.controller("Create",[
         }
       }
     };
+
 
     create.createTag = () => {
       APIFactory.createTag(create.tag).then((res) => {
