@@ -12,10 +12,16 @@ from django.contrib.auth import authenticate, login, logout
 
 import json
 
-from halloween.models import Tag as DjangoTag, Costume as DjangoCostume, Boo as DjangoBoo, Element as DjangoElement, CostumeElement as DjangoCostumeElement
+from halloween.models import Tag as DjangoTag, Costume as DjangoCostume, Boo as DjangoBoo, Element as DjangoElement, CostumeElement as DjangoCostumeElement, Nope as DjangoNope
 from halloween.serializers import *
 from halloween.permissions import IsOwnerOrReadOnly
 from django.core import serializers
+
+
+class Nope(viewsets.ModelViewSet):
+  serializer_class = NopeSerializer
+  queryset = DjangoNope.objects.all()
+
 
 class User(viewsets.ModelViewSet):
   serializer_class = UserSerializer
@@ -46,7 +52,7 @@ class Costume(viewsets.ModelViewSet):
 
   def create(self, request): 
     existing_owner = DjangoUser.objects.get(id=request.data["owner"])
-    new_costume = DjangoCostume(owner = existing_owner, name=request.data["name"], description=request.data["description"], public=request.data["public"])
+    new_costume = DjangoCostume(owner = existing_owner, name=request.data["name"], description=request.data["description"], public=request.data["public"], image=request.data["image"])
 
     new_costume.save()
 
@@ -62,8 +68,6 @@ class Costume(viewsets.ModelViewSet):
     
     data = serializers.serialize("json", (new_costume,))
     return HttpResponse(data, status=status.HTTP_201_CREATED)
-
-
 
 
   def get_queryset(self):
@@ -125,6 +129,12 @@ class CostumeElement(viewsets.ModelViewSet):
     new_costume_element = DjangoCostumeElement(element = existing_element, name=request.data["name"], description=request.data["description"])
 
     new_costume_element.save()
+
+    try: 
+      setattr(new_costume_element, "costume", request.data["costume"])
+    except: 
+      print("hey I couldn't add a costume to this element")
+      pass
 
     for tag_id in request.data["tags"]:
       tag_to_add = DjangoTag.objects.get(id=tag_id)

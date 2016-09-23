@@ -9,6 +9,7 @@ class Costume(models.Model):
     # This will always be now.
     public = models.BooleanField(default=False)
     owner = models.ForeignKey('auth.User',on_delete=models.CASCADE, related_name ="costumes")
+    image = models.CharField(max_length = 1000, blank=True, null=True)
     # costume elements are on costumeElement.
     # tags are on tag.
 
@@ -58,3 +59,12 @@ class Tag(models.Model):
         return "{}".format(self.name)
     def __unicode__(self):
         return "{}".format(self.name)
+
+
+class Nope(models.Model):
+  nope=models.IntegerField()
+
+  def __str__(self):
+    return "{}".format(self.nope)
+  def __unicode__(self):
+    return "{}".format(self.name)

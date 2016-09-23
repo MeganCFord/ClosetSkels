@@ -11,6 +11,7 @@ router.register(r'costumes', views.Costume)
 router.register(r'boos', views.Boo)
 router.register(r'elements', views.Element)
 router.register(r'costumeelements', views.CostumeElement)
+router.register(r'nopes', views.Nope)
 
 urlpatterns = [
   url(r'^', include(router.urls)),

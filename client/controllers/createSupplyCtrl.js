@@ -22,7 +22,9 @@ app.controller("CreateSupply",[
       createSupply.title = "Create Supply";
     } else {
       createSupply.costumeelement = supply;
+      console.log("uh the element", createSupply.costumeelement.element);
       createSupply.title = "Edit Supply";
+      createSupply.selectedElement = createSupply.costumeelement.element;
       $timeout();
     }
 
@@ -60,7 +62,6 @@ app.controller("CreateSupply",[
         }
       }
       createSupply.costumeelement.tags = actualtags;
-      console.log("actual tags", createSupply.costumeelement.tags);
     });
 
     createSupply.createElement = () => {
@@ -77,7 +78,6 @@ app.controller("CreateSupply",[
 
     createSupply.addTag = (tag) => {
       createSupply.costumeelement.tags.push(tag);
-      console.log("should have added to tags", createSupply.costumeelement.tags);
     };
 
     createSupply.removeTag = (tag) => {
@@ -100,38 +100,32 @@ app.controller("CreateSupply",[
     };
 
     createSupply.ok = function () {
-
-
-
-      if(supply != null) {
-        createSupply.costumeelement.element = createSupply.selectedElement;
+      // TEMP SOLUTION: completely recreating the supply and the selected costume is on it already. Some weird error is happening where the costume elements are unreachable once they have a costume assigned.
+      createSupply.costumeelement.element = createSupply.selectedElement.id;
+      if(createSupply.costumeelement.element.$$hashKey) {
         delete createSupply.costumeelement.element.$$hashKey;
-        console.log("supply to edit", createSupply.costumeelement);
-          
-        APIFactory.editCostumeElement(createSupply.costumeelement)
-        .then((res) => { 
-          // Emit the edited supply to the costume controller.
-          console.log("edit: ", res);
-          $scope.$emit("editedSupply", res);
-          $uibModalInstance.close();
-        }, e => console.error);
-      } else {
-
-        createSupply.costumeelement.element = createSupply.selectedElement.id;
-        const tagids = [];
-        for (const index in createSupply.costumeelement.tags) {
-          tagids.push(createSupply.costumeelement.tags[index].id);
-        }
-        createSupply.costumeelement.tags = tagids;
-        console.log("supply to create", createSupply.costumeelement);
-        APIFactory.createCostumeElement(createSupply.costumeelement)
-        .then((res) => { 
-          // Emit the newly created supply to the costume controller.
-          $scope.$emit("createdSupply", res);
-          $uibModalInstance.close();
-        }, e => console.error);
-          //Close modal.
       }
+      if (createSupply.costumeelement.url) {
+        $scope.$emit("deleteSupplyPlease", createSupply.costumeelement);
+        delete createSupply.costumeelement.url; 
+      }
+      if (createSupply.costumeelement.id) {
+        delete createSupply.costumeelement.id;
+      }
+      $scope.$emit("editedSupply", createSupply.costumeelement);
+      
+      const tagids = [];
+      for (const index in createSupply.costumeelement.tags) {
+        tagids.push(createSupply.costumeelement.tags[index].id);
+      }
+      createSupply.costumeelement.tags = tagids;
+        
+      console.log("supply to edit/create", createSupply.costumeelement);
+      APIFactory.createCostumeElement(createSupply.costumeelement)
+      .then(() => { 
+        // Emit the edited supply to the costume controller.
+        $uibModalInstance.close();
+      }, e => console.error);
     };
 
     createSupply.cancel = function () {

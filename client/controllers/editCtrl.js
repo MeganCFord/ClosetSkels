@@ -6,7 +6,8 @@ app.controller("Edit",[
   "$uibModal",
   "$rootScope", // need this because the  uib-Modals' scope is not actually nested inside this scope- it's randomly off to one side or something.
   "$routeParams", 
-  function($scope, APIFactory, $timeout, $location, $uibModal, $rootScope, $routeParams) {
+  "NopeFactory",
+  function($scope, APIFactory, $timeout, $location, $uibModal, $rootScope, $routeParams, NopeFactory) {
     const create = this;
 
     create.title="Edit Costume";
@@ -31,13 +32,16 @@ app.controller("Edit",[
     .then((res) => {
       // console.log("costume gotten", res);
       create.costume = res;
+      const nopelesselements=NopeFactory.checkForNopes(create.costume.costumeelements);
+      create.costume.costumeelements = nopelesselements;
       $timeout();
     }, e => console.error)
     .then(()=> {
       // Also get all costume elements since only the URLs are saved on the costume.
       return APIFactory.getCostumeElements(create.costume.id);
     }).then((res)=> {
-      create.costumeelements = res;
+      const nopelesselements = NopeFactory.checkForNopes(res);
+      create.costumeelements = nopelesselements;
       $timeout();
     }, e => console.error)
     .then(()=> {
@@ -64,26 +68,58 @@ app.controller("Edit",[
     
 
 
-    //grabs new data from the create modal.
-    $rootScope.$on("createdSupply", function(event, value) { 
-      create.costume.costumeelements.push(value.id);
+//grabs new supply object from the create modal. Edits currently create new objects too.
+    $rootScope.$on("editedSupply", function(event, value) { 
+      create.costume.costumeelements.push(value.url);
       create.costumeelements.push(value);
       $timeout(); //Just in case.
     });
 
-    //grabs updated data from edit modal.
-    $rootScope.$on("editedSupply", function(event, value) { 
-      console.log("got the edited supply", value);
-      //remove old value.
-      for(const u in create.costumeelements) {
-        if(create.costumeelements[u].id === value.id) {
-          create.costumeelements.splice(u, 1);
-        }
-      } 
-      //replace with new value.
-      create.costumeelements.push(value);
-      $timeout(); //Just in case.
+    //receives an object to delete from the create modal.
+    $rootScope.$on("deleteSupplyPlease", function(event, value) {
+      return create.deleteSupply(value);
     });
+
+    // //grabs updated data from edit modal.
+    // $rootScope.$on("editedSupply", function(event, value) { 
+    //   console.log("got the edited supply", value);
+    //   //remove old value.
+    //   for(const u in create.costumeelements) {
+    //     if(create.costumeelements[u].id === value.id) {
+    //       create.costumeelements.splice(u, 1);
+    //     }
+    //   } 
+    //   //replace with new value.
+    //   create.costumeelements.push(value);
+    //   $timeout(); //Just in case.
+    // });
+
+    create.uploadPhoto = function() {
+      console.log("hey!");
+      //find the file. Angular doesn't really do this automatically.
+      const input = document.querySelector('[type="file"]');
+      const file = input.files[0];
+
+      FirebaseFactory.uploadImage(file)
+      .then(res => {
+        create.costume.image = res.downloadURL;
+      }, e=>console.error)
+      .then(()=> {
+        console.log("costume image", create.costume.image);
+        $timeout();
+
+      });
+    };
+
+      //displays file name on DOM and uploads file on file choice. 
+    $scope.photoChanged = function(files) {
+      if (files !== null ) {
+        create.currentFileName = files[0].name;
+        console.log("file name:", create.currentFileName);
+        create.uploadPhoto();
+        $scope.$apply();
+      }
+    };
 
     create.addTag = (tag) => {
       create.costume.tags.push(tag);
@@ -134,22 +170,21 @@ app.controller("Edit",[
     };
 
     create.deleteSupply = (object) => {
-      APIFactory.deleteSomething(object.url)
-      .then(() => {
-        // remove from costume
-        for (const u in create.costume.costumeelements) {
-          if (create.costume.costumeelements[u] === object.id) {
-            create.costume.costumeelements.splice(u, 1);
-          }
+      NopeFactory.addToNopes(object.id);
+      // APIFactory.deleteSomething(object.url);
+      // remove from costume
+      for (const u in create.costume.costumeelements) {
+        if (create.costume.costumeelements[u] === object.id) {
+          create.costume.costumeelements.splice(u, 1);
         }
-        // remove from costume element list
-        for (const u in create.costumeelements) {
-          if (create.costumeelements[u] === object) {
-            create.costumeelements.splice(u, 1);
-          }
+      }
+      // remove from costume element list
+      for (const u in create.costumeelements) {
+        if (create.costumeelements[u] === object) {
+          create.costumeelements.splice(u, 1);
         }
-        $timeout();
-      }, e => console.error);
+      }
+      $timeout();
     };
 
     create.createCostume = () => {
@@ -168,7 +203,7 @@ app.controller("Edit",[
     };
 
     create.deleteCostume = () => {
-      APIFactory.deleteCostume(create.costume.url)
+      APIFactory.deleteSomething(create.costume.url)
       .then(() => {
         $location.path("/closet");
       }, e=> console.error);

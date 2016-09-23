@@ -147,14 +147,16 @@ app.factory( "APIFactory", [
           return $http.post(`${root.costumeelements}`, data);
         }, errorHandle)
         .then((res) => {
-          return getApiRoot()
-          .then((root) => {
-            return $http.get(`${root.costumeelements}?key=${res.data[0].pk}`)
-          }, errorHandle);
-        }, errorHandle)
-        .then((res)=> {
-          console.log("newly created costume element.");
-          return res.data[0];
+          console.log("created costumeelement", res.data);
+          return res.data;
+        //   return getApiRoot()
+        //   .then((root) => {
+        //     return $http.get(`${root.costumeelements}?key=${res.data[0].pk}`);
+        //   }, errorHandle);
+        // }, errorHandle)
+        // .then((res)=> {
+        //   console.log("newly created costume element.");
+        //   return res.data[0];
         });
       }, 
       getCostumeElements: (costume = null) => {
