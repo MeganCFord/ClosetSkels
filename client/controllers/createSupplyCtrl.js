@@ -5,7 +5,8 @@ app.controller("CreateSupply",[
   "$location",
   "$uibModalInstance",
   "supply",
-  function($scope, APIFactory, $timeout, $location, $uibModalInstance, supply) {
+  "creating",
+  function($scope, APIFactory, $timeout, $location, $uibModalInstance, supply, creating) {
     const createSupply = this;
     
     createSupply.elementIsCollapsed = true;
@@ -100,7 +101,7 @@ app.controller("CreateSupply",[
     };
 
     createSupply.ok = function () {
-      let amInew=true;
+      let oldObject = {};
       // TEMP SOLUTION: completely recreating the supply with the selected costume set. Some weird error is happening where the costume elements are unreachable after a refresh.
       createSupply.costumeelement.element = createSupply.selectedElement.id;
 
@@ -108,11 +109,10 @@ app.controller("CreateSupply",[
         delete createSupply.costumeelement.element.$$hashKey;
       }
       if (createSupply.costumeelement.url) {
-        $scope.$emit("deleteSupplyPlease", createSupply.costumeelement);
+        oldObject = createSupply.costumeelement;
         delete createSupply.costumeelement.url; 
       }
       if (createSupply.costumeelement.id) {
-        amInew=false;
         delete createSupply.costumeelement.id;
       }
       
@@ -121,14 +121,35 @@ app.controller("CreateSupply",[
         tagids.push(createSupply.costumeelement.tags[index].id);
       }
       createSupply.costumeelement.tags = tagids;
-        
-      console.log("supply to edit/create", createSupply.costumeelement, newness=amInew);
+      
+      let newce = {};
       APIFactory.createCostumeElement(createSupply.costumeelement)
       .then((res) => { 
+        newce = res;
+        if(creating = false) {
+          return APIFactory.getCostumeElements(createSupply.costume.id);
+        } else {
+          return APIFactory.getCostumeElements();
+        }
+      }, e => console.error)
+      .then((res) => {
+        // console.log("ok, here's the list of elements", res);
+        let element_to_send = {};
+        for(const index in res) {
+          if(res[index].id === newce.pk) {
+            element_to_send = res[index];
+          }
+        }
+        // console.log("element to send, should have all fields", element_to_send);
+        return element_to_send;
+      }).then((res)=> {
         // Emit the edited supply to the costume controller.
-        $scope.$emit("editedSupply", createSupply.costumeelement);
+        $scope.$emit("editedSupply", res);
+        $scope.$emit("deleteSupplyPlease", oldObject);
+
         $uibModalInstance.close();
-      }, e => console.error);
+        
+      }, e=> console.error);
     };
 
     createSupply.cancel = function () {

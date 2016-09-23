@@ -141,24 +141,16 @@ app.factory( "APIFactory", [
 
       //// COSTUME ELEMENTS ////
 
-      createCostumeElement: (data, newness=false) => {
+      createCostumeElement: (data) => {
+        // TODO: make this actually return what I want.
         return getApiRoot()
         .then((root) => {
           return $http.post(`${root.costumeelements}`, data);
         }, errorHandle)
         .then((res) => {
-          if(newness===true) {
-            return getApiRoot()
-            .then((root) => {
-              return $http.get(`${root.costumeelements}?key=${res.data[0].pk}`);
-            }, errorHandle)
-            .then((res)=> {
-              return res.data[0];
-            });
-          } else {
-            return res.data;
-          }
-        }, errorHandle);
+          return res.data[0];
+        });
+          
       }, 
       getCostumeElements: (costume = null) => {
         return getApiRoot()

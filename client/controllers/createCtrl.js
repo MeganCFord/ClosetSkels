@@ -76,10 +76,10 @@ app.controller("Create",[
 // LISTENERS /////////////////////
 ///////////////////////////////
 
-    //grabs new supply object from the create modal. Edits currently create new objects too.
+    //receives new supply object from the create modal. Edits currently create new objects too.
     $rootScope.$on("editedSupply", function(event, value) { 
-      console.log("i got an element", value);
-      create.costume.costumeelements.push(value.id);
+
+      create.costume.costumeelements.push(value);
       create.costumeelements.push(value);
       $timeout(); //Just in case.
     });
@@ -177,7 +177,8 @@ app.controller("Create",[
         controller: "CreateSupply",
         controllerAs: "createSupply",
         resolve: {
-          "supply": null
+          "supply": null, 
+          "creating": true
         }   
       });
     }; 
@@ -191,7 +192,8 @@ app.controller("Create",[
         controller: "CreateSupply",
         controllerAs: "createSupply", 
         resolve: {
-          "supply": supply
+          "supply": supply,
+          "creating": true
         }
       });
     };
@@ -200,8 +202,8 @@ app.controller("Create",[
       // TODO: DO NOT USE THIS AFTER REFRESH, it doesn't work. Costume element objects are currently undeletable. Nope factory is a very temp solution at this point.
       // NopeFactory.AddToNopes(object.id);
 
-      APIFactory.deleteSomething(object.url)
-      .then(() => {
+      // APIFactory.deleteSomething(object.url)
+      // .then(() => {
         // remove from costume
         for (const u in create.costume.costumeelements) {
           if (create.costume.costumeelements[u] === object.id) {
@@ -215,7 +217,7 @@ app.controller("Create",[
           }
         }
         $timeout();
-      });
+      // });
     };
 
     create.createCostume = () => {

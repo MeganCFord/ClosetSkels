@@ -4,7 +4,7 @@
 <div class="container-fluid">
   <div class="col col-sm-3 scrollingsidebar">
 
-    <div ng-hide="create.costumeelements | isEmpty" ng-repeat="element in create.costumeelements | unique:'id'">
+    <div ng-hide="create.costumeelements | isEmpty" ng-repeat="element in create.costumeelements | unique:'name'">
       <div class="well well-lg">
         <h5>{{element.name}}</h5>
         <hr>

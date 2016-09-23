@@ -60,8 +60,8 @@ class Costume(viewsets.ModelViewSet):
       tag_to_add = DjangoTag.objects.get(id=tag_id)
       new_costume.tags.add(tag_to_add)
 
-    for ce_id in request.data["costumeelements"]:
-      ce_to_add = DjangoCostumeElement.objects.get(id=ce_id)
+    for ce_data in request.data["costumeelements"]:
+      ce_to_add = DjangoCostumeElement.objects.get(id=ce_data["id"])
       setattr(ce_to_add, 'costume', new_costume)
       new_costume.costumeelements.add(ce_to_add)
     
