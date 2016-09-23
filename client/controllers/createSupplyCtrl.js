@@ -5,8 +5,7 @@ app.controller("CreateSupply",[
   "$location",
   "$uibModalInstance",
   "supply",
-  "creating",
-  function($scope, APIFactory, $timeout, $location, $uibModalInstance, supply, creating) {
+  function($scope, APIFactory, $timeout, $location, $uibModalInstance, supply) {
     const createSupply = this;
     
     createSupply.elementIsCollapsed = true;
@@ -126,21 +125,18 @@ app.controller("CreateSupply",[
       APIFactory.createCostumeElement(createSupply.costumeelement)
       .then((res) => { 
         newce = res;
-        if(creating = false) {
-          return APIFactory.getCostumeElements(createSupply.costume.id);
-        } else {
-          return APIFactory.getCostumeElements();
-        }
+        console.log("new element", newce);
+        // new element does not have the costume on it because evil, so find it in the null costumes.
+        return APIFactory.getCostumeElements();
       }, e => console.error)
       .then((res) => {
-        // console.log("ok, here's the list of elements", res);
+        console.log("ok, here's the list of elements", res);
         let element_to_send = {};
         for(const index in res) {
           if(res[index].id === newce.pk) {
             element_to_send = res[index];
-          }
+          } 
         }
-        // console.log("element to send, should have all fields", element_to_send);
         return element_to_send;
       }).then((res)=> {
         // Emit the edited supply to the costume controller.

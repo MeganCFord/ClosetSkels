@@ -177,8 +177,7 @@ app.controller("Create",[
         controller: "CreateSupply",
         controllerAs: "createSupply",
         resolve: {
-          "supply": null, 
-          "creating": true
+          "supply": null
         }   
       });
     }; 
@@ -192,8 +191,7 @@ app.controller("Create",[
         controller: "CreateSupply",
         controllerAs: "createSupply", 
         resolve: {
-          "supply": supply,
-          "creating": true
+          "supply": supply
         }
       });
     };

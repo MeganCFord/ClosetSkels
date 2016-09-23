@@ -73,8 +73,8 @@ app.controller("Edit",[
 ///////////////////////////////
 
     //grabs new data from the create modal. Editing supplies also recreates them right now. DO NOT REFRESH or duplicates will show up. 
-    $rootScope.$on("createdSupply", function(event, value) { 
-      create.costume.costumeelements.push(value);
+    $rootScope.$on("editedSupply", function(event, value) { 
+      create.costume.costumeelements.push(value.url);
       create.costumeelements.push(value);
       $timeout(); //Just in case.
     });
@@ -229,7 +229,7 @@ app.controller("Edit",[
       }
       // remove from costume element list
       for (const u in create.costumeelements) {
-        if (create.costumeelements[u] === object) {
+        if (create.costumeelements[u] === object.url) {
           create.costumeelements.splice(u, 1);
         }
       }
