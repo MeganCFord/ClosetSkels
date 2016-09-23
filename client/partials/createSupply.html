@@ -20,11 +20,10 @@
       <div class="elementform">
         <div uib-collapse="!createSupply.elementIsCollapsed">
 
-
-          <select class="form-control" ng-model="createSupply.selectedElement" ng-options="element as element.name for element in createSupply.elements" style="margin-bottom: 20px">
-            <option disabled ng-if="!createSupply.selectedElement"> -- select an option -- </option>
-          </select>
-
+            <select class="form-control" ng-model="createSupply.selectedElement" ng-options="element as element.name for element in createSupply.elements" style="margin-bottom: 20px">
+            <option ng-if="!createSupply.selectedElement" disabled> -- select an option -- </option>
+            <!-- <option ng-value="{{element}}">{{element.name}}</option> -->
+            </select>
 
 
 
@@ -52,10 +51,10 @@
         <div uib-collapse="!createSupply.tagIsCollapsed">
 
           <div class="well well-lg">
-            <span ng-repeat="tag in createSupply.tags">
-              <span ng-hide="createSupply.costumeelement.tags | contains:tag" ng-click="createSupply.addTag(tag)" class="btn btn-default">{{tag.name}}</span>
-              <span ng-show="createSupply.costumeelement.tags | contains:tag" ng-click="createSupply.removeTag(tag)" class="btn btn-primary">{{tag.name}}</span>
-            </span>
+              <span ng-repeat="tag in createSupply.tags">
+                <span ng-hide="createSupply.costumeelement.tags | contains:tag" ng-click="createSupply.addTag(tag)" class="btn btn-default">{{tag.name}}</span>
+                <span ng-show="createSupply.costumeelement.tags | contains:tag"ng-click="createSupply.removeTag(tag)" class="btn btn-primary">{{tag.name}}</span>
+              </span>
             <hr>
             <button class="btn btn-info" ng-click="createSupply.tagIsCollapsed = !createSupply.tagIsCollapsed">Create a New Tag</button>
           </div>

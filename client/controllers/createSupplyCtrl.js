@@ -1,3 +1,18 @@
+// app.filter("isTagActive", function() {
+
+//   return function(input, list) {
+//     for(const index in list) {
+//       if(input.name===list[index].name) {
+//         return true;
+//       } else {
+//         return false;
+//       }
+//     }
+//   };
+// });
+
+
+
 app.controller("CreateSupply",[
   "$scope",
   "APIFactory",
@@ -22,11 +37,44 @@ app.controller("CreateSupply",[
       createSupply.title = "Create Supply";
     } else {
       createSupply.costumeelement = supply;
+      $timeout()
       createSupply.title = "Edit Supply";
       createSupply.selectedElement = createSupply.costumeelement.element;
       $timeout();
     }
 
+    // Get all tags for selection.
+    APIFactory.getTags()
+    .then((res)=> {
+      createSupply.tags = res;
+      console.log("uh tags", createSupply.tags);
+      console.log("supply tags!!!!!", createSupply.costumeelement.tags);
+      $timeout();
+    }).then(()=> {
+      //Not really sure why this sometimes doesn't work.
+      console.log("uh tags?", createSupply.costumeelement);
+      const actualtags = [];
+      for(const index in createSupply.tags) {
+        for (const u in createSupply.costumeelement.tags) {
+          if(createSupply.costumeelement.tags[u].$$hashKey == createSupply.tags[index].$$hashKey) {
+            actualtags.push(createSupply.tags[index]);
+          } 
+        }
+      }
+      createSupply.costumeelement.tags = actualtags;
+      console.log("tags should match now", createSupply.costumeelement.tags, createSupply.tags);
+      $timeout();
+    });
+
+    createSupply.isTagActive = (tag) => {
+      for(const tagindex in createSupply.costumeelement.tags) {
+        if(tag.name===createSupply.costumeelement.tags[tagindex].name) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    };
 
     // Get all elements for select.
     APIFactory.getElements()
@@ -125,12 +173,10 @@ app.controller("CreateSupply",[
       APIFactory.createCostumeElement(createSupply.costumeelement)
       .then((res) => { 
         newce = res;
-        console.log("new element", newce);
         // new element does not have the costume on it because evil, so find it in the null costumes.
         return APIFactory.getCostumeElements();
       }, e => console.error)
       .then((res) => {
-        console.log("ok, here's the list of elements", res);
         let element_to_send = {};
         for(const index in res) {
           if(res[index].id === newce.pk) {
