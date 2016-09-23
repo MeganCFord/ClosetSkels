@@ -55,15 +55,12 @@ app.controller("CreateSupply",[
       const actualtags = [];
       for(const index in createSupply.tags) {
         for (const u in createSupply.costumeelement.tags) {
-          if(createSupply.costumeelement.tags[u].name == createSupply.tags[index].name) {
+          if(createSupply.costumeelement.tags[u] == createSupply.tags[index].id) {
             actualtags.push(createSupply.tags[index]);
-          } else {
-            console.log("no match",createSupply.costumeelement.tags[u].name == createSupply.tags[index].name )
           }
         }
       }
       createSupply.costumeelement.tags = actualtags;
-      console.log("actual tags", createSupply.costumeelement.tags, createSupply.tags);
     });
 
     createSupply.createElement = () => {
