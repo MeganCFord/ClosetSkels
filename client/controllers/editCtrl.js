@@ -66,7 +66,7 @@ app.controller("Edit",[
 
     //grabs new data from the create modal.
     $rootScope.$on("createdSupply", function(event, value) { 
-      create.costume.costumeelements.push(value.id);
+      create.costume.costumeelements.push(value);
       create.costumeelements.push(value);
       $timeout(); //Just in case.
     });
