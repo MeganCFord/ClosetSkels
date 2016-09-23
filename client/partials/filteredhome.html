@@ -1,13 +1,13 @@
 <div class="col col-xs-6" ng-repeat="(matchname, stuff) in home.matches">
 
 
-  <div ng-repeat="costume in home.costumes">
+  <div ng-repeat="costume in home.costumes | orderBy: stuff.matches.length">
     <div  class="well well-lg">
       <h4>{{costume.name}}
         <button class="btn btn-default boobutton floatingboo nohoverdefault pull-right">{{costume.boos.length}}   <i class="em em-ghost"></i>s</button>
       </h4>
       <hr>
-      <p>Matches: <span class="btn btn-default nohoverdefault" ng-repeat="match in stuff.matches">{{match}} </span> </p>
+      <p>Matches: <span class="btn btn-default nohoverdefault" ng-repeat="match in stuff.matches | unique ">{{match}} </span> </p>
       <hr>
        <button ng-repeat="boo in costume.boos" class="btn btn-danger boobutton" ng-show="boo.owner==home.userInfo.url" ng-click="home.unBoo(boo.url)">Un<i class="em em-ghost"></i></button>
       <button class="btn btn-success boobutton" ng-hide="home.hasUserBood(costume.boos)==true" ng-click="home.boo(costume.url)"><i class="em em-ghost"></i></button>

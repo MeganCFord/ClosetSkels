@@ -122,13 +122,11 @@ app.controller("Home",[
             if(costume.tags[s].name === home.filterer.tags[t].name) {
               if (home.matches[costume.name] != undefined) {
                 home.matches[costume.name].matches.push(home.filterer.tags[t].name);
-                console.log("matches!!", home.matches);
               } else {
                 home.matches[costume.name] = {};
                 home.matches[costume.name].matches = [];
                 home.matches[costume.name].object = costume;
                 home.matches[costume.name].matches.push(home.filterer.tags[t].name);
-                console.log("matches!!", home.matches);
               }
             }
           } //for
@@ -148,13 +146,11 @@ app.controller("Home",[
             if (supplies[s].element.url === home.filterer.supply) {
               if (home.matches[costume.name] != undefined) {
                 home.matches[costume.name].matches.push(supplies[s].element.name);
-                console.log("matches!", home.matches);
               } else {
                 home.matches[costume.name] = {};
                 home.matches[costume.name].matches = [];
                 home.matches[costume.name].object = costume;
                 home.matches[costume.name].matches.push(supplies[s].element.name);
-                console.log("matches!", home.matches);
               }
             }
           } 
@@ -167,34 +163,31 @@ app.controller("Home",[
 
     home.checkForSupplyTags = (costume) => {
       if(home.filterer.supplytags.length > 0) {
-        let supplies = [];
-        APIFactory.getCostumeElements(costume.id)
-        .then((res)=> {
-          supplies = res;
-          console.log("supplies for costume", supplies);
-          for(const u in supplies) {
-            console.log("supply element", supplies[u].element.name);
-            for (const p in home.filterer.supplytags) {
-              if (supplies[u].name === home.filterer.supplytags[p].name) {
-                console.log("supply tag match", supplies[u].name, home.filterer.supplytags[p].name);
-                if (home.matches[costume.name] != undefined) {
-                  home.matches[costume.name].matches.push(home.filterer.supplytags[u]);
-                  console.log(home.matches, "matches");
-                } else {
-                  home.matches[costume.name] = {};
-                  home.matches[costume.name].matches = [];
-                  home.matches[costume.name].object = costume;
-                  home.matches[costume.name].matches.push(`Supply: ${home.filterer.supplytags[u].name}`);
-                  console.log(home.matches, "matches");
+        console.log("supply tags", home.filterer.supplytags);
+        APIFactory.getCostumeElements(costume.id).then((res) => {
+          const supplies = res;
+          return supplies;
+        }, e=> console.error)
+        .then((supplies) => {
+          for (const s in supplies) {
+            for(const u in home.filterer.supplytags){
+              for(const v in home.filterer.supplytags[u].costumeelements){
+                if (home.filterer.supplytags[u].costumeelements[v] === supplies[s].url) {
+                  if (home.matches[costume.name] != undefined) {
+                    home.matches[costume.name].matches.push(`${home.filterer.supplytags[u].name} ${supplies[s].element.name}`);
+                  } else {
+                    home.matches[costume.name] = {};
+                    home.matches[costume.name].matches = [];
+                    home.matches[costume.name].object = costume;
+                    home.matches[costume.name].matches.push(`${home.filterer.supplytags[u].name} ${supplies[s].element.name}`);
+                  }
                 }
-              } else {
-                console.log("no supply tag match, matches:", home.matches);
               }
             }
-          }
-        }, e => console.error);
-      } else {
-        // console.log("no supply tags selected.");
+          } 
+        }).then(()=> {
+          $timeout();
+        });
       }  
     };
 
