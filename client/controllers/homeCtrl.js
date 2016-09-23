@@ -119,7 +119,8 @@ app.controller("Home",[
       if(home.filterer.tags.length > 0) {
         for(const s in costume.tags) {
           for(const t in home.filterer.tags) {
-            if(costume.tags[s].name === home.filterer.tags[t].name) {
+            if(costume.tags[s].url === home.filterer.tags[t].url) {
+              console.log("match", costume.tags[s].url, home.filterer.tags[t].url)
               if (home.matches[costume.name] != undefined) {
                 home.matches[costume.name].matches.push(home.filterer.tags[t].name);
               } else {
@@ -128,10 +129,13 @@ app.controller("Home",[
                 home.matches[costume.name].object = costume;
                 home.matches[costume.name].matches.push(home.filterer.tags[t].name);
               }
+            } else {
+              console.log("no match, ", costume.tags[s].name, home.filterer.tags[t].name);
             }
           } //for
         } //for
-      }
+      } console.log("tag matches", home.matches)
+      return home.matches;
     };
     
     home.checkForSupply = (costume) => {
@@ -157,7 +161,8 @@ app.controller("Home",[
         }).then(()=> {
           $timeout();
         });
-      }
+      } console.log("matches", home.matches);
+        return home.matches;
     };
 
 
@@ -197,11 +202,11 @@ app.controller("Home",[
       home.filtering = true;
       home.costumes.forEach((costume) => {
         $timeout().then(() => {
-          home.checkForTags(costume);
+          return home.checkForTags(costume);
         }).then(()=> {
-          home.checkForSupply(costume);
+          return home.checkForSupply(costume);
         }).then(()=> {
-          home.checkForSupplyTags(costume);
+          return home.checkForSupplyTags(costume);
         }).then(()=> {
           $timeout();
         });
