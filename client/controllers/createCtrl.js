@@ -99,10 +99,7 @@ app.controller("Create",[
 
       FirebaseFactory.uploadImage(file)
       .then(res => {
-        // const actualImage = res.downloadURL.substring(0, res.downloadURL.indexOf('?'));
-        // console.log("actual image", actualImage)
         create.costume.image = res.downloadURL;
-        // return res.downloadURL;
       }, e=>console.error)
       .then(()=> {
         console.log("costume image", create.costume.image);
@@ -110,7 +107,7 @@ app.controller("Create",[
 
       });
     };
-      //displays file name on DOM before upload. 
+      //displays file name on DOM and uploads file on file choice. 
     $scope.photoChanged = function(files) {
       if (files !== null ) {
         create.currentFileName = files[0].name;

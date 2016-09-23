@@ -97,6 +97,32 @@ app.controller("Edit",[
       }
     };
 
+     create.uploadPhoto = function() {
+      console.log("hey!");
+      //find the file. Angular doesn't really do this automatically.
+      const input = document.querySelector('[type="file"]');
+      const file = input.files[0];
+
+      FirebaseFactory.uploadImage(file)
+      .then(res => {
+        create.costume.image = res.downloadURL;
+      }, e=>console.error)
+      .then(()=> {
+        console.log("costume image", create.costume.image);
+        $timeout();
+
+      });
+    };
+      //displays file name on DOM and uploads file on file choice. 
+    $scope.photoChanged = function(files) {
+      if (files !== null ) {
+        create.currentFileName = files[0].name;
+        console.log("file name:", create.currentFileName);
+        create.uploadPhoto();
+        $scope.$apply();
+      }
+    };
+
     create.createTag = () => {
       APIFactory.createTag(create.tag).then((res) => {
         create.tags.push(res);
