@@ -28,7 +28,7 @@ class CostumeSerializer(serializers.HyperlinkedModelSerializer):
   class Meta: 
     model = Costume
     fields = ( 'id', 'url', 'owner', 'name', 'description', 'public', 'costumeelements', 'tags', 'boos', 'image')
-
+    
   def update(self, instance, validated_data):
     
     instance.name = validated_data.get("name")
@@ -41,11 +41,10 @@ class CostumeSerializer(serializers.HyperlinkedModelSerializer):
     if ces_data: 
       instance.costumeeelements = [];
       for ce_data in ces_data:
-        ce_name = getattr(ce_data, "name")
-        element_to_add = get_object_or_404(CostumeElement, name=ce_name)
-        # id_to_add = getattr(element_to_add, "id")
-        # instance.costumeelements.add(element_to_add)
+        ce_id = getattr(ce_data, "id")
+        element_to_add = get_object_or_404(CostumeElement, pk=ce_id)
         setattr(element_to_add, "costume", instance )
+        element_to_add.save()
 
     tags_data = validated_data.pop("tags", None)
     if tags_data: 
