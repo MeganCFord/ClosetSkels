@@ -17,6 +17,7 @@ from halloween.serializers import *
 from halloween.permissions import IsOwnerOrReadOnly
 from django.core import serializers
 
+
 class User(viewsets.ModelViewSet):
   serializer_class = UserSerializer
   queryset = DjangoUser.objects.all()
@@ -62,8 +63,6 @@ class Costume(viewsets.ModelViewSet):
     
     data = serializers.serialize("json", (new_costume,))
     return HttpResponse(data, status=status.HTTP_201_CREATED)
-
-
 
 
   def get_queryset(self):
@@ -125,6 +124,12 @@ class CostumeElement(viewsets.ModelViewSet):
     new_costume_element = DjangoCostumeElement(element = existing_element, name=request.data["name"], description=request.data["description"])
 
     new_costume_element.save()
+
+    try: 
+      setattr(new_costume_element, "costume", request.data["costume"])
+    except: 
+      print("hey I couldn't add a costume to this element")
+      pass
 
     for tag_id in request.data["tags"]:
       tag_to_add = DjangoTag.objects.get(id=tag_id)
