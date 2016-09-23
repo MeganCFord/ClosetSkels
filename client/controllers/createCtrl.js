@@ -50,14 +50,16 @@ app.controller("Create",[
     });
 
     // In case of refresh. Gets all costume elements with no costume url assigned (meaning the costume has not been completed) and pushes their ids back into the costume object.
-    APIFactory.getCostumeElements()
-    .then((res) => {
-      create.costumeelements = res;
-      for(const index in create.costumeelements) {
-        create.costume.costumeelements.push(create.costumeelements[index].id);
-      }
-      $timeout();
-    }, e => console.error);
+    // 
+    // TODO: this does not work because the costume elements once created are ungettable. fix in V2.
+    // APIFactory.getCostumeElements()
+    // .then((res) => {
+    //   create.costumeelements = res;
+    //   for(const index in create.costumeelements) {
+    //     create.costume.costumeelements.push(create.costumeelements[index].id);
+    //   }
+    //   $timeout();
+    // }, e => console.error);
     
     // On load, also load all tags.
     APIFactory.getTags()
@@ -168,6 +170,7 @@ app.controller("Create",[
     };
 
     create.deleteSupply = (object) => {
+      // TODO: DO NOT USE THIS AFTER REFRESH, it doesn't work. Costume element objects are currently undeletable.
       APIFactory.deleteSomething(object.url)
       .then(() => {
         // remove from costume
