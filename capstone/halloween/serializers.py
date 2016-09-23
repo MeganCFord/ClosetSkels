@@ -27,13 +27,14 @@ class CostumeSerializer(serializers.HyperlinkedModelSerializer):
 
   class Meta: 
     model = Costume
-    fields = ( 'id', 'url', 'owner', 'name', 'description', 'public', 'costumeelements', 'tags', 'boos')
+    fields = ( 'id', 'url', 'owner', 'name', 'description', 'public', 'costumeelements', 'tags', 'boos', 'image')
 
   def update(self, instance, validated_data):
     
     instance.name = validated_data.get("name")
     instance.description = validated_data.get("description")
     instance.public = validated_data.get("public")
+    instance.image = validated_data.get("image")
     instance.save()
     
     ces_data = validated_data.pop("costumeelements", None)

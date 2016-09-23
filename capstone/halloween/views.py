@@ -46,7 +46,7 @@ class Costume(viewsets.ModelViewSet):
 
   def create(self, request): 
     existing_owner = DjangoUser.objects.get(id=request.data["owner"])
-    new_costume = DjangoCostume(owner = existing_owner, name=request.data["name"], description=request.data["description"], public=request.data["public"])
+    new_costume = DjangoCostume(owner = existing_owner, name=request.data["name"], description=request.data["description"], public=request.data["public"], image=request.data["image"])
 
     new_costume.save()
 
