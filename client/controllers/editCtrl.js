@@ -11,11 +11,8 @@ app.controller("Edit",[
     const create = this;
 
     create.title="Edit Costume";
-
-    // Toggle 'create tag' div.
     create.tagIsCollapsed=true;
     create.deleteButton="Delete";
-
     create.tags = [];
     create.costumeelements = [];
 
@@ -24,24 +21,28 @@ app.controller("Edit",[
       "costumes": [], 
       "costumeelements": []
     };
-
     create.costume = {};
+
+///////////////////////////////
+// LOADERS /////////////////////
+///////////////////////////////
 
     //On load, set costume from route params.
     APIFactory.getOneCostume($routeParams.id)
     .then((res) => {
       // console.log("costume gotten", res);
       create.costume = res;
-      const nopelesselements=NopeFactory.checkForNopes(create.costume.costumeelements);
-      create.costume.costumeelements = nopelesselements;
+      // const nopelesselements=NopeFactory.checkForNopes(create.costume.costumeelements);
+      // create.costume.costumeelements = nopelesselements;
       $timeout();
     }, e => console.error)
     .then(()=> {
       // Also get all costume elements since only the URLs are saved on the costume.
       return APIFactory.getCostumeElements(create.costume.id);
     }).then((res)=> {
-      const nopelesselements = NopeFactory.checkForNopes(res);
-      create.costumeelements = nopelesselements;
+      // const nopelesselements = NopeFactory.checkForNopes(res);
+      // create.costumeelements = nopelesselements;
+      create.costumeelements = res;
       $timeout();
     }, e => console.error)
     .then(()=> {
@@ -67,10 +68,13 @@ app.controller("Edit",[
     });
     
 
+///////////////////////////////
+// LISTENERS /////////////////////
+///////////////////////////////
 
-//grabs new supply object from the create modal. Edits currently create new objects too.
-    $rootScope.$on("editedSupply", function(event, value) { 
-      create.costume.costumeelements.push(value.url);
+    //grabs new data from the create modal. Editing supplies also recreates them right now. DO NOT REFRESH or duplicates will show up. 
+    $rootScope.$on("createdSupply", function(event, value) { 
+      create.costume.costumeelements.push(value);
       create.costumeelements.push(value);
       $timeout(); //Just in case.
     });
@@ -79,7 +83,7 @@ app.controller("Edit",[
     $rootScope.$on("deleteSupplyPlease", function(event, value) {
       return create.deleteSupply(value);
     });
-
+    //TODO: fix this, it doesn't work right now.
     // //grabs updated data from edit modal.
     // $rootScope.$on("editedSupply", function(event, value) { 
     //   console.log("got the edited supply", value);
@@ -94,6 +98,9 @@ app.controller("Edit",[
     //   $timeout(); //Just in case.
     // });
 
+    $rootScope.$on("newTag", function(event, value) {
+      create.tags.push(value);
+    });
     create.uploadPhoto = function() {
       console.log("hey!");
       //find the file. Angular doesn't really do this automatically.
@@ -111,6 +118,11 @@ app.controller("Edit",[
       });
     };
 
+
+///////////////////////////////
+// PHOTOS /////////////////////
+///////////////////////////////
+
       //displays file name on DOM and uploads file on file choice. 
     $scope.photoChanged = function(files) {
       if (files !== null ) {
@@ -121,6 +133,36 @@ app.controller("Edit",[
       }
     };
 
+    create.uploadPhoto = function() {
+      console.log("hey!");
+      //find the file. Angular doesn't really do this automatically.
+      const input = document.querySelector('[type="file"]');
+      const file = input.files[0];
+
+      FirebaseFactory.uploadImage(file)
+      .then(res => {
+        create.costume.image = res.downloadURL;
+      }, e=>console.error)
+      .then(()=> {
+        console.log("costume image", create.costume.image);
+        $timeout();
+
+      });
+    };
+      //displays file name on DOM and uploads file on file choice. 
+    $scope.photoChanged = function(files) {
+      if (files !== null ) {
+        create.currentFileName = files[0].name;
+        console.log("file name:", create.currentFileName);
+        create.uploadPhoto();
+        $scope.$apply();
+      }
+    };
+
+
+///////////////////////////////
+// TAGS /////////////////////
+///////////////////////////////
     create.addTag = (tag) => {
       create.costume.tags.push(tag);
     };
@@ -143,6 +185,11 @@ app.controller("Edit",[
       }, e => console.error);
     };
   
+
+///////////////////////////////
+// MODALS /////////////////////
+///////////////////////////////
+
     create.openCreateModal = () => {
       const modalInstance = $uibModal.open({
         size: "lg",
@@ -169,8 +216,10 @@ app.controller("Edit",[
       });
     };
 
+
+
     create.deleteSupply = (object) => {
-      NopeFactory.addToNopes(object.id);
+      // TODO: fix this because costume elements are currently undeletable.
       // APIFactory.deleteSomething(object.url);
       // remove from costume
       for (const u in create.costume.costumeelements) {
@@ -185,14 +234,10 @@ app.controller("Edit",[
         }
       }
       $timeout();
+      // }, e => console.error);
     };
 
     create.createCostume = () => {
-      // const tagIds = [];
-      // for(const index in create.costume.tags) {
-      //   tagIds.push(create.costume.tags[index].id);
-      // }
-      // create.costume.tags = tagIds;
       console.log("costume I am sending", create.costume);
 
       APIFactory.updateCostume(create.costume)

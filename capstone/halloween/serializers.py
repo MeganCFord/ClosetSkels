@@ -67,7 +67,6 @@ class CostumeElementSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = CostumeElement
     fields = ("id", "url", "element", "description", "tags", "name")
-    # extra_kwargs = {'costume': {'required': 'False'}}
 
   def update(self, instance, validated_data):
     # NOTE: not using this right now because the costumeelement itself is returning 404.
@@ -76,7 +75,6 @@ class CostumeElementSerializer(serializers.HyperlinkedModelSerializer):
     
     element_data = validated_data.pop('element', None)
     if element_data:
-        # element_name = getattr(element_data, "name")
         element = get_object_or_404(Element, name=element_data["name"])
         validated_data['element'] = element
     instance.element = validated_data["element"]

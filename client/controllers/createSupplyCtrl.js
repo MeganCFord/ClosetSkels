@@ -22,7 +22,6 @@ app.controller("CreateSupply",[
       createSupply.title = "Create Supply";
     } else {
       createSupply.costumeelement = supply;
-      console.log("uh the element", createSupply.costumeelement.element);
       createSupply.title = "Edit Supply";
       createSupply.selectedElement = createSupply.costumeelement.element;
       $timeout();
@@ -92,6 +91,7 @@ app.controller("CreateSupply",[
       APIFactory.createTag(createSupply.tag).then((res) => {
         createSupply.tags.push(res);
         createSupply.costumeelement.tags.push(res);
+        $scope.$emit("newTag", res);
         // Reset form.
         createSupply.tag.name="";
         createSupply.tagIsCollapsed = true;
@@ -100,8 +100,9 @@ app.controller("CreateSupply",[
     };
 
     createSupply.ok = function () {
-      // TEMP SOLUTION: completely recreating the supply and the selected costume is on it already. Some weird error is happening where the costume elements are unreachable once they have a costume assigned.
+      // TEMP SOLUTION: completely recreating the supply with the selected costume set. Some weird error is happening where the costume elements are unreachable after a refresh.
       createSupply.costumeelement.element = createSupply.selectedElement.id;
+
       if(createSupply.costumeelement.element.$$hashKey) {
         delete createSupply.costumeelement.element.$$hashKey;
       }

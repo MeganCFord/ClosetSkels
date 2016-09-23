@@ -22,7 +22,6 @@ class Nope(viewsets.ModelViewSet):
   serializer_class = NopeSerializer
   queryset = DjangoNope.objects.all()
 
-
 class User(viewsets.ModelViewSet):
   serializer_class = UserSerializer
   queryset = DjangoUser.objects.all()
