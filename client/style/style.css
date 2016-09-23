@@ -1,5 +1,9 @@
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
+.btn {
+  margin: 2px 0;
+}
+
 .card {
   height: 155px;
 }
