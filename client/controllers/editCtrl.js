@@ -160,8 +160,9 @@ app.controller("Edit",[
     };
 
     create.deleteSupply = (object) => {
-      APIFactory.deleteSomething(object.url)
-      .then(() => {
+      // TODO: fix this because costume elements are currently undeletable.
+      // APIFactory.deleteSomething(object.url)
+      // .then(() => {
         // remove from costume
         for (const u in create.costume.costumeelements) {
           if (create.costume.costumeelements[u] === object.id) {
@@ -175,7 +176,7 @@ app.controller("Edit",[
           }
         }
         $timeout();
-      }, e => console.error);
+      // }, e => console.error);
     };
 
     create.createCostume = () => {
