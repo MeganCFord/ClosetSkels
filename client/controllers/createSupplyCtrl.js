@@ -1,17 +1,3 @@
-// app.filter("isTagActive", function() {
-
-//   return function(input, list) {
-//     for(const index in list) {
-//       if(input.name===list[index].name) {
-//         return true;
-//       } else {
-//         return false;
-//       }
-//     }
-//   };
-// });
-
-
 
 app.controller("CreateSupply",[
   "$scope",
