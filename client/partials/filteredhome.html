@@ -9,9 +9,9 @@
       <hr>
       <p>Matches: <span class="btn btn-default nohoverdefault" ng-repeat="match in costume.matches | unique ">{{match}} </span> </p>
       <hr>
-       <button ng-repeat="boo in costume.boos" class="btn btn-danger boobutton" ng-show="boo.owner==home.userInfo.url" ng-click="home.unBoo(boo.url)">Un<i class="em em-ghost"></i></button>
-      <button class="btn btn-success boobutton" ng-hide="home.hasUserBood(costume.boos)==true" ng-click="home.boo(costume.url)"><i class="em em-ghost"></i></button>
-      <a ng-click="home.openModal(costume)" class="btn btn-default">View</a>
+       <button ng-repeat="boo in costume.object.boos" class="btn btn-danger boobutton" ng-show="boo.owner==home.userInfo.url" ng-click="home.unBoo(boo.url)">Un<i class="em em-ghost"></i></button>
+      <button class="btn btn-success boobutton" ng-hide="home.hasUserBood(costume.boos)==true" ng-click="home.boo(costume.object.url)"><i class="em em-ghost"></i></button>
+      <a ng-click="home.openModal(costume.object)" class="btn btn-default">View</a>
     </div>
   </div>
 
