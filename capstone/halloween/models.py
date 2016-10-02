@@ -6,9 +6,8 @@ from django.utils import timezone
 class Costume(models.Model):
     name = models.CharField(max_length=55)
     description = models.CharField(max_length=1000, blank=True)
-    # This will always be now.
     public = models.BooleanField(default=False)
-    owner = models.ForeignKey('auth.User',on_delete=models.CASCADE, related_name ="costumes")
+    owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name ="costumes")
     image = models.CharField(max_length=1000, blank=True, null=True)
     # costume elements are on costumeElement.
     # tags are on tag.
@@ -20,8 +19,9 @@ class Costume(models.Model):
 
 
 class Boo(models.Model):
-  owner = models.ForeignKey('auth.User', null=True, blank=True, on_delete=models.CASCADE, related_name="boos")
-  costume = models.ForeignKey('costume', null=True, blank=True, on_delete=models.CASCADE, related_name="boos")
+
+  owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name="boos")
+  costume = models.ForeignKey('costume', on_delete=models.CASCADE, related_name="boos")
 
   def __str__(self):
         return "{}".format(self.id)
