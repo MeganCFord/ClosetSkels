@@ -12,6 +12,7 @@ app.factory( "APIFactory", [
     const errorHandle = (e) => {console.log(e);};
 
     const getUser = (username) => {
+      // TODO: change this to the user ID? 
       return getApiRoot().then((root) => {
         return $http.get(`${root.users}?username=${username}`);
       }, errorHandle)
@@ -33,7 +34,7 @@ app.factory( "APIFactory", [
       getUserCostumes: (username) => {
         return getUser(username)
         .then((res) => {
-          // returns in a list since queries return filtered lists. in this case, there will be just one match since Django requires unique usernames in its User model.
+          // returns in a list since queries return filtered lists. in this case, there will be just one match since Django requires unique usernames in its User model. TODO: move this into the costume? 
           return res[0].costumes;
         }, errorHandle);
       },
@@ -41,7 +42,7 @@ app.factory( "APIFactory", [
       //// BOOS ////
       
       getUserBoos: (id) => {
-        console.log("user id I'm going to send for boos", id);
+        // TODO: move this into costumes?
         return getApiRoot()
         .then((root)=> {
           return $http.get(`${root.boos}?userid=${id}`);
@@ -104,6 +105,7 @@ app.factory( "APIFactory", [
       //// COSTUMES ////
 
       getCostumes: () => {
+        // Gets all public costumes for feed.
         return getApiRoot()
         .then((root) => {
           return $http.get(`${root.costumes}?public=true`);
@@ -113,6 +115,7 @@ app.factory( "APIFactory", [
         }, errorHandle);
       }, 
       getOneCostume: (id) => {
+        // Gets one costume for editing.
         return getApiRoot()
         .then((root) => {
           return $http.get(`${root.costumes}?costumeid=${id}`);
@@ -134,43 +137,41 @@ app.factory( "APIFactory", [
           return res.data;
         }, errorHandle);
       }, 
-      deleteCostume: (costumeurl) => {
-        return $http.delete(`${costumeurl}`)
-        .then(() => true, errorHandle);
-      }, 
 
-      //// COSTUME ELEMENTS ////
+      //// SUPPLIES ////
 
-      createCostumeElement: (data) => {
+      createSupply: (data) => {
         // TODO: make this actually return what I want.
         return getApiRoot()
         .then((root) => {
-          return $http.post(`${root.costumeelements}`, data);
+          return $http.post(`${root.supplies}`, data);
         }, errorHandle)
         .then((res) => {
           return res.data[0];
-        });
-          
+        });     
       }, 
-      getCostumeElements: (costume = null) => {
+      getSupplies: (costume=null) => {
+        // Gets the supplies either for an uncreated costume, or for the selected costume. This is not scaleable: TODO: make supplies attached to a user.
         return getApiRoot()
         .then((root) => {
           if (costume===null) {
-            return $http.get(`${root.costumeelements}`);
+            return $http.get(`${root.supplies}`);
           } else {
-            return $http.get(`${root.costumeelements}?costume=${costume}`);
+            return $http.get(`${root.supplies}?costume=${costume}`);
           }
         }, errorHandle)
         .then((res)=> res.data);
       }, 
-      editCostumeElement: (data) => {
+
+      editSupply: (data) => {
+        // TODO: fix this. 
         return $http.put(`${data.url}`, data)
         .then((res) => {
           return res.data;
         }, errorHandle);
       }, 
 
-      // DELETING THE THINGS!
+      ///// DELETIONS /////
   
       deleteSomething: (url) => {
         return $http.delete(`${url}`);
