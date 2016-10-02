@@ -142,20 +142,15 @@ app.factory( "APIFactory", [
       //// COSTUME ELEMENTS ////
 
       createCostumeElement: (data) => {
+        // TODO: make this actually return what I want.
         return getApiRoot()
         .then((root) => {
           return $http.post(`${root.costumeelements}`, data);
         }, errorHandle)
         .then((res) => {
-          return getApiRoot()
-          .then((root) => {
-            return $http.get(`${root.costumeelements}?key=${res.data[0].pk}`)
-          }, errorHandle);
-        }, errorHandle)
-        .then((res)=> {
-          console.log("newly created costume element.");
           return res.data[0];
         });
+          
       }, 
       getCostumeElements: (costume = null) => {
         return getApiRoot()

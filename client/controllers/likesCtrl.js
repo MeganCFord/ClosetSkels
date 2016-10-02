@@ -4,7 +4,8 @@ app.controller("Likes",[
   "APIFactory",
   "$http",
   "$uibModal",
-  function($scope, $timeout, APIFactory, $http, $uibModal) {
+  "$location", 
+  function($scope, $timeout, APIFactory, $http, $uibModal, $location) {
     const likes = this;
     likes.title="likes page";
 
@@ -33,11 +34,13 @@ app.controller("Likes",[
       }, e=> console.error)
       .then((boos) => {
         const booPromises = boos.map((magic) => {
-          return $http.get(magic.costume).then((res) => {
-            likes.boodCostumes.push(res.data);
-            $timeout();
-            console.log("bood costumes", likes.boodCostumes);
-          }, e=> console.error);
+          if(magic.costume != undefined) {
+            return $http.get(magic.costume).then((res) => {
+              likes.boodCostumes.push(res.data);
+              $timeout();
+              console.log("bood costumes", likes.boodCostumes);
+            }, e=> console.error);
+          }
         });
       }, e=> console.error);
     });
@@ -68,6 +71,22 @@ app.controller("Likes",[
           "userInfo": likes.userInfo
         }
       });
+    };
+
+    likes.saveToCloset = (costume) => {
+      const costumeToSave = costume;
+      delete costumeToSave["url"];
+      delete costumeToSave["id"];
+      if(costumeToSave["$$hashKey"]) {
+        delete costumeToSave["$$hashKey"];
+      }
+      costumeToSave.owner = likes.userInfo.url;
+      costumeToSave.public = false;
+
+      APIFactory.createCostume(costumeToSave)
+      .then(() => {
+        $location.path("/closet");
+      }, e=>console.error);
     };
   }]);
 

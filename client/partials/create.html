@@ -4,7 +4,7 @@
 <div class="container-fluid">
   <div class="col col-sm-3 scrollingsidebar">
 
-    <div ng-hide="create.costumeelements | isEmpty" ng-repeat="element in create.costumeelements">
+    <div ng-hide="create.costumeelements | isEmpty" ng-repeat="element in create.costumeelements | unique:'name'">
       <div class="well well-lg">
         <h5>{{element.name}}</h5>
         <hr>
@@ -31,7 +31,20 @@
         </div>
       <hr>
         <div class="col col-sm-6">
-          <!-- IMAGE HERE -->
+          <!-- IMAGE UPLOAD -->
+          <div class="text-center">
+            <label class="btn btn-info">
+              <span ng-model="create.uploadBtnText">Choose a File</span>
+              <!-- this input broadcasts the name of the file loaded for display. -->
+              <input type="file" ng-model="create.costumeImage" accept="image/*" style="display: none" onchange="angular.element(this).scope().photoChanged(this.files)"/>
+            </label>
+          </div>
+          <hr>
+          <div ng-if="create.costume.image.length >0">
+            <img class="img-thumbnail center-block" style="max-width: 33vh; max-height: 50vh" ng-src="{{create.costume.image}}" alt="costume image">
+            <p class="text-center" ng-model="create.currentFileName">{{create.currentFileName}}</p>
+          </div>
+
         </div>
         <div class="col col-sm-6">
           <div class="fixedheightsub">

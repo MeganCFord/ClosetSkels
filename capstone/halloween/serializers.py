@@ -10,41 +10,43 @@ class ElementSerializer(serializers.HyperlinkedModelSerializer):
     model = Element
     fields = ("id", "url", "name")
 
+
 class TagSerializer(serializers.HyperlinkedModelSerializer):
    class Meta: 
     model = Tag
-    fields = ("id", "url", "name", "costumes", "costumeelements")
+    fields = ("id", "url", "name")
 
-class BooSerializer(serializers.HyperlinkedModelSerializer):
-  
+
+class BooSerializer(serializers.HyperlinkedModelSerializer): 
   class Meta: 
     model = Boo
     fields = ("url", "owner", "costume")
 
+
 class CostumeSerializer(serializers.HyperlinkedModelSerializer):
   boos=BooSerializer(many=True, read_only=True)
-  tags = TagSerializer(many=True)
+  tags = TagSerializer(many=True) 
 
   class Meta: 
     model = Costume
-    fields = ( 'id', 'url', 'owner', 'name', 'description', 'public', 'costumeelements', 'tags', 'boos')
+    fields = ( 'id', 'url', 'owner', 'name', 'description', 'public', 'supplies', 'tags', 'boos', "image")
 
   def update(self, instance, validated_data):
     
     instance.name = validated_data.get("name")
     instance.description = validated_data.get("description")
     instance.public = validated_data.get("public")
+    instance.image = validated_data.get("image")
     instance.save()
     
-    ces_data = validated_data.pop("costumeelements", None)
+    ces_data = validated_data.pop("supplies", None)
     if ces_data: 
       instance.costumeeelements = [];
       for ce_data in ces_data:
-        ce_name = getattr(ce_data, "name")
-        element_to_add = get_object_or_404(CostumeElement, name=ce_name)
-        # id_to_add = getattr(element_to_add, "id")
-        # instance.costumeelements.add(element_to_add)
+        ce_id = getattr(ce_data, "id")
+        element_to_add = get_object_or_404(Supply, pk=ce_id)
         setattr(element_to_add, "costume", instance )
+        element_to_add.save()
 
     tags_data = validated_data.pop("tags", None)
     if tags_data: 
@@ -56,22 +58,21 @@ class CostumeSerializer(serializers.HyperlinkedModelSerializer):
 
     return instance
 
-class CostumeElementSerializer(serializers.HyperlinkedModelSerializer):
+
+class SupplySerializer(serializers.HyperlinkedModelSerializer):
   tags = TagSerializer(many=True)
   element = ElementSerializer()
   class Meta:
-    model = CostumeElement
+    model = Supply
     fields = ("id", "url", "element", "description", "tags", "name")
-    # extra_kwargs = {'costume': {'required': 'False'}}
 
   def update(self, instance, validated_data):
-    
+    # NOTE: not using this right now because the supply itself is returning 404.
     instance.name = validated_data.get("name")
     instance.description = validated_data.get("description")
     
     element_data = validated_data.pop('element', None)
     if element_data:
-        # element_name = getattr(element_data, "name")
         element = get_object_or_404(Element, name=element_data["name"])
         validated_data['element'] = element
     instance.element = validated_data["element"]
@@ -94,7 +95,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = User
     fields = ('id', 'url', 'username', 'costumes')
-
 
 
 

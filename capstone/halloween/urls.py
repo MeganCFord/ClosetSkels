@@ -1,7 +1,6 @@
 from rest_framework import routers
 from django.conf.urls import url, include
 from halloween import views as views
-from rest_framework_nested import routers
 
 router = routers.DefaultRouter()
 
@@ -10,7 +9,7 @@ router.register(r'tags', views.Tag)
 router.register(r'costumes', views.Costume)
 router.register(r'boos', views.Boo)
 router.register(r'elements', views.Element)
-router.register(r'costumeelements', views.CostumeElement)
+router.register(r'supplies', views.Supply)
 
 urlpatterns = [
   url(r'^', include(router.urls)),

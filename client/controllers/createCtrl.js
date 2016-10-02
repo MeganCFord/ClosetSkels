@@ -5,14 +5,14 @@ app.controller("Create",[
   "$location",
   "$uibModal",
   "$rootScope", // need this because the  uib-Modal scope is not actually nested inside this scope- it's randomly off to one corner or whatever.
-  function($scope, APIFactory, $timeout, $location, $uibModal, $rootScope) {
+  "FirebaseFactory",
+  function($scope, APIFactory, $timeout, $location, $uibModal, $rootScope, FirebaseFactory) {
+
     const create = this;
     create.title="Create a Costume";
-
-    // Toggle 'create tag' div.
     create.tagIsCollapsed=true;
     create.deleteButton = "Discard";
-
+    create.currentFileName = "No File Selected"; 
     create.tags = [];
     create.costumeelements = [];
 
@@ -28,10 +28,16 @@ app.controller("Create",[
       "public": false, 
       "owner": "" ,
       "costumeelements": [], 
-      "tags": []
+      "tags": [], 
+      "image": ""
     };
 
-    // On load, get the username and user info. 
+
+///////////////////////////////
+// LOADERS /////////////////////
+///////////////////////////////
+
+    // Get the username and user info. 
     $scope.$on("username", function(event, data) {
       $timeout().then(() => {
         create.username = data; 
@@ -45,15 +51,17 @@ app.controller("Create",[
       }, e=> console.error);
     });
 
+    // TODO: this does not work because the costume elements once created are ungettable. fix in V2.
+  
     // In case of refresh. Gets all costume elements with no costume url assigned (meaning the costume has not been completed) and pushes their ids back into the costume object.
-    APIFactory.getCostumeElements()
-    .then((res) => {
-      create.costumeelements = res;
-      for(const index in create.costumeelements) {
-        create.costume.costumeelements.push(create.costumeelements[index].id);
-      }
-      $timeout();
-    }, e => console.error);
+    // APIFactory.getCostumeElements()
+    // .then((res) => {
+    //   create.costumeelements = res;
+    //   for(const index in create.costumeelements) {
+    //     create.costume.costumeelements.push(create.costumeelements[index].id);
+    //   }
+    //   $timeout();
+    // }, e => console.error);
     
     // On load, also load all tags.
     APIFactory.getTags()
@@ -63,26 +71,75 @@ app.controller("Create",[
     }, e => console.error);
 
 
-    //grabs new data from the create modal. Since I had to write a custom nested serializer, this returns only the primary key of the object created. Dealing with this here right now, but eventually can move this into the factory.
-    $rootScope.$on("createdSupply", function(event, value) { 
-      create.costume.costumeelements.push(value.id);
+
+///////////////////////////////
+// LISTENERS /////////////////////
+///////////////////////////////
+
+    //receives new supply object from the create modal. Edits currently create new objects too.
+    $rootScope.$on("editedSupply", function(event, value) { 
+
+      create.costume.costumeelements.push(value);
       create.costumeelements.push(value);
       $timeout(); //Just in case.
     });
 
-    //grabs updated data from edit modal.
-    $rootScope.$on("editedSupply", function(event, value) { 
-      // console.log("got the edited supply", value);
-      //remove old value.
-      for(const u in create.costumeelements) {
-        if(create.costumeelements[u].id === value.id) {
-          create.costumeelements.splice(u, 1);
-        }
-      } 
-      //replace with new value.
-      create.costumeelements.push(value);
-      $timeout(); //Just in case.
+    //receives an object to delete from the create modal.
+    $rootScope.$on("deleteSupplyPlease", function(event, value) {
+      return create.deleteSupply(value);
     });
+    // TODO: activate this instead once costume element objects are gettable again. 
+    //grabs updated data from edit modal.
+    // $rootScope.$on("editedSupply", function(event, value) { 
+    //   // console.log("got the edited supply", value);
+    //   //remove old value.
+    //   for(const u in create.costumeelements) {
+    //     if(create.costumeelements[u].id === value.id) {
+    //       create.costumeelements.splice(u, 1);
+    //     }
+    //   } 
+    //   //replace with new value.
+    //   create.costumeelements.push(value);
+    //   $timeout(); //Just in case.
+    // });
+    
+    $rootScope.$on("newTag", function(event, value) {
+      create.tags.push(value);
+    });
+    
+///////////////////////////////
+// PHOTOS /////////////////////
+///////////////////////////////
+
+    create.uploadPhoto = function() {
+   
+      //find the file. Angular doesn't really do this automatically.
+      const input = document.querySelector('[type="file"]');
+      const file = input.files[0];
+
+      FirebaseFactory.uploadImage(file)
+      .then(res => {
+        create.costume.image = res.downloadURL;
+      }, e=>console.error)
+      .then(()=> {
+        console.log("costume image", create.costume.image);
+        $timeout();
+      });
+    };
+      //displays file name on DOM and uploads file on file choice. 
+    $scope.photoChanged = function(files) {
+      if (files !== null ) {
+        create.currentFileName = files[0].name;
+        console.log("file name:", create.currentFileName);
+        create.uploadPhoto();
+        $scope.$apply();
+      }
+    };
+
+
+///////////////////////////////
+// TAGS ///////////////////////
+///////////////////////////////
 
     create.addTag = (tag) => {
       create.costume.tags.push(tag);
@@ -96,6 +153,7 @@ app.controller("Create",[
       }
     };
 
+
     create.createTag = () => {
       APIFactory.createTag(create.tag).then((res) => {
         create.tags.push(res);
@@ -106,6 +164,11 @@ app.controller("Create",[
       }, e => console.error);
     };
 
+
+
+///////////////////////////////
+// MODALS /////////////////////
+///////////////////////////////
 
     create.openCreateModal = () => {
       const modalInstance = $uibModal.open({
@@ -134,8 +197,11 @@ app.controller("Create",[
     };
 
     create.deleteSupply = (object) => {
-      APIFactory.deleteSomething(object.url)
-      .then(() => {
+      // TODO: DO NOT USE THIS AFTER REFRESH, it doesn't work. Costume element objects are currently undeletable. Nope factory is a very temp solution at this point.
+      // NopeFactory.AddToNopes(object.id);
+
+      // APIFactory.deleteSomething(object.url)
+      // .then(() => {
         // remove from costume
         for (const u in create.costume.costumeelements) {
           if (create.costume.costumeelements[u] === object.id) {
@@ -149,7 +215,7 @@ app.controller("Create",[
           }
         }
         $timeout();
-      }, e => console.error);
+      // });
     };
 
     create.createCostume = () => {
