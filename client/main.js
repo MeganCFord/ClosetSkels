@@ -2,7 +2,7 @@ const app = angular.module("Halloween", ["ngRoute", "ngAnimate", "ngCookies", "a
 
 app.constant("apiUrl", "http://localhost:8000");
 
-// on page load, get cookie if it exists and set credentials/permissions.
+// on page load, get authorization cookie from browser if it exists and set credentials/permissions.
 app.run(function run(AuthFactory, $cookies, $http) {
   const hc= $cookies.get("HalloweenCredentials");
   if (hc) {
@@ -24,7 +24,7 @@ app.config(function($routeProvider) {
       controller: "Home", 
       controllerAs: "home"
     })
-    .when("/likes", {
+    .when("/boos", {
       templateUrl: "partials/likes.html", 
       controller: "Likes", 
       controllerAs: "likes"
@@ -39,14 +39,9 @@ app.config(function($routeProvider) {
       controller: "Create", 
       controllerAs: "create"
     })
-    .when("/:id", {
-      templateUrl: "partials/detail.html", 
-      controller: "Detail", 
-      controllerAs: "detail"
-    })
-    .when("/:id/edit", {
+    .when("/edit/:id", {
       templateUrl: "partials/create.html", 
-      controller: "Edit", 
+      controller: "Edit", //TODO: make the create and edit controllers the same.
       controllerAs: "create"
     })
     .otherwise("/login");
