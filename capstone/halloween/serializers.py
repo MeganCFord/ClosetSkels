@@ -5,6 +5,13 @@ from django.shortcuts import get_object_or_404
 import requests
 
 
+
+class UserSerializer(serializers.HyperlinkedModelSerializer): 
+  class Meta:
+    model = User
+    fields = ('id', 'url', 'username')
+
+
 class ElementSerializer(serializers.HyperlinkedModelSerializer):
   class Meta: 
     model = Element
@@ -89,12 +96,6 @@ class SupplySerializer(serializers.HyperlinkedModelSerializer):
     return instance
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-  costumes = CostumeSerializer(many=True)
-  
-  class Meta:
-    model = User
-    fields = ('id', 'url', 'username', 'costumes')
 
 
 
