@@ -5,37 +5,29 @@ app.factory( "APIFactory", [
 
     const httpGet = $http.get(apiUrl);
 
-    const getApiRoot = () => {
-      return httpGet.then(res => res.data);
-    };
-
     const errorHandle = (e) => {console.log(e);};
 
-    const getUser = (username) => {
-      // TODO: change this to the user ID? 
-      return getApiRoot().then((root) => {
-        return $http.get(`${root.users}?username=${username}`);
-      }, errorHandle)
-      .then((res) => {
-        return res.data;
-      }, errorHandle);
-    };
 
     return {
   
+      getApiRoot: () => {
+        return httpGet.then(res => res.data);
+      },
       //// USERS ////
+      getUser: (username) => {
+        // TODO: change this to the user ID? 
+        return getApiRoot().then((root) => {
+          return $http.get(`${root.users}?username=${username}`);
+        }, errorHandle)
+        .then((res) => {
+          return res.data;
+        }, errorHandle);
+      },
 
       getUserInfo: (username) => {
         return getUser(username)
         .then((res) => {
           return res[0];
-        }, errorHandle);
-      },
-      getUserCostumes: (username) => {
-        return getUser(username)
-        .then((res) => {
-          // returns in a list since queries return filtered lists. in this case, there will be just one match since Django requires unique usernames in its User model. TODO: move this into the costume? 
-          return res[0].costumes;
         }, errorHandle);
       },
 
