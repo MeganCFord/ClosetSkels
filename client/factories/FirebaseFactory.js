@@ -1,17 +1,13 @@
 
-//   // Initialize Firebase. TODO: somehow there is a hidden one of these duplicating data and I don't know where.
-// var config = {
-//   apiKey: "AIzaSyBPlrwFlbxXy8_b_yWtgQ9Ufxmlu3p1I4Y",
-//   authDomain: "closet-skels.firebaseapp.com",
-//   databaseURL: "https://closet-skels.firebaseio.com",
-//   storageBucket: "gs://closet-skels.appspot.com/",
-//   messagingSenderId: "1091164121744"
-// };
-// firebase.initializeApp(config);
-
-// // firebase.app().delete().then(function() {
-// //   console.log("[DEFAULT] App is Gone Now");
-// // });
+// Initialize Firebase. TODO: somehow there is a hidden one of these duplicating data and I don't know where.
+var config = {
+  apiKey: "AIzaSyBPlrwFlbxXy8_b_yWtgQ9Ufxmlu3p1I4Y",
+  authDomain: "closet-skels.firebaseapp.com",
+  databaseURL: "https://closet-skels.firebaseio.com",
+  storageBucket: "gs://closet-skels.appspot.com/",
+  messagingSenderId: "1091164121744"
+};
+firebase.initializeApp(config);
 
 app.factory( "FirebaseFactory", [ 
   "$http",
