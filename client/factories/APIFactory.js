@@ -5,26 +5,17 @@ app.factory( "APIFactory", [
 
     const httpGet = $http.get(apiUrl);
 
-    const errorHandle = (e) => {console.log(e);};
-
     const getApiRoot = () => {
       return httpGet.then(res => res.data);
     };
 
+    const errorHandle = (e) => {console.log(e);};
+
+    let currentUser = {};
+
     return {
   
       getApiRoot: getApiRoot,
-
-      //// USERS ////
-      getUser: (username) => {
-        // TODO: change this to the user ID? 
-        return getApiRoot().then((root) => {
-          return $http.get(`${root.users}?username=${username}`);
-        }, errorHandle)
-        .then((res) => {
-          return res.data;
-        }, errorHandle);
-      },
 
       //// BOOS ////
       
@@ -35,10 +26,6 @@ app.factory( "APIFactory", [
         }, errorHandle)
         .then((res) => res.data, errorHandle);
       }, 
-      deleteBoo: (booUrl) => {
-        return $http.delete(`${booUrl}`)
-        .then(()=> true, errorHandle);
-      },
 
       //// TAGS ////
   
@@ -81,16 +68,6 @@ app.factory( "APIFactory", [
 
       //// COSTUMES ////
 
-      getCostumes: () => {
-        // Gets all public costumes for feed.
-        return getApiRoot()
-        .then((root) => {
-          return $http.get(`${root.costumes}?public=true`);
-        }, errorHandle)
-        .then((res) => {
-          return res.data;
-        }, errorHandle);
-      }, 
       getOneCostume: (id) => {
         // Gets one costume for editing.
         return getApiRoot()
