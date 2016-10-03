@@ -8,28 +8,42 @@ app.factory( "CostumeFactory", [
 
 
     return {
-      getUserCostumes: (username) => {
-        // TODO: change this to get from the user id? Do I need to edit the cookies?
+
+      getPublicCostumes: () => {
+        // Gets all public costumes for feed.
+        // Arguments: none
         return APIFactory.getApiRoot()
         .then((root) => {
-          return $http.get(`${root.costumes}?owner=${username}`);
+          return $http.get(`${root.costumes}?public=true`);
         }, errorHandle)
         .then((res) => {
-          console.log(res.data);
+          return res.data;
+        }, errorHandle);
+      }, 
+
+      getUserCostumes: (userid) => {
+        // Get all costumes owned by a given user. 
+        // Argument: user id
+        return APIFactory.getApiRoot()
+        .then((root) => {
+          return $http.get(`${root.costumes}?owner=${userid}`);
+        }, errorHandle)
+        .then((res) => {
           return res.data[0];
         });
       },
 
-      getUserBoos: (username) => {
+      getUserBoos: (userid) => {
+        // Get all costumes 'bood' (liked) by a given user, via boo database table.
+        // Argument: user id
         return APIFactory.getApiRoot()
         .then((root)=> {
-          return $http.get(`${root.boos}?username=${username}`);
+          return $http.get(`${root.boos}?userid=${userid}`);
         }, errorHandle)
         .then((res) => {
           return res.data;
         });
       }
+
     };
-
-
   }]);
