@@ -10,7 +10,7 @@
         <li ng-class="nav.currentPage == '/create'? 'active':''" ><a href="#/create">Create</a></li>
       </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li><p class="navbar-text">Signed in as {{nav.username}}</p></li>
+      <li><p class="navbar-text">Signed in as {{nav.user.username}}</p></li>
       <li></li>
       <li><button ng-click="nav.logout()" class="navbar-btn btn btn-default">Log Out</button></li>
     </ul>
