@@ -59,10 +59,9 @@ class Costume(viewsets.ModelViewSet):
     by filtering against query perameters in the URL.
     '''
     queryset = DjangoCostume.objects.all()
-    # TODO: what am I actually sending here? is it an id? not a username?
-    username = self.request.query_params.get("username", None)
-    if username is not None:
-      queryset = queryset.filter(owner=username)
+    userid = self.request.query_params.get("userid", None)
+    if userid is not None:
+      queryset = queryset.filter(owner=userid)
     else:
       public = self.request.query_params.get("public", None)
       if public is not None:
