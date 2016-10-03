@@ -213,14 +213,10 @@ def create_user(request):
 
   UserName = req_body['username']
   Password = req_body['password']
-  FirstName = req_body['first_name']
-  LastName = req_body['last_name']
 
   # Use the built-in creation method to create a new user.
   user = DjangoUser.objects.create_user(username=UserName,
-                                  password=Password,
-                                  first_name=FirstName,
-                                  last_name=LastName)
+                                  password=Password)
   user.save()
   # Return a success object. TODO: simplify this?
   return JsonResponse({"success": True})

@@ -7,16 +7,15 @@ app.controller("Login", [
   function( $location, $http, UserFactory, apiUrl, $cookies) {
 
     const login = this;
+    
+    // Boolean to show login or register partials.
+    login.registering=false;
 
     login.user = {
       username: "",
-      password: "", 
-      first_name: "",
-      last_name: ""
+      password: ""
     };
 
-    // Boolean to show login or register partials.
-    login.registering=false;
 
 
     login.login = function() {
@@ -33,13 +32,13 @@ app.controller("Login", [
       }).then(res => {
         if (res.data.success) {
           //Encode credentials
-          const encoded = UserFactory.encodeCredentials({
-            username: login.user.username,
-            password: login.user.password
-          });
-          // create encoded cookie and authorization headers for http requests etc.
+          const encoded = window.btoa(`${login.user.username}:${login.user.password}`);
+          
+          // Set encoded cookie and authorization headers for http requests etc.
           $cookies.put("HalloweenCredentials", encoded);
           $http.defaults.headers.common.Authorization = "Basic " + encoded;
+          UserFactory.setEncodedCredentials(encoded);
+          
           // Redirect
           $location.path("/home");
         } 
@@ -50,11 +49,10 @@ app.controller("Login", [
     login.register = function() {
       $http.post( `${apiUrl}/register`, {
         "username": login.user.username,
-        "password": login.user.password,
-        "first_name": login.user.first_name,
-        "last_name": login.user.last_name}
+        "password": login.user.password}
+      
       ).then(res => {
-        if (res.success) {
+        if (res.data.success) {
           login.login();
         }
       }, () => (console.error));
