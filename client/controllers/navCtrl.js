@@ -1,18 +1,20 @@
 app.controller("Nav", [
-  "AuthFactory", 
+  "UserFactory", 
   "$cookies",
   "$scope",
+  "$timeout",
   "$location",
-  function(AuthFactory, $cookies, $scope, $location) {
+  function(UserFactory, $cookies, $scope, $timeout, $location) {
 
     const nav = this;
+    nav.user = {};
     
-    nav.username = AuthFactory.getDecodedCredentials();
-    if (nav.username.length === 0 || nav.username === undefined) {
-      $location.path("/");
-    } else {
-      $scope.$emit("username", nav.username);
-    }
+    UserFactory.setUser().then((res) => {
+      nav.user = res;
+      $timeout();
+      // Emit user to other controllers.
+      $scope.$emit("user", nav.user);
+    });
 
     nav.currentPage = $location.path();
 
