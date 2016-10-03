@@ -8,13 +8,8 @@ app.factory( "UserFactory", [
 
     return {
 
-      encodeCredentials: (creds) => {
-        // Encodes credentials during login for cookie setting.
-        return window.btoa(`${creds.username}:${creds.password}`); 
-      },
-
       setEncodedCredentials:(creds) => {
-        // Receives encoded credentials from cookie in app.run
+        // Receives encoded credentials from cookie in app.run or from login function.
         encodedCredentials = creds;
       },
 
