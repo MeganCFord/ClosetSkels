@@ -1,10 +1,10 @@
 app.controller("Login", [
   "$location", 
   "$http",  
-  "AuthFactory", 
+  "UserFactory", 
   "apiUrl", 
   "$cookies",
-  function( $location, $http, AuthFactory, apiUrl, $cookies) {
+  function( $location, $http, UserFactory, apiUrl, $cookies) {
 
     const login = this;
 
@@ -30,23 +30,20 @@ app.controller("Login", [
           "username": login.user.username,
           "password": login.user.password
         }
-      }).success(res => {
-        if (res.success) {
-          /*
-          Login was successful, store credentials for use in requests
-          to API that require permissions
-           */
-          AuthFactory.encodeCredentials({
+      }).then(res => {
+        if (res.data.success) {
+          //Encode credentials
+          const encoded = UserFactory.encodeCredentials({
             username: login.user.username,
             password: login.user.password
           });
-          // create cookie and authorization headers for http requests etc.
-          $cookies.put("HalloweenCredentials", AuthFactory.getEncodedCredentials());
-          $http.defaults.headers.common.Authorization = "Basic " + AuthFactory.getEncodedCredentials();
+          // create encoded cookie and authorization headers for http requests etc.
+          $cookies.put("HalloweenCredentials", encoded);
+          $http.defaults.headers.common.Authorization = "Basic " + encoded;
           // Redirect
           $location.path("/home");
-        }
-      }).error(console.error);
+        } 
+      }, console.error);
     };
 
 
