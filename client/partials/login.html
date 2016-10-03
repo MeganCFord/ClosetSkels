@@ -1,4 +1,4 @@
-<div ng-if="login.registering===false" class="container">
+<div class="container">
   <h1 class="text-center">Login</h1>
   <form ng-submit="login.login()"
         class="form-horizontal col-sm-6 col-sm-offset-2">
@@ -25,7 +25,6 @@
     </div>
   </form>
 <div class="text-right col-sm-6 col-sm-offset-2">
-    <button  class="btn btn-info" ng-click="login.registering=true">New User</button>
+    <a  class="btn btn-info" href="#/register">New User</a>
 </div>
 </div>
-<div ng-if="login.registering===true" ng-include src="'partials/register.html'"></div>

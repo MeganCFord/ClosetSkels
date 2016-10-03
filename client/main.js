@@ -26,6 +26,11 @@ app.config(function($routeProvider) {
       controller: "Login",
       controllerAs: "login"
     })
+    .when("/register", {
+      templateUrl: "partials/register.html",
+      controller: "Login",
+      controllerAs: "login"
+    })
     .when("/home", {
       templateUrl: "partials/home.html", 
       controller: "Home", 
