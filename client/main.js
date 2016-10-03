@@ -2,14 +2,21 @@ const app = angular.module("Halloween", ["ngRoute", "ngAnimate", "ngCookies", "a
 
 app.constant("apiUrl", "http://localhost:8000");
 
-// on page load, get authorization cookie from browser if it exists and set credentials/permissions.
-app.run(function run(AuthFactory, $cookies, $http) {
-  const hc= $cookies.get("HalloweenCredentials");
+
+// on page load, get authorization cookie from browser if it exists-
+app.run(function run(UserFactory, $cookies, $http, $location) {
+  const hc = $cookies.get("HalloweenCredentials");
   if (hc) {
-    AuthFactory.decodeCredentials(hc);
-    $http.defaults.headers.common.Authorization = "Basic " + AuthFactory.getEncodedCredentials();
+    // Set http credentials for permissions.
+    $http.defaults.headers.common.Authorization = "Basic " + hc;
+    // Save encoded creds into user factory.
+    UserFactory.setEncodedCredentials(hc);
+  } else {
+    // If the cookie doesn't exist, send the user to the login page.
+    $location.path("/login");
   }
 });
+
 
 
 app.config(function($routeProvider) {
