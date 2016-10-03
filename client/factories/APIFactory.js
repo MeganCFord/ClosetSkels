@@ -7,12 +7,14 @@ app.factory( "APIFactory", [
 
     const errorHandle = (e) => {console.log(e);};
 
+    const getApiRoot = () => {
+      return httpGet.then(res => res.data);
+    };
 
     return {
   
-      getApiRoot: () => {
-        return httpGet.then(res => res.data);
-      },
+      getApiRoot: getApiRoot,
+
       //// USERS ////
       getUser: (username) => {
         // TODO: change this to the user ID? 
@@ -24,25 +26,8 @@ app.factory( "APIFactory", [
         }, errorHandle);
       },
 
-      getUserInfo: (username) => {
-        return getUser(username)
-        .then((res) => {
-          return res[0];
-        }, errorHandle);
-      },
-
       //// BOOS ////
       
-      getUserBoos: (id) => {
-        // TODO: move this into costumes?
-        return getApiRoot()
-        .then((root)=> {
-          return $http.get(`${root.boos}?userid=${id}`);
-        }, errorHandle)
-        .then((res) => {
-          return res.data;
-        });
-      },
       addBoo: (userUrl, costumeUrl) => {
         return getApiRoot()
         .then((root)=> {
