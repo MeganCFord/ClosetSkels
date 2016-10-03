@@ -2,10 +2,11 @@ app.controller("Likes",[
   "$scope",
   "$timeout",
   "APIFactory",
+  "CostumeFactory",
   "$http",
   "$uibModal",
   "$location", 
-  function($scope, $timeout, APIFactory, $http, $uibModal, $location) {
+  function($scope, $timeout, APIFactory, CostumeFactory, $http, $uibModal, $location) {
     const likes = this;
     likes.title="likes page";
 
@@ -15,35 +16,45 @@ app.controller("Likes",[
     
     $scope.$on("username", function(event, data) {
       $timeout().then(()=> {
-        likes.username = data;
-        $timeout();
+        likes.username = data; 
         return data;
-      }).then((data)=> {
-        return APIFactory.getUserInfo(data);
-      }).then((res)=> {
-        likes.userInfo = res;
-        $timeout();
-      }, e => console.error)
-      .then((res)=> {
-        return APIFactory.getUserBoos(likes.userInfo.id);
-      }).then((res)=> {
-        console.log("user boos", res);
-        likes.boos = res;
-        $timeout();
-        return res;
-      }, e=> console.error)
-      .then((boos) => {
-        const booPromises = boos.map((magic) => {
-          if(magic.costume != undefined) {
-            return $http.get(magic.costume).then((res) => {
-              likes.boodCostumes.push(res.data);
-              $timeout();
-              console.log("bood costumes", likes.boodCostumes);
-            }, e=> console.error);
-          }
-        });
-      }, e=> console.error);
+      }).then(() => {
+        return CostumeFactory.getUserBoos(data);
+      }).then((res) => {
+        console.log(res);
+      });
     });
+    // $scope.$on("username", function(event, data) {
+    //   $timeout().then(()=> {
+    //     likes.username = data;
+    //     $timeout();
+    //     return data;
+    //   }).then((data)=> {
+    //     return APIFactory.getUserInfo(data);
+    //   }).then((res)=> {
+    //     likes.userInfo = res;
+    //     $timeout();
+    //   }, e => console.error)
+    //   .then((res)=> {
+    //     return APIFactory.getUserBoos(likes.userInfo.id);
+    //   }).then((res)=> {
+    //     console.log("user boos", res);
+    //     likes.boos = res;
+    //     $timeout();
+    //     return res;
+    //   }, e=> console.error)
+    //   .then((boos) => {
+    //     const booPromises = boos.map((magic) => {
+    //       if(magic.costume != undefined) {
+    //         return $http.get(magic.costume).then((res) => {
+    //           likes.boodCostumes.push(res.data);
+    //           $timeout();
+    //           console.log("bood costumes", likes.boodCostumes);
+    //         }, e=> console.error);
+    //       }
+    //     });
+    //   }, e=> console.error);
+    // });
 
     likes.unBoo = (boourl) => {
       console.log("unbooing", boourl);
