@@ -16,13 +16,16 @@
             <button class="btn btn-default boobutton floatingboo nohoverdefault pull-right">{{costume.boos.length}}   <i class="em em-ghost"></i>s</button>
           </h4>
           <hr>
-           <button ng-repeat="boo in costume.boos" class="btn btn-danger boobutton" ng-show="boo.owner==home.userInfo.url" ng-click="home.unBoo(boo.url)">Un<i class="em em-ghost"></i></button>
-          <button class="btn btn-success boobutton" ng-hide="home.hasUserBood(costume.boos)==true" ng-click="home.boo(costume.url)"><i class="em em-ghost"></i></button>
+          <!-- Show unboo button if user has bood. -->
+          <button ng-repeat="boo in filteredBoos = (costume.boos | filter:hasUserBood)" class="btn btn-danger boobutton" ng-click="home.unBoo(boo.url)">Un<i class="em em-ghost"></i></button>
+          <!-- Hide boo button if user has bood. -->
+          <button class="btn btn-success boobutton" ng-show="!filteredBoos.length" ng-click="home.boo(costume.url)"><i class="em em-ghost"></i></button>
+
           <a ng-click="home.openModal(costume)" class="btn btn-default">View</a>
         </div>
       </div>
       <div ng-if="home.filtering" ng-include="'partials/filteredhome.html'">
-        <!-- including filtered results. -->
+        <!-- filtered results -->
       </div>
     </div>
   </div>

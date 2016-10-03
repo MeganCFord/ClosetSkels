@@ -1,50 +1,38 @@
-
 app.controller("Home",[
   "$scope",
   "APIFactory",
+  "CostumeFactory",
   "$timeout",
   "$uibModal",
-  function($scope, APIFactory, $timeout, $uibModal) {
+  function($scope, APIFactory, CostumeFactory, $timeout, $uibModal) {
     const home = this;
-    home.title="home page";
-    //Filtered costumes.
-    home.costumes = [];
-    home.username="";
-    home.userInfo={};
 
+    // Search box.
     home.search = "";
+
     // tags and supply tags are objects, supply is a url.
     home.filtering = false;
     home.filterer = {"tags": [], "supply": "", "supplytags": []};
-    home.tags = [];
-    home.supplies = []; 
     
     home.matches = {};
 
-    // assign the username for DOM, get the user URL for passing to boos.
-    $scope.$on("username", function(event, data) {
-      $timeout().then(() => {
-        home.username = data; 
-        return data;
-      }).then(() => {
-        return APIFactory.getUserInfo(home.username);
-      }).then((res) => {
-        home.userInfo = res; 
-        $timeout();
-      }, e=> console.error);
+    // Set user info for boos.
+    $scope.$on("user", function(event, data) {
+      home.user = data; 
+      $timeout();
     });
 
-    // Load costumes.
-    APIFactory.getCostumes()
+    // Load all (public) costumes.
+    CostumeFactory.getPublicCostumes()
     .then((res) => {
       home.costumes = res;
       $timeout();
     }, e=>console.error);
 
-    // Load all supplies.
+    // Load all elements.
     APIFactory.getElements()
     .then((res)=> {
-      home.supplies = res;
+      home.elements = res;
       $timeout();
     }, e => console.error);
 
@@ -54,36 +42,32 @@ app.controller("Home",[
       home.tags = res; 
       $timeout();
     }, e => console.error);
-    
 
-
-    // Checks each costume list of boos to return true if the user has bood, which will show/hide the 'boo' button as needed.
-    home.hasUserBood = (costumeBoos) => {
-      let userBoo = false;
-      for (const index in costumeBoos) {
-        if (costumeBoos[index].owner==home.userInfo.url) {
-          userBoo= true;
-          break;
-        }
+    // Filter to check whether user has 'boo'd each costume.
+    home.hasUserBood = (boo) => {
+      if(boo.owner === home.user.url) {
+        return true;
+      } else {
+        return false;
       }
-      return userBoo;
     };
-
+    
     // Boo functionality
     home.boo = (costumeurl) => {
-      APIFactory.addBoo(home.userInfo.url, costumeurl)
+      APIFactory.addBoo(home.user.url, costumeurl)
       .then(()=> {
-        return APIFactory.getCostumes();
+        return CostumeFactory.getPublicCostumes();
       }, e=>console.error)
       .then((res) => {
         home.costumes = res;
         $timeout();
       }, e=>console.error);
     };
+
     home.unBoo = (boourl) => {
-      APIFactory.deleteBoo(boourl)
+      APIFactory.deleteSomething(boourl)
       .then(() => {
-        return APIFactory.getCostumes();
+        return CostumeFactory.getPublicCostumes();
       }, e=>console.error)
       .then((res)=> {
         home.costumes=res;
