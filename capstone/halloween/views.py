@@ -107,12 +107,16 @@ class Boo(viewsets.ModelViewSet):
   def get_queryset(self): 
     '''
     Optionally restricts returned queryset to boos owned by a given user, 
-    by filtering against a 'userid' query perameter in the URL.
+    by filtering against a 'userid' query perameter in the URL. 
+    The restricted queryset returns the costume object related to the boo.
     '''
     queryset = DjangoBoo.objects.all()
-    userid = self.request.query_params.get("userid", None)
-    if userid is not None:
-      queryset = queryset.filter(owner=userid)
+    username = self.request.query_params.get("username", None)
+    if username is not None:
+      queryset = []
+      for e in DjangoBoo.objects.filter(owner__username=username).select_related('costume'):
+        print(e)
+        queryset.add(e.costume)
     return queryset
 
 

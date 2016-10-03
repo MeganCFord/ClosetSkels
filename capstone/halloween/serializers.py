@@ -31,7 +31,7 @@ class BooSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CostumeSerializer(serializers.HyperlinkedModelSerializer):
-  boos=BooSerializer(many=True, read_only=True)
+  boos = BooSerializer(many=True, read_only=True)
   tags = TagSerializer(many=True) 
 
   class Meta: 
