@@ -14,12 +14,13 @@ app.controller("Likes",[
     likes.boodCostumes = [];
     likes.search = "";
     
-    $scope.$on("username", function(event, data) {
+    $scope.$on("user", function(event, data) {
       $timeout().then(()=> {
-        likes.username = data; 
+        likes.user = data;
+        $timeout(); 
         return data;
       }).then(() => {
-        return CostumeFactory.getUserBoos(data);
+        return CostumeFactory.getUserBoos(likes.user.id);
       }).then((res) => {
         console.log(res);
       });
