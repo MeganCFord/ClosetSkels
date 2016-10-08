@@ -1,87 +1,60 @@
 app.controller("Detail",[
   "$scope",
   "APIFactory",
+  "CostumeFactory",
   "$timeout",
   "$location",
-  "$routeParams", 
   "$uibModalInstance",
-  "costume",
-  "userInfo",
-  "$cookies",
-  function($scope, APIFactory, $timeout, $location, $routeParams, $uibModalInstance, costume, userInfo, $cookies) {
+  "costume", // Sent in from modal open resolve.
+  "user", // Sent in from modal open resolve.
+  function($scope, APIFactory, CostumeFactory, $timeout, $location, $uibModalInstance, costume, user) {
     const detail = this;
 
     detail.costume = costume;
-    console.log("costume", detail.costume);
-    detail.supplies = [];
-    detail.userInfo = userInfo;
-    console.log("user info", detail.userInfo);
-    detail.userBoo = false;
+    detail.user = user;
 
-
-    APIFactory.getCostumeElements(detail.costume.id)
+    APIFactory.getSupplies(detail.costume.id)
     .then((res)=> {
+      console.log("supplies", res);
       detail.supplies = res;
       $timeout();
     }, e => console.error);
 
-        
-
-    // Get the user URL for boo'ing.
-    $scope.$on("username", function(event, data) {
-      $timeout().then(() => {
-        return APIFactory.getUserInfo(data);
-      }).then((res) => {
-        detail.userInfo = res; 
-        $timeout();
-      }, e=> console.error)
-      .then(() => {
-        // Set user boo variable.
-        for (const index in detail.costume.boos) {
-          // two equals signs here because the userInfo url is an expression not a string.
-          if (detail.costume.boos[index].owner == detail.userInfo.url) {
-            detail.userBoo = true;
-            break;
-          }
-        }
-      });
-    });
-
     
-    // Boo functionality
+    // BOO FUNCTIONALITY //
 
     detail.boo = () => {
-      APIFactory.addBoo(detail.userInfo.url, detail.costume.url)
+      // Create new boo.
+      APIFactory.createBoo(detail.user.url, detail.costume.url)
       .then((res) => {
+        // Add created boo to list of costume boos.
         detail.costume.boos.push(res);
-        detail.userBoo = true;
         $timeout();
       }, e=>console.error);
     };
 
-    detail.unBoo = () => {
-      let boourl = "";
-      for(const index in detail.costume.boos) {
-        if (detail.costume.boos[index].owner == detail.userInfo.url) {
-          boourl = detail.costume.boos[index].url;
-          detail.costume.boos.splice(index, 1);
-        }
-      }
-      APIFactory.deleteBoo(boourl)
-      .then(() => {
-        detail.userBoo = false;
-        $timeout();
-      }, e=>console.error);
+    detail.unBoo = (boo) => {
+      // Splice boo out of local costume copy.
+      detail.costume.boos.splice(detail.costume.boos.indexOf(boo), 1);
+      // Remove boo via url.
+      APIFactory.deleteSomething(boo.url);
     };
+
 
     detail.copyToCloset = () => {
+      // Edit existing costume object 
+      if(detail.costume["$$hashkey"]) {
+        delete detail.costume["$$hashkey"];
+      }
       delete detail.costume["url"];
       delete detail.costume["id"];
       detail.costume.owner = detail.userInfo.url;
       detail.costume.public = false;
-
-      APIFactory.createCostume(detail.costume)
+      // Create a new costume using most of existing info.
+      // TODO: what happens with creating new supplies for the costume copy??? I don't think that's working.
+      CostumeFactory.createCostume(detail.costume)
       .then(() => {
+        // Redirect to costume closet page.
         $location.path("/closet");
         $uibModalInstance.close();
       }, e=>console.error);
@@ -89,13 +62,14 @@ app.controller("Detail",[
     };
 
     detail.goToEdit = () => {
+      // redirect to edit page.
       $location.path(`/${detail.costume.id}/edit`);
       $uibModalInstance.close();
     };
   
 
     detail.cancel = function () {
-      // Closes the modal, doing nothing.
+      // Close the modal, doing nothing.
       $uibModalInstance.dismiss("cancel");
     };
   }]);

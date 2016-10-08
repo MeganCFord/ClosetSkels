@@ -1,6 +1,3 @@
-<!-- <div ng-include="'partials/navbar.html'" class="navbar navbar-default" ng-controller="Nav as nav"></div> -->
-
-
 <div class="container-fluid">
   <div class="col col-sm-3 scrollingsidebar">
     <div ng-repeat="supply in detail.supplies">
@@ -26,6 +23,10 @@
            <div ng-if="detail.costume.image.length >0">
             <img class="img-thumbnail center-block" style="max-width: 33vh; max-height: 50vh" ng-src="{{detail.costume.image}}" alt="costume image">
           </div>
+          <!-- if there is no image uploaded. -->
+          <div ng-if="detail.costume.image.length===0">
+            <h4 class="text-center">No Costume Image</h4>
+          </div>
 
         </div>
         <div class="col col-sm-6">
@@ -44,14 +45,20 @@
     <div  style="padding-bottom: 5px" class="text-right">
     <!-- how many boos. -->
      <button class="btn btn-default boobutton nohoverdefault">{{detail.costume.boos.length}}   <i class="em em-ghost"></i>s</button>
-      <!-- unboo button -->
-      <button ng-if="detail.userBoo" ng-click="detail.unBoo()" class="btn btn-danger boobutton">Un <i class="em em-ghost"></i></button>
-      <!-- boo button -->
-      <button ng-if="!detail.userBoo" ng-click="detail.boo()" class="btn btn-success boobutton"><i class="em em-ghost"></i></button>
-      <button ng-hide="detail.costume.owner === detail.userInfo.url" ng-click="detail.copyToCloset()" class="btn btn-info">Save to Closet</button>
-      <a ng-show="detail.costume.owner === detail.userInfo.url" ng-click="detail.goToEdit()"class="btn btn-info">Edit</a>
-      <!-- TODO: store the previous path in the resolve for the detail view. -->
-      <button class="btn btn-default" ng-click="detail.cancel()">back</button>
+     <!-- unboo button, checking if owner exists in list of costume boos. -->
+      <button ng-repeat="boo in detail.costume.boos | filterBy:['owner']: detail.user.url as unbooable" class="btn boobutton btn-danger" ng-click="detail.unBoo(boo)">Un<i class="em em-ghost"></i></button>
+
+      <!-- boo button, checking if unboo button is showing. -->
+      <button  class="btn btn-success boobutton" ng-if="unbooable | isEmpty" ng-click="detail.boo()"><i class="em em-ghost"></i></button>
+
+      <!-- Copy to closet button, if costume is not owned by user. -->
+      <button ng-hide="detail.costume.owner === detail.user.url" ng-click="detail.copyToCloset()" class="btn btn-info">Save to Closet</button>
+
+      <!-- Edit button, if costume is owned by user. -->
+      <a ng-show="detail.costume.owner===detail.user.url" ng-click="detail.goToEdit()" class="btn btn-info">Edit</a>
+
+      <!-- Close modal button. -->
+      <button class="btn btn-default" ng-click="detail.cancel()">Close</button>
     </div>
   </div>
 </div>
