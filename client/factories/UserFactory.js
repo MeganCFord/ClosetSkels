@@ -29,9 +29,11 @@ app.factory( "UserFactory", [
       },
 
       getUser: () => {
+        // If the user object has already been gotten via setUser, return user object.
         if(userObject.length > 0) {
           return userObject;     
         } else {
+          // Otherwise, run setUser to get the current user object via decoding and http.
           return setUser();
         }
       }
