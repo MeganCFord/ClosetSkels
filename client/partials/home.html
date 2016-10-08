@@ -1,31 +1,37 @@
+<!-- Navbar. -->
 <div ng-include="'partials/navbar.html'" class="navbar navbar-default" ng-controller="Nav as nav"></div>
 
 
 <div class="container-fluid">
   <div class="col col-sm-3 filtersidebar">
+    <!-- Filter sidebar is included here. -->
     <div ng-include="'partials/filter.html'"></div>
   </div>
   <div class="col col-sm-9">
     <div class="container-fluid">
+      <!-- Page titles. -->
       <h1 ng-if="!home.filtering" style="padding-left: 15px">Browse</h1> 
       <h1 ng-if="home.filtering" style="padding-left: 15px">Search</h1> 
       <hr>
       <div class="col col-sm-6" ng-repeat="costume in home.costumes | filter:home.search" ng-if="!home.filtering">
         <div class="well well-lg card">
           <h4>{{costume.name}}
+            <!-- How many boos. -->
             <button class="btn btn-default boobutton floatingboo nohoverdefault pull-right">{{costume.boos.length}}   <i class="em em-ghost"></i>s</button>
           </h4>
           <hr>
-          <!-- Show unboo button if user has bood. -->
-          <button ng-repeat="boo in filteredBoos = (costume.boos | filter:hasUserBood)" class="btn btn-danger boobutton" ng-click="home.unBoo(boo.url)">Un<i class="em em-ghost"></i></button>
-          <!-- Hide boo button if user has bood. -->
-          <button class="btn btn-success boobutton" ng-show="!filteredBoos.length" ng-click="home.boo(costume.url)"><i class="em em-ghost"></i></button>
+          <!-- unboo button, checking if owner exists in list of costume boos. -->
+          <button ng-repeat="boo in costume.boos | filterBy:['owner']: home.user.url as unbooable" class="btn boobutton btn-danger" ng-click="home.unBoo(costume, boo)">Un<i class="em em-ghost"></i></button>
 
+          <!-- boo button, checking if unboo button is showing. -->
+          <button  class="btn btn-success boobutton" ng-if="unbooable | isEmpty" ng-click="home.boo(costume)"><i class="em em-ghost"></i></button>
+
+          <!-- view costume button. -->
           <a ng-click="home.openModal(costume)" class="btn btn-default">View</a>
         </div>
       </div>
       <div ng-if="home.filtering" ng-include="'partials/filteredhome.html'">
-        <!-- filtered results -->
+        <!-- filtered results div.-->
       </div>
     </div>
   </div>
