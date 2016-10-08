@@ -10,39 +10,26 @@ app.controller("Likes",[
     const likes = this;
     likes.title="likes page";
 
-    likes.boos = [];
+    // likes.boos = [];
     likes.boodCostumes = [];
     likes.search = "";
     
     $scope.$on("user", function(event, data) {
       $timeout().then(()=> {
+        // Save User data.
         likes.user = data;
         $timeout(); 
         return data;
       }).then(() => {
-        return CostumeFactory.getUserBoos(likes.user.id);
+        // Get all the boos owned by the user.
+        return APIFactory.getUserBoos(likes.user.id);
       }).then((res) => {
-        console.log(res);
+        console.log("hey here are the boos", res);
+        likes.boos = res;
       });
     });
-    // $scope.$on("username", function(event, data) {
-    //   $timeout().then(()=> {
-    //     likes.username = data;
-    //     $timeout();
-    //     return data;
-    //   }).then((data)=> {
-    //     return APIFactory.getUserInfo(data);
-    //   }).then((res)=> {
-    //     likes.userInfo = res;
-    //     $timeout();
-    //   }, e => console.error)
-    //   .then((res)=> {
-    //     return APIFactory.getUserBoos(likes.userInfo.id);
-    //   }).then((res)=> {
-    //     console.log("user boos", res);
-    //     likes.boos = res;
-    //     $timeout();
-    //     return res;
+
+   
     //   }, e=> console.error)
     //   .then((boos) => {
     //     const booPromises = boos.map((magic) => {

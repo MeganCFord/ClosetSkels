@@ -38,7 +38,7 @@ app.controller("Home",[
     // Boo functionality
     home.boo = (costume) => {
       // create a boo
-      APIFactory.addBoo(home.user.url, costume.url)
+      APIFactory.createBoo(home.user.url, costume.url)
       .then((res)=> {
         // add the created boo to the list of costume boos.
         costume.boos.push(res);
@@ -47,18 +47,17 @@ app.controller("Home",[
     };
 
     home.unBoo = (costume, boo) => {
+      // remove the boo object from the costume list of boos. 
+      costume.boos.splice(costume.boos.indexOf(boo), 1);
       // Delete boo via its url property.
-      APIFactory.deleteSomething(boo.url)
-      .then(()=> {
-        // remove the boo object from the costume list of boos. 
-        costume.boos.splice(costume.boos.indexOf(boo), 1);
-        $timeout();
-      }, e=> console.error);
+      APIFactory.deleteSomething(boo.url);
+  
     };
 
     home.openModal = (costume) => {
     // Opens costume detail modal.
-    // Sends the entire object of the costume clicked into modal for display.
+    // Sends the entire object of the costume clicked, 
+    // And the user info.
       const modalInstance = $uibModal.open({
         size: "lg",
         templateUrl: "/partials/detail.html", 
@@ -66,7 +65,7 @@ app.controller("Home",[
         controllerAs: "detail", 
         resolve: {
           "costume": costume, 
-          "userInfo": home.userInfo
+          "user": home.user
         }
       });
     };
