@@ -12,6 +12,7 @@
     <div class="container-fluid">
       <h1 style="padding-left: 15px">Boos</h1> 
       <hr>
+      <!-- Repeating costumes within Boos so unBoo functionality is simpler. -->
       <div class="col col-sm-6" ng-repeat="boo in likes.boos">
         <div ng-repeat="costume in likes.boodCostumes | filterBy:['url']:boo.costume | filter:likes.search">
           <div class="well well-lg card">
@@ -20,8 +21,8 @@
             </h4>
             <hr>
             <a ng-click="likes.openModal(costume)" class="btn btn-default">View</a>
-            <button class="btn btn-info" ng-click="likes.saveToCloset(costume)">Save</button>
-            <button class="btn btn-danger boobutton" ng-click="likes.unBoo(boo.url)">un<i class="em em-ghost"></i></button>
+            <button class="btn btn-info" ng-click="likes.copyToCloset(costume)">Save</button>
+            <button class="btn btn-danger boobutton" ng-click="likes.unBoo(boo)">un<i class="em em-ghost"></i></button>
           </div>
         </div>
       </div>

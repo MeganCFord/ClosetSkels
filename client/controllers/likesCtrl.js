@@ -3,16 +3,13 @@ app.controller("Likes",[
   "$timeout",
   "APIFactory",
   "CostumeFactory",
-  "$http",
   "$uibModal",
   "$location", 
-  function($scope, $timeout, APIFactory, CostumeFactory, $http, $uibModal, $location) {
+  function($scope, $timeout, APIFactory, CostumeFactory, $uibModal, $location) {
     const likes = this;
     likes.title="likes page";
 
-    // likes.boos = [];
     likes.boodCostumes = [];
-    likes.search = "";
     
     $scope.$on("user", function(event, data) {
       $timeout().then(()=> {
@@ -23,43 +20,30 @@ app.controller("Likes",[
       }).then(() => {
         // Get all the boos owned by the user.
         return APIFactory.getUserBoos(likes.user.id);
-      }).then((res) => {
-        console.log("hey here are the boos", res);
-        likes.boos = res;
-      });
+      }).then((boos) => {
+        // Saving the boos so they can be deleted.
+        likes.boos = boos;
+        const booPromises = boos.map((boo) => {
+          // Get the costume object for each Boo. 
+          return APIFactory.getSomething(boo.costume).then((res) => {
+            likes.boodCostumes.push(res);
+            $timeout();
+          }, e=> console.error);
+        });
+      }, e=> console.error);
     });
 
-   
-    //   }, e=> console.error)
-    //   .then((boos) => {
-    //     const booPromises = boos.map((magic) => {
-    //       if(magic.costume != undefined) {
-    //         return $http.get(magic.costume).then((res) => {
-    //           likes.boodCostumes.push(res.data);
-    //           $timeout();
-    //           console.log("bood costumes", likes.boodCostumes);
-    //         }, e=> console.error);
-    //       }
-    //     });
-    //   }, e=> console.error);
-    // });
-
-    likes.unBoo = (boourl) => {
-      console.log("unbooing", boourl);
-      return $http.delete(boourl)
-      .then(()=> {
-        for (const index in likes.boos) {
-          if (likes.boos[index].url ===boourl) {
-            likes.boos.splice(index, 1);
-            console.log("new bood costumes", likes.boos);
-          }
-        }
-        $timeout();
-      }, e=> console.error);
+    likes.unBoo = (boo) => {
+      // remove the boo object from the list of boos.
+      likes.boos.splice(likes.boos.indexOf(boo), 1);
+      // Delete boo via its url property.
+      APIFactory.deleteSomething(boo.url); 
     };
 
     likes.openModal = (costume) => {
-    //Sending the entire object into modal.
+    // Opens costume detail modal.
+    // Sends the entire object of the costume clicked, 
+    // And the user info.      
       const modalInstance = $uibModal.open({
         size: "lg",
         templateUrl: "/partials/detail.html", 
@@ -67,25 +51,27 @@ app.controller("Likes",[
         controllerAs: "detail", 
         resolve: {
           "costume": costume, 
-          "userInfo": likes.userInfo
+          "user": likes.user
         }
       });
     };
 
-    likes.saveToCloset = (costume) => {
-      const costumeToSave = costume;
-      delete costumeToSave["url"];
-      delete costumeToSave["id"];
-      if(costumeToSave["$$hashKey"]) {
-        delete costumeToSave["$$hashKey"];
+    likes.copyToCloset = (costume) => {
+      // Edit existing costume object 
+      if(costume["$$hashKey"]) {
+        delete costume["$$hashKey"];
       }
-      costumeToSave.owner = likes.userInfo.url;
-      costumeToSave.public = false;
-
-      APIFactory.createCostume(costumeToSave)
+      delete costume["url"];
+      delete costume["id"];
+      costume.owner = likes.userInfo.url;
+      costume.public = false;
+      // Create a new costume using most of existing info.
+      CostumeFactory.createCostume(costume)
       .then(() => {
+        // Redirect to costume closet page.
         $location.path("/closet");
       }, e=>console.error);
     };
+
   }]);
 
