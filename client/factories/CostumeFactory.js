@@ -31,31 +31,30 @@ app.factory( "CostumeFactory", [
         .then((res) => {
           return res.data[0];
         });
+      },
+
+      getOneCostume: (id) => {
+        // Gets one costume via id, for editing.
+        return APIFactory.getApiRoot()
+        .then((root) => {
+          return $http.get(`${root.costumes}?costumeid=${id}`);
+        }, errorHandle)
+        .then((res)=> {
+          return res.data[0];
+        }, errorHandle);
+      }, 
+
+      createCostume: (data) => {
+        console.log("data", data);
+      // return APIFactory.getApiRoot()
+      //   .then((root) => {
+      //     return $http.post(`${root.costumes}`, data);
+      //   }, errorHandle)
       }
 
     };
   }]);
 
-
-      // //// COSTUMES ////
-
-      // getOneCostume: (id) => {
-      //   // Gets one costume for editing.
-      //   return getApiRoot()
-      //   .then((root) => {
-      //     return $http.get(`${root.costumes}?costumeid=${id}`);
-      //   }, errorHandle)
-      //   .then((res)=> {
-      //     return res.data[0];
-      //   }, errorHandle);
-      // },
-      // createCostume: (data) => {
-      //   return getApiRoot()
-      //   .then((root) => {
-      //     return $http.post(`${root.costumes}`, data);
-      //   }, errorHandle)
-      //   .then(()=> true, errorHandle);
-      // },
       // updateCostume: (data) => {
       //   return $http.put(`${data.url}`, data)
       //   .then((res) => {
