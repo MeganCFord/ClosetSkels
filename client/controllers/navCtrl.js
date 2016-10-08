@@ -9,7 +9,7 @@ app.controller("Nav", [
     const nav = this;
     nav.user = {};
     
-    UserFactory.setUser().then((res) => {
+    UserFactory.getUser().then((res) => {
       nav.user = res;
       $timeout();
       // Emit user to other controllers.
