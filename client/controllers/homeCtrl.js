@@ -7,16 +7,7 @@ app.controller("Home",[
   function($scope, APIFactory, CostumeFactory, $timeout, $uibModal) {
     const home = this;
 
-    // Search box.
-    home.search = "";
-
-    // tags and supply tags are objects, supply is a url.
-    home.filtering = false;
-    home.filterer = {"tags": [], "supply": "", "supplytags": []};
-    
-    home.matches = {};
-
-    // Set user info for boos.
+    // Set user info via nav data.
     $scope.$on("user", function(event, data) {
       home.user = data; 
       $timeout();
@@ -43,38 +34,51 @@ app.controller("Home",[
       $timeout();
     }, e => console.error);
 
-    // Filter to check whether user has 'boo'd each costume.
-    home.hasUserBood = (boo) => {
-      if(boo.owner === home.user.url) {
-        return true;
-      } else {
-        return false;
-      }
-    };
     
     // Boo functionality
-    home.boo = (costumeurl) => {
-      APIFactory.addBoo(home.user.url, costumeurl)
-      .then(()=> {
-        return CostumeFactory.getPublicCostumes();
-      }, e=>console.error)
-      .then((res) => {
-        home.costumes = res;
+    home.boo = (costume) => {
+      // create a boo
+      APIFactory.addBoo(home.user.url, costume.url)
+      .then((res)=> {
+        // add the created boo to the list of costume boos.
+        costume.boos.push(res);
         $timeout();
       }, e=>console.error);
     };
 
-    home.unBoo = (boourl) => {
-      APIFactory.deleteSomething(boourl)
-      .then(() => {
-        return CostumeFactory.getPublicCostumes();
-      }, e=>console.error)
-      .then((res)=> {
-        home.costumes=res;
+    home.unBoo = (costume, boo) => {
+      // Delete boo via its url property.
+      APIFactory.deleteSomething(boo.url)
+      .then(()=> {
+        // remove the boo object from the costume list of boos. 
+        costume.boos.splice(costume.boos.indexOf(boo), 1);
         $timeout();
       }, e=> console.error);
     };
 
+    home.openModal = (costume) => {
+    // Opens costume detail modal.
+    // Sends the entire object of the costume clicked into modal for display.
+      const modalInstance = $uibModal.open({
+        size: "lg",
+        templateUrl: "/partials/detail.html", 
+        controller: "Detail",
+        controllerAs: "detail", 
+        resolve: {
+          "costume": costume, 
+          "userInfo": home.userInfo
+        }
+      });
+    };
+
+
+
+    // FILTER FUNCTIONALITY. TODO: completely redo this.
+    // tags and supply tags are objects, supply is a url.
+    home.filtering = false;
+    home.filterer = {"tags": [], "supply": "", "supplytags": []};
+    
+    home.matches = {};
     home.addTag = (tag) => {
       home.filterer.tags.push(tag);
     };
@@ -202,21 +206,6 @@ app.controller("Home",[
       home.matches = [];
       home.filtering = false;
       $timeout();
-    };
-
-    home.openModal = (costume) => {
-      console.log("costume I'm sending", costume);
-    //Sending the entire object into modal.
-      const modalInstance = $uibModal.open({
-        size: "lg",
-        templateUrl: "/partials/detail.html", 
-        controller: "Detail",
-        controllerAs: "detail", 
-        resolve: {
-          "costume": costume, 
-          "userInfo": home.userInfo
-        }
-      });
     };
 
   }]);
