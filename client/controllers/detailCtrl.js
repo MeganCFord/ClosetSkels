@@ -5,8 +5,8 @@ app.controller("Detail",[
   "$timeout",
   "$location",
   "$uibModalInstance",
-  "costume", // Sent in from modal open resolve.
-  "user", // Sent in from modal open resolve.
+  "costume", // Sent in from modal-open resolve.
+  "user", // Sent in from modal-open resolve.
   function($scope, APIFactory, CostumeFactory, $timeout, $location, $uibModalInstance, costume, user) {
     const detail = this;
 
@@ -15,7 +15,6 @@ app.controller("Detail",[
 
     APIFactory.getSupplies(detail.costume.id)
     .then((res)=> {
-      console.log("supplies", res);
       detail.supplies = res;
       $timeout();
     }, e => console.error);
@@ -51,14 +50,12 @@ app.controller("Detail",[
       detail.costume.owner = detail.userInfo.url;
       detail.costume.public = false;
       // Create a new costume using most of existing info.
-      // TODO: what happens with creating new supplies for the costume copy??? I don't think that's working.
       CostumeFactory.createCostume(detail.costume)
       .then(() => {
         // Redirect to costume closet page.
         $location.path("/closet");
         $uibModalInstance.close();
       }, e=>console.error);
-
     };
 
     detail.goToEdit = () => {
@@ -67,7 +64,6 @@ app.controller("Detail",[
       $uibModalInstance.close();
     };
   
-
     detail.cancel = function () {
       // Close the modal, doing nothing.
       $uibModalInstance.dismiss("cancel");
