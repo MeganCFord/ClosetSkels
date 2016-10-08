@@ -4,22 +4,32 @@ app.factory( "APIFactory", [
   function($http, apiUrl) {
 
     const httpGet = $http.get(apiUrl);
+    
+    const errorHandle = (e) => {console.log(e);};
 
     const getApiRoot = () => {
       return httpGet.then(res => res.data);
     };
 
-    const errorHandle = (e) => {console.log(e);};
-
-    let currentUser = {};
-
     return {
-  
       getApiRoot: getApiRoot,
 
       //// BOOS ////
       
-      addBoo: (userUrl, costumeUrl) => {
+      getUserBoos: (userid) => {
+        // Get all costumes 'bood' (liked) by a given user, via boo database table.
+        // Argument: user id
+        return getApiRoot()
+        .then((root)=> {
+          return $http.get(`${root.boos}?userid=${userid}`);
+        }, errorHandle)
+        .then((res) => {
+          return res.data;
+        });
+      },  
+      createBoo: (userUrl, costumeUrl) => {
+        // Add a new 'boo'. 
+        // Arguments: URL of current user, URL of costume clicked. 
         return getApiRoot()
         .then((root)=> {
           return $http.post(`${root.boos}`, {"owner": userUrl, "costume": costumeUrl});
@@ -66,32 +76,6 @@ app.factory( "APIFactory", [
         .then((res)=> res.data);
       }, 
 
-      //// COSTUMES ////
-
-      getOneCostume: (id) => {
-        // Gets one costume for editing.
-        return getApiRoot()
-        .then((root) => {
-          return $http.get(`${root.costumes}?costumeid=${id}`);
-        }, errorHandle)
-        .then((res)=> {
-          return res.data[0];
-        }, errorHandle);
-      },
-      createCostume: (data) => {
-        return getApiRoot()
-        .then((root) => {
-          return $http.post(`${root.costumes}`, data);
-        }, errorHandle)
-        .then(()=> true, errorHandle);
-      },
-      updateCostume: (data) => {
-        return $http.put(`${data.url}`, data)
-        .then((res) => {
-          return res.data;
-        }, errorHandle);
-      }, 
-
       //// SUPPLIES ////
 
       createSupply: (data) => {
@@ -104,14 +88,14 @@ app.factory( "APIFactory", [
           return res.data[0];
         });     
       }, 
-      getSupplies: (costume=null) => {
-        // Gets the supplies either for an uncreated costume, or for the selected costume. This is not scaleable: TODO: make supplies attached to a user.
+      getSupplies: (costumeid=null) => {
+        // Gets the supplies either for an uncreated costume, or for the selected costume. TODO: make supplies attached to a user so multiple users can be creating costumes/have created supplies at once.
         return getApiRoot()
         .then((root) => {
-          if (costume===null) {
+          if (costumeid===null) {
             return $http.get(`${root.supplies}`);
           } else {
-            return $http.get(`${root.supplies}?costume=${costume}`);
+            return $http.get(`${root.supplies}?costumeid=${costumeid}`);
           }
         }, errorHandle)
         .then((res)=> res.data);

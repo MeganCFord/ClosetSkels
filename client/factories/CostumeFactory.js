@@ -35,3 +35,30 @@ app.factory( "CostumeFactory", [
 
     };
   }]);
+
+
+      // //// COSTUMES ////
+
+      // getOneCostume: (id) => {
+      //   // Gets one costume for editing.
+      //   return getApiRoot()
+      //   .then((root) => {
+      //     return $http.get(`${root.costumes}?costumeid=${id}`);
+      //   }, errorHandle)
+      //   .then((res)=> {
+      //     return res.data[0];
+      //   }, errorHandle);
+      // },
+      // createCostume: (data) => {
+      //   return getApiRoot()
+      //   .then((root) => {
+      //     return $http.post(`${root.costumes}`, data);
+      //   }, errorHandle)
+      //   .then(()=> true, errorHandle);
+      // },
+      // updateCostume: (data) => {
+      //   return $http.put(`${data.url}`, data)
+      //   .then((res) => {
+      //     return res.data;
+      //   }, errorHandle);
+      // }, 
