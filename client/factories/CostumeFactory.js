@@ -31,18 +31,6 @@ app.factory( "CostumeFactory", [
         .then((res) => {
           return res.data[0];
         });
-      },
-
-      getUserBoos: (userid) => {
-        // Get all costumes 'bood' (liked) by a given user, via boo database table.
-        // Argument: user id
-        return APIFactory.getApiRoot()
-        .then((root)=> {
-          return $http.get(`${root.boos}?userid=${userid}`);
-        }, errorHandle)
-        .then((res) => {
-          return res.data;
-        });
       }
 
     };
