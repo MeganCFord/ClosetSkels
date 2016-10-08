@@ -12,7 +12,6 @@ app.factory( "APIFactory", [
     };
 
     return {
-      getApiRoot: getApiRoot,
 
       //// BOOS ////
       
@@ -78,16 +77,6 @@ app.factory( "APIFactory", [
 
       //// SUPPLIES ////
 
-      createSupply: (data) => {
-        // TODO: make this actually return what I want.
-        return getApiRoot()
-        .then((root) => {
-          return $http.post(`${root.supplies}`, data);
-        }, errorHandle)
-        .then((res) => {
-          return res.data[0];
-        });     
-      }, 
       getSupplies: (costumeid=null) => {
         // Gets the supplies either for an uncreated costume, or for the selected costume. TODO: make supplies attached to a user so multiple users can be creating costumes/have created supplies at once.
         return getApiRoot()
@@ -101,6 +90,17 @@ app.factory( "APIFactory", [
         .then((res)=> res.data);
       }, 
 
+      createSupply: (data) => {
+        // TODO: make this actually return what I want.
+        return getApiRoot()
+        .then((root) => {
+          return $http.post(`${root.supplies}`, data);
+        }, errorHandle)
+        .then((res) => {
+          return res.data[0];
+        });     
+      }, 
+
       editSupply: (data) => {
         // TODO: fix this. 
         return $http.put(`${data.url}`, data)
@@ -109,12 +109,20 @@ app.factory( "APIFactory", [
         }, errorHandle);
       }, 
 
-      ///// DELETIONS /////
+      ///// UTILITIES /////
+      
+      getApiRoot: getApiRoot,
   
       deleteSomething: (url) => {
         return $http.delete(`${url}`);
+      }, 
+
+      getSomething: (url) => {
+        return $http.get(`${url}`)
+        .then((res)=> {
+          return res.data;
+        });
       }
-    }; 
 
-
+    };
   }]);
