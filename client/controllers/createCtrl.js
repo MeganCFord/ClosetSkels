@@ -51,9 +51,7 @@ app.controller("Create",[
       }, e=> console.error);
     });
 
-    // TODO: this does not work because the costume elements once created are ungettable. fix in V2.
-  
-    // In case of refresh. Gets all costume elements with no costume url assigned (meaning the costume has not been completed) and pushes their ids back into the costume object.
+      // In case of refresh. Gets all costume elements with no costume url assigned (meaning the costume has not been completed) and pushes their ids back into the costume object. TODO: edit this so it gets the ones owned by the user with a costume of null.
     // APIFactory.getCostumeElements()
     // .then((res) => {
     //   create.costumeelements = res;
@@ -122,7 +120,6 @@ app.controller("Create",[
         create.costume.image = res.downloadURL;
       }, e=>console.error)
       .then(()=> {
-        console.log("costume image", create.costume.image);
         $timeout();
       });
     };
@@ -130,7 +127,6 @@ app.controller("Create",[
     $scope.photoChanged = function(files) {
       if (files !== null ) {
         create.currentFileName = files[0].name;
-        console.log("file name:", create.currentFileName);
         create.uploadPhoto();
         $scope.$apply();
       }
@@ -173,9 +169,9 @@ app.controller("Create",[
     create.openCreateModal = () => {
       const modalInstance = $uibModal.open({
         size: "lg",
-        templateUrl: "/partials/createSupply.html", 
-        controller: "CreateSupply",
-        controllerAs: "createSupply",
+        templateUrl: "/partials/supply.html", 
+        controller: "Supplier",
+        controllerAs: "supplier",
         resolve: {
           "supply": null
         }   
@@ -187,9 +183,9 @@ app.controller("Create",[
       //Sending the entire supply object into modal.
       const modalInstance = $uibModal.open({
         size: "lg",
-        templateUrl: "/partials/createSupply.html", 
-        controller: "CreateSupply",
-        controllerAs: "createSupply", 
+        templateUrl: "/partials/supply.html", 
+        controller: "Supplier",
+        controllerAs: "supplier", 
         resolve: {
           "supply": supply
         }
