@@ -72,7 +72,9 @@ app.factory( "APIFactory", [
         .then((root) => {
           return $http.post(`${root.elements}`, data);
         }, errorHandle)
-        .then((res)=> res.data);
+        .then((res)=> {
+          return res.data;
+        }, errorHandle);
       }, 
 
       //// SUPPLIES ////
@@ -97,6 +99,7 @@ app.factory( "APIFactory", [
           return $http.post(`${root.supplies}`, data);
         }, errorHandle)
         .then((res) => {
+          console.log("what I got back from the post request", res)
           return res.data[0];
         });     
       }, 

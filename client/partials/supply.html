@@ -1,42 +1,40 @@
 <div class="modal-header">  
   <h3>{{supplier.title}}</h3>
 </div>
-  <!-- since there are three forms here, the DOM gets confused on which form to submit on 'enter' if they're in 'form' elements. so no 'forms'. TODO: add validation. -->
+  <!-- since there are three forms here, the DOM gets confused on which form to submit on 'enter' if they're in 'form' elements. So no 'forms'. TODO: add validation using ng-form. -->
 <div class="modal-body container-fluid">
   <div class="col col-sm-6">
     <!-- NAME -->
     <div class="form-group">
       <label for="name">Supply Name</label>
-      <input type="text" class="form-control" id="name" ng-model="supplier.costumeelement.name" placeholder="eg. 'red and white baseball tee', 'gold spray paint'" required>
+      <input type="text" class="form-control" id="name" ng-model="supplier.supply.name" placeholder="eg. 'red and white baseball tee', 'gold spray paint'" required>
     </div>
     <!-- DESCRIPTION -->
     <div class="form-group">
       <label for="description">Description</label>
-      <textarea class="form-control" id="description" ng-model="supplier.costumeelement.description" placeholder="add some instructions or additional info here." rows="6.5"></textarea>
+      <textarea class="form-control" id="description" ng-model="supplier.supply.description" placeholder="add some instructions or additional info here." rows="6.5"></textarea>
     </div>
     <!-- SUPPLY TYPE -->
     <div class="form-group">
       <label for="element">Supply Type</label>
       <div class="elementform">
-        <div uib-collapse="!supplier.elementIsCollapsed">
+        <div uib-collapse="!supplier.hideNewElementForm">
 
-            <select class="form-control" ng-model="supplier.selectedElement" ng-options="element as element.name for element in supplier.elements" style="margin-bottom: 20px">
-            <option ng-if="!supplier.selectedElement" disabled> -- select an option -- </option>
-            <!-- <option ng-value="{{element}}">{{element.name}}</option> -->
+            <select class="form-control" ng-model="supplier.supply.element" ng-options="element as element.name for element in supplier.elements" style="margin-bottom: 20px">
             </select>
 
 
 
-          <button class="btn btn-info" ng-click="supplier.elementIsCollapsed = !supplier.elementIsCollapsed">Create a New Supply</button>
+          <button class="btn btn-info" ng-click="supplier.hideNewElementForm = !supplier.hideNewElementForm">Create a New Supply</button>
         </div>
         <!-- add new supply form. -->
-        <div uib-collapse = "supplier.elementIsCollapsed">
+        <div uib-collapse = "supplier.hideNewElementForm">
           <div class="well well-lg form-inline">
             <div class="form-group">
-              <input type="text" class="form-control" id="name" ng-model="supplier.element.name" placeholder="Supply">
+              <input type="text" class="form-control" id="name" ng-model="supplier.newElement.name" placeholder="Supply">
             </div>
             <span class="btn btn-default" ng-click="supplier.createElement()">Add</span>
-            <span class="btn btn-default" ng-click="supplier.elementIsCollapsed =! supplier.elementIsCollapsed">Cancel</span>
+            <span class="btn btn-default" ng-click="supplier.hideNewElementForm =! supplier.hideNewElementForm">Cancel</span>
           </div>
         </div>
       </div>
@@ -48,27 +46,27 @@
     <div class="form-group">
       <label>Tags</label>
       <div class="tagform">
-        <div uib-collapse="!supplier.tagIsCollapsed">
+        <div uib-collapse="!supplier.hideNewTagForm">
 
           <div class="well well-lg">
               <span ng-repeat="tag in supplier.tags">
-                <span ng-hide="supplier.costumeelement.tags | contains:tag" ng-click="supplier.addTag(tag)" class="btn btn-default">{{tag.name}}</span>
-                <span ng-show="supplier.costumeelement.tags | contains:tag"ng-click="supplier.removeTag(tag)" class="btn btn-primary">{{tag.name}}</span>
+                <span ng-hide="supplier.supply.tags | contains:tag" ng-click="supplier.addTag(tag)" class="btn btn-default">{{tag.name}}</span>
+                <span ng-show="supplier.supply.tags | contains:tag" ng-click="supplier.removeTag(tag)" class="btn btn-primary">{{tag.name}}</span>
               </span>
             <hr>
-            <button class="btn btn-info" ng-click="supplier.tagIsCollapsed = !supplier.tagIsCollapsed">Create a New Tag</button>
+            <button class="btn btn-info" ng-click="supplier.hideNewTagForm = !supplier.hideNewTagForm">Create a New Tag</button>
           </div>
         </div>
         <!-- add new tag form.  -->
-        <div uib-collapse="supplier.tagIsCollapsed" >
+        <div uib-collapse="supplier.hideNewTagForm" >
           <div class="well well-lg container-fluid form-inline">
             <input class="form-group form-control"
                    placeholder="tag"
-                   ng-model="supplier.tag.name"
+                   ng-model="supplier.newTag.name"
                    type="text"
                    required>
             <span ng-click="supplier.createTag()" class="btn btn-default">Add</span>
-            <span ng-click="supplier.tagIsCollapsed = !supplier.tagIsCollapsed" class="btn btn-default">Cancel</span>
+            <span ng-click="supplier.hideNewTagForm = !supplier.hideNewTagForm" class="btn btn-default">Cancel</span>
           </div>
         </div>
         </div>
