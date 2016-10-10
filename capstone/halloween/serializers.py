@@ -15,7 +15,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class ElementSerializer(serializers.HyperlinkedModelSerializer):
   class Meta: 
     model = Element
-    fields = ("id", "url", "name")
+    fields = ("id", "name")
 
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
@@ -35,23 +35,23 @@ class SupplySerializer(serializers.HyperlinkedModelSerializer):
   element = ElementSerializer()
   class Meta:
     model = Supply
-    fields = ("id", "url", "element", "costume", "description", "tags", "name")
+    fields = ("id", "name", "url", "costume", "description", "element", "tags")
 
   def create(self, request): 
     '''
     During creation of a supply,
     adds instances of chosen tags to supply's tag list. 
     '''
-    element = request.data["element"]
-    element_instance = Element.objects.get(id=element["id"])
-    new_supply = Supply(element = element_instance, name=request.data["name"], description=request.data["description"])
+    element = request["element"]
+    element_instance = Element.objects.get(name=element["name"])
+    new_supply = Supply(element = element_instance, name=request["name"], description=request["description"])
 
     new_supply.save()
 
-    tags_data = request.data.pop("tags", None)
+    tags_data = request.pop("tags", None)
     if tags_data:
-      for tag in request.data["tags"]:
-        tag_to_add = DjangoTag.objects.get(pk=tag["id"])
+      for tag in tags_data:
+        tag_to_add = Tag.objects.get(name=tag["name"])
         new_supply.tags.add(tag_to_add)
       new_supply.save()
     
@@ -110,7 +110,7 @@ class CostumeSerializer(serializers.HyperlinkedModelSerializer):
     Handles creation of tags and supplies during costume creation 
     by adding newly created costume instance to existing tags and supplies. 
     '''
-    owner = User.objects.get(id=request.data["owner"])
+    owner = User.objects.get(username=request["owner"]["username"])
     new_costume = Costume.objects.create(owner=owner, name=request.data["name"], description=request.data["description"], public=request.data["public"], image=request.data["image"])
 
     new_costume.save()
