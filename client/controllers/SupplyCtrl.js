@@ -14,33 +14,28 @@ app.controller("Supplier",[
     supplier.newTag = {"name": "", "costumes": [], "costumeelements": []};
     supplier.hideNewTagForm = true;
     
-    // Get all tags.
+    // Get all tag options.
     APIFactory.getTags()
     .then((res)=> {
       supplier.tags = res;
       $timeout();
-      // TODO: I think the supply tags and the list of tags don't actually match due to added hashkey.
     });
 
-    // Get all elements.
+    // Get all element options.
     APIFactory.getElements()
     .then((res)=> {
       supplier.elements = res;
       $timeout();
-    }).then(()=> {
-      // TODO: set selected element if form is being used for editing.
     });
 
     if(supply === null) {
-      // If the modal has been opened to create a new supply:
+      // 'Create' setup.
       supplier.supply = {"name": "", "costume": "", "element": {}, "description": "", "tags": []};
       supplier.title = "Create Supply";
     } else {
+      // 'Edit' setup.
       supplier.supply = supply;
       supplier.title = "Edit Supply";
-      // TODO: check if I need to remove a hashkey from the selected element for editing select match. 
-      // TODO: get the selected element to show up as a preselect in ng-options.
-      supplier.selectedElement = supplier.supply.element;
       $timeout();
     }
 
@@ -78,11 +73,23 @@ app.controller("Supplier",[
     supplier.removeTag = (tag) => {
       supplier.supply.tags.splice(supplier.supply.tags.indexOf(tag));
     };
+
     supplier.ok = function () {
-      APIFactory.createSupply(supplier.supply)
-      .then((res)=> {
-        console.log('res in controller', res)
-      })
+      if (supply===null) {
+        APIFactory.createSupply(supplier.supply)
+        .then((res)=> {
+          // Send the new supply to the main create page for display.
+          $scope.$emit("supply", res);
+          $uibModalInstance.close();
+        });
+      } else {
+        APIFactory.editSupply(supplier.supply)
+        .then((res)=> {
+          // Send the edited supply to the main create page for display.
+          $scope.$emit("supply", res);
+          $uibModalInstance.close();
+        });
+      }
     };
 
     supplier.cancel = function () {
