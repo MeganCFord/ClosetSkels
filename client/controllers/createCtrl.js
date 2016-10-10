@@ -4,32 +4,41 @@ app.controller("Create",[
   "$timeout",
   "$location",
   "$uibModal",
-  "$rootScope", // need this because the  uib-Modal scope is not actually nested inside this scope- it's randomly off to one corner or whatever.
+  "$rootScope", // need this because the uib-Modal scope is not actually nested inside this scope.
+  "CostumeFactory",
   "FirebaseFactory",
-  function($scope, APIFactory, $timeout, $location, $uibModal, $rootScope, FirebaseFactory) {
+  "$routeParams",
+  function($scope, APIFactory, $timeout, $location, $uibModal, $rootScope, CostumeFactory, FirebaseFactory, $routeParams) {
 
     const create = this;
-    create.title="Create a Costume";
-    create.tagIsCollapsed=true;
-    create.deleteButton = "Discard";
+
+    if ($location.path() === "/create") { 
+      // 'Create' setup.
+      create.title="Create Costume";
+      create.deleteButton = "Discard";
+      create.costume = {
+        "name": "",
+        "description": "", 
+        "public": false, 
+        "owner": "" ,
+        "tags": [], 
+        "image": ""
+      };
+    } else {
+      // 'Edit' setup.
+      create.title = "Edit Costume";
+      create.deleteButton = "Delete";
+    }
+
+    create.hideNewTagForm=true;
     create.currentFileName = "No File Selected"; 
     create.tags = [];
-    create.costumeelements = [];
+    create.supplies = [];
 
-    create.tag = {
+    create.newTag = {
       "name": "", 
       "costumes": [], 
       "costumeelements": []
-    };
-
-    create.costume = {
-      "name": "",
-      "description": "", 
-      "public": false, 
-      "owner": "" ,
-      "costumeelements": [], 
-      "tags": [], 
-      "image": ""
     };
 
 
@@ -37,31 +46,37 @@ app.controller("Create",[
 // LOADERS /////////////////////
 ///////////////////////////////
 
-    // Get the username and user info. 
-    $scope.$on("username", function(event, data) {
+    $scope.$on("user", function(event, data) {
       $timeout().then(() => {
-        create.username = data; 
-        return data;
-      }).then(() => {
-        return APIFactory.getUserInfo(create.username);
-      }).then((res) => {
-        create.userInfo = res; 
-        create.costume.owner = create.userInfo.id;
+        // Set User.
+        create.user = data;
         $timeout();
-      }, e=> console.error);
+      }).then(()=> {
+        if($location.path()==="/create") {
+          create.costume.owner = data;
+          // 'Create' setup. Gets all supplies with no costume url assigned (meaning the costume has not been completed).
+          return APIFactory.getSupplies()
+          .then((res) => {
+            create.supplies = res;
+            $timeout();
+          }, e => console.error);
+        } else {
+          // 'Edit' setup. Get costume via ID in route.
+          APIFactory.getOneCostume($routeParams.id)
+          .then((res)=> {
+            create.costume = res;
+            // Get all supplies assigned to that costume.
+            return APIFactory.getSupplies(costumeid = res.id);
+          }).then((res)=> {
+            create.supplies = res;
+            $timeout();
+          }, e => console.error);
+        }
+      }, e => console.error);
     });
 
-      // In case of refresh. Gets all costume elements with no costume url assigned (meaning the costume has not been completed) and pushes their ids back into the costume object. TODO: edit this so it gets the ones owned by the user with a costume of null.
-    // APIFactory.getCostumeElements()
-    // .then((res) => {
-    //   create.costumeelements = res;
-    //   for(const index in create.costumeelements) {
-    //     create.costume.costumeelements.push(create.costumeelements[index].id);
-    //   }
-    //   $timeout();
-    // }, e => console.error);
     
-    // On load, also load all tags.
+    // Get all tag options.
     APIFactory.getTags()
     .then((res)=> {
       create.tags = res; 
@@ -74,32 +89,17 @@ app.controller("Create",[
 // LISTENERS /////////////////////
 ///////////////////////////////
 
-    //receives new supply object from the create modal. Edits currently create new objects too.
-    $rootScope.$on("editedSupply", function(event, value) { 
-
-      create.costume.costumeelements.push(value);
-      create.costumeelements.push(value);
+    //receives new/edited supply object from the create modal. 
+    $rootScope.$on("supply", function(event, data) { 
+      // TODO: if the supply is a new version of an edited one, splice it out.
+      create.supplies.push(data);
       $timeout(); //Just in case.
     });
 
     //receives an object to delete from the create modal.
-    $rootScope.$on("deleteSupplyPlease", function(event, value) {
-      return create.deleteSupply(value);
+    $rootScope.$on("deleteSupplyPlease", function(event, data) {
+      return create.deleteSomething(data.url);
     });
-    // TODO: activate this instead once costume element objects are gettable again. 
-    //grabs updated data from edit modal.
-    // $rootScope.$on("editedSupply", function(event, value) { 
-    //   // console.log("got the edited supply", value);
-    //   //remove old value.
-    //   for(const u in create.costumeelements) {
-    //     if(create.costumeelements[u].id === value.id) {
-    //       create.costumeelements.splice(u, 1);
-    //     }
-    //   } 
-    //   //replace with new value.
-    //   create.costumeelements.push(value);
-    //   $timeout(); //Just in case.
-    // });
     
     $rootScope.$on("newTag", function(event, value) {
       create.tags.push(value);
@@ -111,7 +111,7 @@ app.controller("Create",[
 
     create.uploadPhoto = function() {
    
-      //find the file. Angular doesn't really do this automatically.
+      //find the file. Angular can't really find files automatically.
       const input = document.querySelector('[type="file"]');
       const file = input.files[0];
 
@@ -142,20 +142,16 @@ app.controller("Create",[
     };
 
     create.removeTag = (tag) => {
-      for(const u in create.costume.tags) {
-        if(create.costume.tags[u] === tag) {
-          create.costume.tags.splice(u, 1);
-        }
-      }
+      create.costume.tags.splice(create.costume.tags.indexOf(tag));
     };
 
 
     create.createTag = () => {
-      APIFactory.createTag(create.tag).then((res) => {
+      APIFactory.createTag(create.newTag).then((res) => {
         create.tags.push(res);
         create.costume.tags.push(res);
-        create.tagIsCollapsed = true;
-        create.tag.name="";
+        create.hideNewTagForm = true;
+        create.newTag.name="";
         $timeout();
       }, e => console.error);
     };
@@ -192,29 +188,9 @@ app.controller("Create",[
       });
     };
 
-    create.deleteSupply = (object) => {
-      // TODO: DO NOT USE THIS AFTER REFRESH, it doesn't work. Costume element objects are currently undeletable. Nope factory is a very temp solution at this point.
-      // NopeFactory.AddToNopes(object.id);
-
-      // APIFactory.deleteSomething(object.url)
-      // .then(() => {
-        // remove from costume
-        for (const u in create.costume.costumeelements) {
-          if (create.costume.costumeelements[u] === object.id) {
-            create.costume.costumeelements.splice(u, 1);
-          }
-        }
-        // remove from costume element list
-        for (const u in create.costumeelements) {
-          if (create.costumeelements[u] === object) {
-            create.costumeelements.splice(u, 1);
-          }
-        }
-        $timeout();
-      // });
-    };
 
     create.createCostume = () => {
+      // TODO: fix this and also handle what happens if you're editing the costume instead.
       const tagIds = [];
       for(const index in create.costume.tags) {
         tagIds.push(create.costume.tags[index].id);
@@ -230,6 +206,15 @@ app.controller("Create",[
     };
 
     create.deleteCostume = () => {
-      $location.path("/closet");
+      if($location.path()==="/create") {
+        // TODO: delete all the supplies you may have created. 
+        $location.path("/closet");
+      } else {
+        APIFactory.deleteSomething(create.costume.url)
+        // TODO: also delete all the supplies associated with that costume.
+        .then(()=> {
+          $location.path("/closet");
+        }, e => console.error);
+      }
     };
   }]);
