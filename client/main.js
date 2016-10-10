@@ -9,7 +9,7 @@ app.run(function run(UserFactory, $cookies, $http, $location) {
   if (hc) {
     // Set http credentials for permissions.
     $http.defaults.headers.common.Authorization = "Basic " + hc;
-    // Save encoded creds into user factory.
+    // Save encoded creds into user factory. I've found making an angular http call before DOM load is kind of complicated, so I'm making that call in the nav.
     UserFactory.setEncodedCredentials(hc);
   } else {
     // If the cookie doesn't exist, send the user to the login page.
@@ -53,7 +53,7 @@ app.config(function($routeProvider) {
     })
     .when("/edit/:id", {
       templateUrl: "partials/create.html", 
-      controller: "Edit", //TODO: make the create and edit controllers the same.
+      controller: "Create", 
       controllerAs: "create"
     })
     .otherwise("/login");
