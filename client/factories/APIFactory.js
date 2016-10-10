@@ -99,8 +99,7 @@ app.factory( "APIFactory", [
           return $http.post(`${root.supplies}`, data);
         }, errorHandle)
         .then((res) => {
-          console.log("what I got back from the post request", res)
-          return res.data[0];
+          return res.data;
         });     
       }, 
 
