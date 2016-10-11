@@ -4,12 +4,12 @@
 <div class="container-fluid">
   <div class="col col-sm-3 scrollingsidebar">
 
-    <div ng-hide="create.costumeelements | isEmpty" ng-repeat="element in create.costumeelements | unique:'name'">
+    <div ng-hide="create.supplies | isEmpty" ng-repeat="supply in create.supplies">
       <div class="well well-lg">
-        <h5>{{element.name}}</h5>
+        <h5>{{supply.name}}</h5>
         <hr>
-        <span class="btn btn-default" ng-click="create.openEditModal(element)">Edit </span>
-        <span class="btn btn-danger" ng-click="create.deleteSupply(element)">Delete</span>
+        <span class="btn btn-default" ng-click="create.openModal(supply)">Edit </span>
+        <span class="btn btn-danger" ng-click="create.deleteSupply(supply)">Delete</span>
       </div>
       <hr>
     </div>
@@ -17,7 +17,7 @@
     <div class="well well-lg elementcard">
       <hr>
       <div class="text-center">
-        <span class="btn btn-info" ng-click="create.openCreateModal()">New Supply</span>
+        <span class="btn btn-info" ng-click="create.openModal()">New Supply</span>
       </div>
     </div>
   </div>
