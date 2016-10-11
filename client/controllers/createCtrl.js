@@ -172,7 +172,7 @@ app.controller("Create",[
 
 
 ///////////////////////////////
-// MODALS /////////////////////
+// Supply /////////////////////
 ///////////////////////////////
 
     create.openModal = (supply = null) => {
@@ -188,6 +188,12 @@ app.controller("Create",[
       });
     }; 
 
+    create.deleteSupply = (supply) => {
+      // Delete supply.
+      create.supplies.splice(create.supplies.indexOf(supply));
+      APIFactory.deleteSomething(supply.url);
+    };
+
 
     create.createCostume = () => {
       // TODO: fix this and also handle what happens if you're editing the costume instead.
@@ -201,17 +207,17 @@ app.controller("Create",[
 
     create.deleteCostume = () => {
       // Delete all the supplies. 
+      
       create.supplies.forEach((supply) => {
         return APIFactory.deleteSomething(supply.url);
-      }).then(()=> {
-        if($location.path()==="/create") {
-          $location.path("/closet");
-        } else {
-          APIFactory.deleteSomething(create.costume.url)
-          .then(()=> {
-            $location.path("/closet");
-          }, e => console.error);
-        }
       });
+      if($location.path()==="/create") {
+        $location.path("/closet");
+      } else {
+        APIFactory.deleteSomething(create.costume.url)
+        .then(()=> {
+          $location.path("/closet");
+        }, e => console.error);
+      }
     };
   }]);
