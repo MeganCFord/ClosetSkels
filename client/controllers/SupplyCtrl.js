@@ -1,11 +1,11 @@
 app.controller("Supplier",[
   "$scope",
-  "APIFactory",
   "$timeout",
   "$location",
   "$uibModalInstance",
+  "APIFactory",
   "supply",
-  function($scope, APIFactory, $timeout, $location, $uibModalInstance, supply) {
+  function($scope, $timeout, $location, $uibModalInstance, APIFactory, supply) {
     const supplier = this;
     
     supplier.newElement = {"name": ""};
@@ -38,6 +38,12 @@ app.controller("Supplier",[
     APIFactory.getElements()
     .then((res)=> {
       supplier.elements = res;
+      if (supply===null) {
+        // On create:
+        // Add disabled 'please choose' option to ng-options repeater and preselect it.
+        supplier.elements.unshift({"name": "Please choose an element"});
+        supplier.supply.element=supplier.elements[0];
+      } 
       $timeout();
     });
 
