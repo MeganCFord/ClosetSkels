@@ -32,9 +32,9 @@ class Element(models.Model):
     name=models.CharField(max_length=55)
 
     def __str__(self):
-          return "{}".format(self.name)
+          return "{}: {}".format(self.id, self.name)
     def __unicode__(self):
-          return "{}".format(self.name)
+          return "{}: {}".format(self.id, self.name)
 
 
 class Supply(models.Model):
@@ -57,6 +57,6 @@ class Tag(models.Model):
   supplies=models.ManyToManyField(Supply, blank=True, related_name="tags")
 
   def __str__(self):
-      return "{}".format(self.name)
+      return "{}: {}".format(self.id, self.name)
   def __unicode__(self):
-      return "{}".format(self.name)
+      return "{}: {}".format(self.id, self.name)
