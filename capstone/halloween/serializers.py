@@ -72,7 +72,7 @@ class SupplySerializer(serializers.HyperlinkedModelSerializer):
     
     element_data = validated_data.pop('element', None)
     if element_data:
-      element_to_add = Element.objects.get(pk=element_data["id"])
+      element_to_add = Element.objects.get(name=element_data["name"])
       setattr(instance, "element", element_to_add)
       instance.save()
 
@@ -81,14 +81,13 @@ class SupplySerializer(serializers.HyperlinkedModelSerializer):
     if tags_data: 
       instance.tags = [];
       for tag_data in tags_data:
-        tag_name = geattr(tag_data, "name")
-        tag_to_add = get_object_or_404(Tag, name=tag_name)
+        tag_to_add = Tag.objects.get(name=tag_data["name"])
         instance.tags.add(tag_to_add)
       instance.save()
 
     costume_data = validated_data.pop("costume", None)
     if costume_data:
-      costume_to_add = Costume.objects.get(pk=costume_data["id"])
+      costume_to_add = Costume.objects.get(name=costume_data["name"])
       setattr(instance, "costume", costume_to_add)
       instance.save()
 
