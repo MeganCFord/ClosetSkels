@@ -1,19 +1,19 @@
 app.controller("Create",[
   "$scope",
-  "APIFactory",
+  "$rootScope", // need this because the uib-Modal scope is not actually nested inside this scope.
   "$timeout",
   "$location",
+  "$routeParams",
   "$uibModal",
-  "$rootScope", // need this because the uib-Modal scope is not actually nested inside this scope.
   "CostumeFactory",
   "FirebaseFactory",
-  "$routeParams",
-  function($scope, APIFactory, $timeout, $location, $uibModal, $rootScope, CostumeFactory, FirebaseFactory, $routeParams) {
+  "APIFactory",
+  function($scope, $rootScope, $timeout, $location, $routeParams, $uibModal, CostumeFactory, FirebaseFactory, APIFactory) {
 
     const create = this;
 
     if ($location.path() === "/create") { 
-      // 'Create' setup.
+      // Pre-user 'Create' setup.
       create.title="Create Costume";
       create.deleteButton = "Discard";
       create.costume = {
@@ -25,7 +25,7 @@ app.controller("Create",[
         "image": ""
       };
     } else {
-      // 'Edit' setup.
+      // Pre-user 'Edit' setup.
       create.title = "Edit Costume";
       create.deleteButton = "Delete";
     }
@@ -43,7 +43,7 @@ app.controller("Create",[
 
 
 ///////////////////////////////
-// LOADERS /////////////////////
+// LOADER /////////////////////
 ///////////////////////////////
 
     $scope.$on("user", function(event, data) {
@@ -54,14 +54,16 @@ app.controller("Create",[
       }).then(()=> {
         if($location.path()==="/create") {
           create.costume.owner = data;
-          // 'Create' setup. Gets all supplies with no costume url assigned (meaning the costume has not been completed).
+          // 'Create' setup. 
+          // Get all supplies with no costume url assigned (meaning the costume has not been completed).
           return APIFactory.getSupplies()
           .then((res) => {
             create.supplies = res;
             $timeout();
           }, e => console.error);
         } else {
-          // 'Edit' setup. Get costume via ID in route.
+          // 'Edit' setup. 
+          // Get costume via ID in route.
           APIFactory.getOneCostume($routeParams.id)
           .then((res)=> {
             create.costume = res;
@@ -89,19 +91,30 @@ app.controller("Create",[
 // LISTENERS /////////////////////
 ///////////////////////////////
 
-    //receives new/edited supply object from the create modal. 
-    $rootScope.$on("supply", function(event, data) { 
-      // TODO: if the supply is a new version of an edited one, splice it out.
+    $rootScope.$on("supply", function(event, data) {
+      // Receives new/edited supply object from the supply modal. 
+      // If the supply is a new version of an edited one, splice it out.
+      create.supplies.forEach((supply)=> {
+        if(supply.id === data.id) {
+          create.supplies.splice(create.supplies.indexOf(supply));
+        }
+      });
       create.supplies.push(data);
-      $timeout(); //Just in case.
     });
 
-    //receives an object to delete from the create modal.
-    $rootScope.$on("deleteSupplyPlease", function(event, data) {
-      return create.deleteSomething(data.url);
+    $rootScope.$on("delete", function(event, data) {
+      //receives an object to delete from the supply modal.
+      //Splice out the supply to delete from the list.
+      create.supplies.forEach((supply)=> {
+        if(supply.id === data.id) {
+          create.supplies.splice(create.supplies.indexOf(supply));
+        }
+      });
+      return APIFactory.deleteSomething(data.url);
     });
     
     $rootScope.$on("newTag", function(event, value) {
+      // If a new tag has been created by the supply modal, also add it to the available tags here.
       create.tags.push(value);
     });
     
@@ -109,8 +122,7 @@ app.controller("Create",[
 // PHOTOS /////////////////////
 ///////////////////////////////
 
-    create.uploadPhoto = function() {
-   
+    create.uploadPhoto = function() {  
       //find the file. Angular can't really find files automatically.
       const input = document.querySelector('[type="file"]');
       const file = input.files[0];
@@ -123,8 +135,9 @@ app.controller("Create",[
         $timeout();
       });
     };
-      //displays file name on DOM and uploads file on file choice. 
+
     $scope.photoChanged = function(files) {
+      //displays file name on DOM and uploads file on file choice. 
       if (files !== null ) {
         create.currentFileName = files[0].name;
         create.uploadPhoto();
@@ -162,42 +175,23 @@ app.controller("Create",[
 // MODALS /////////////////////
 ///////////////////////////////
 
-    create.openCreateModal = () => {
+    create.openModal = (supply = null) => {
+      //If editing, send the entire supply object into modal.
       const modalInstance = $uibModal.open({
         size: "lg",
         templateUrl: "/partials/supply.html", 
         controller: "Supplier",
         controllerAs: "supplier",
         resolve: {
-          "supply": null
+          "supply": supply
         }   
       });
     }; 
 
 
-    create.openEditModal = (supply) => {
-      //Sending the entire supply object into modal.
-      const modalInstance = $uibModal.open({
-        size: "lg",
-        templateUrl: "/partials/supply.html", 
-        controller: "Supplier",
-        controllerAs: "supplier", 
-        resolve: {
-          "supply": supply
-        }
-      });
-    };
-
-
     create.createCostume = () => {
       // TODO: fix this and also handle what happens if you're editing the costume instead.
-      const tagIds = [];
-      for(const index in create.costume.tags) {
-        tagIds.push(create.costume.tags[index].id);
-      }
-      create.costume.tags = tagIds;
-      console.log("costume I am sending", create.costume);
-
+     
       APIFactory.createCostume(create.costume).then((res)=> {
         console.log(res);
         // TODO: pop up with a success modal or something for a second. 
@@ -206,15 +200,18 @@ app.controller("Create",[
     };
 
     create.deleteCostume = () => {
-      if($location.path()==="/create") {
-        // TODO: delete all the supplies you may have created. 
-        $location.path("/closet");
-      } else {
-        APIFactory.deleteSomething(create.costume.url)
-        // TODO: also delete all the supplies associated with that costume.
-        .then(()=> {
+      // Delete all the supplies. 
+      create.supplies.forEach((supply) => {
+        return APIFactory.deleteSomething(supply.url);
+      }).then(()=> {
+        if($location.path()==="/create") {
           $location.path("/closet");
-        }, e => console.error);
-      }
+        } else {
+          APIFactory.deleteSomething(create.costume.url)
+          .then(()=> {
+            $location.path("/closet");
+          }, e => console.error);
+        }
+      });
     };
   }]);
