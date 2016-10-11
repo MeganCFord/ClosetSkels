@@ -20,11 +20,13 @@
       <div class="elementform">
         <div uib-collapse="!supplier.hideNewElementForm">
 
-            <select class="form-control" ng-model="supplier.supply.element" ng-options="element as element.name for element in supplier.elements" style="margin-bottom: 20px">
-            </select>
-
-
-
+          <select 
+            class="form-control"
+            ng-options="element.name disable when element.name==='Please choose an element' for element in supplier.elements track by element.name"
+            ng-model="supplier.supply.element" 
+            style="margin-bottom: 20px">
+          </select>
+           
           <button class="btn btn-info" ng-click="supplier.hideNewElementForm = !supplier.hideNewElementForm">Create a New Supply</button>
         </div>
         <!-- add new supply form. -->
