@@ -14,6 +14,19 @@ app.controller("Supplier",[
     supplier.newTag = {"name": "", "costumes": [], "costumeelements": []};
     supplier.hideNewTagForm = true;
     
+    if(supply === null) {
+      // 'Create' setup.
+      supplier.supply = {"name": "", "costume": "", "element": {}, "description": "", "tags": []};
+      supplier.title = "Create Supply";
+      supplier.deleteButtonText = "Discard";
+    } else {
+      // 'Edit' setup.
+      supplier.supply = supply;
+      supplier.title = "Edit Supply";
+      supplier.deleteButtonText = "Delete Supply";
+      $timeout();
+    }
+
     // Get all tag options.
     APIFactory.getTags()
     .then((res)=> {
@@ -27,17 +40,6 @@ app.controller("Supplier",[
       supplier.elements = res;
       $timeout();
     });
-
-    if(supply === null) {
-      // 'Create' setup.
-      supplier.supply = {"name": "", "costume": "", "element": {}, "description": "", "tags": []};
-      supplier.title = "Create Supply";
-    } else {
-      // 'Edit' setup.
-      supplier.supply = supply;
-      supplier.title = "Edit Supply";
-      $timeout();
-    }
 
     supplier.createElement = () => {
       APIFactory.createElement(supplier.newElement).then((res) => {
@@ -71,10 +73,27 @@ app.controller("Supplier",[
     };
 
     supplier.removeTag = (tag) => {
-      supplier.supply.tags.splice(supplier.supply.tags.indexOf(tag));
+      // Since the list of all tags has a hashkey and the list of tags on the costume does not, I can't simply splice this match.
+      
+      supplier.supply.tags.forEach((supplytag)=> {
+        if(supplytag.id === tag.id) { 
+          supplier.supply.tags.splice(supplier.supply.tags.indexOf(supplytag), 1);
+        }
+      });
     };
 
-    supplier.ok = function () {
+    supplier.delete = () => {
+      if(supply===null) {
+        // If template is 'create', simply close the modal.
+        $uibModalInstance.dismiss("cancel");
+      } else {
+        // If template is 'edit', emit a deleter before closing.
+        $scope.$emit("delete", supplier.supply);
+        $uibModalInstance.close();
+      }
+    };
+
+    supplier.ok = () =>  {
       if (supply===null) {
         APIFactory.createSupply(supplier.supply)
         .then((res)=> {
@@ -92,7 +111,7 @@ app.controller("Supplier",[
       }
     };
 
-    supplier.cancel = function () {
+    supplier.cancel = () => {
       // Closes the modal, doing nothing.
       $uibModalInstance.dismiss("cancel");
     };
