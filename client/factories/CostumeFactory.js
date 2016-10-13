@@ -29,7 +29,7 @@ app.factory( "CostumeFactory", [
           return $http.get(`${root.costumes}?owner=${userid}`);
         }, errorHandle)
         .then((res) => {
-          return res.data[0];
+          return res.data;
         });
       },
 
@@ -44,33 +44,31 @@ app.factory( "CostumeFactory", [
         }, errorHandle);
       }, 
 
-      createCostume: (data) => {
-        const supplies = data.supplies; 
-        console.log("costume supplies", supplies);
-        data.supplies = [];
+      createNewCostume: (costume, supplies) => {
         return APIFactory.getApiRoot()
         .then((root) => {
-          return $http.post(`${root.costumes}`, data);
+          return $http.post(`${root.costumes}`, costume);
         }, errorHandle)
         .then((res) => {
-          console.log("costume created", res.data);
-          // supplies.forEach((supply)=> {
-          // if the costume is being copied from an existing one, make new copies of the supplies, then update them with new costume instance. 
-          // if the costume is brand new, simply update them with the costume instance.
-          //   supply.costume = res.data.url;
-          //   return $http.put(`${supply.url}`, supply);
-          // }).then((res) => {
-          //   console.log("should have made a supply here", res.data);
-          // }, errorHandle);
+          supplies.forEach((supply)=> {
+          // if the costume is brand new, simply update the supplies with the new costume instance on the costume field..
+            supply.costume = String(res.data.url);
+            return $http.put(`${supply.url}`, supply)
+            .then((res) => {
+            console.log("should have made a supply here", res.data);
+            }, errorHandle);
+          });
         });
       }
-
-    };
-  }]);
-
       // updateCostume: (data) => {
       //   return $http.put(`${data.url}`, data)
       //   .then((res) => {
       //     return res.data;
       //   }, errorHandle);
       // }, 
+      
+      // createCostumeCopy: 
+
+    };
+  }]);
+
