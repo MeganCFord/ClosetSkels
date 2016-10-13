@@ -40,13 +40,18 @@ class SupplySerializer(serializers.HyperlinkedModelSerializer):
     '''
     Handles assignment of tags during supply creation 
     by adding newly created supply instance to existing tags.
-    Supplies are always created with a 'null' costume field.
+    Supplies are created with a 'null' costume field during the creation of a new costume. 
+    They are created with a costume url during the copying of an existing costume to a new one.
     '''
     element = request["element"]
     element_instance = Element.objects.get(name=element["name"])
     new_supply = Supply(element=element_instance, name=request["name"], description=request["description"])
 
     new_supply.save()
+    
+    if request["costume"]:
+      setattr(new_supply, costume, request["costume"])
+      new_supply.save()
 
     tags_data = request.pop("tags", None)
     if tags_data:
@@ -60,7 +65,7 @@ class SupplySerializer(serializers.HyperlinkedModelSerializer):
   def update(self, instance, validated_data):
     '''
     During updating of a supply:
-    1. Assign the costume via url (supplies are always created with 'None' costume field),
+    1. Assign the costume via url (supplies are usually created with 'None' costume field),
     2. Update the tags list, 
     3. Update the element field.
     '''
