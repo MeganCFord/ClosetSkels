@@ -1,52 +1,36 @@
 app.controller("Closet",[
   "$scope",
-  "APIFactory",
   "$timeout",
   "$http",
   "$uibModal",
-  function($scope, APIFactory, $timeout, $http, $uibModal) {
+  "APIFactory",
+  "CostumeFactory",
+  function($scope, $timeout, $http, $uibModal, APIFactory, CostumeFactory) {
     const closet = this;
 
-    closet.userInfo = {};
-    closet.costumes = [];
     closet.search="";
     
-    $scope.$on("username", function(event, data) {
-      // wrapped in a timeout to ensure the scope emitter gets here before we try to use its data.
+    $scope.$on("user", function(event, data) {
       $timeout().then(() => {
-        closet.username = data;
+        closet.user = data;
       }).then(() => {
-        return APIFactory.getUserInfo(closet.username)
-      .then((data) => {
-        closet.userInfo = data;
-        $timeout();
-      }, e=>console.error)
-      .then(() => {
         // only get the costumes for the current user.
-        return APIFactory.getUserCostumes(closet.username);
+        return CostumeFactory.getUserCostumes(closet.user.id);
       }).then((res) => {
         closet.costumes = res;
         $timeout();
-        console.log("user costumes", closet.costumes);
       }, (e) => console.error);
-      });
     });
 
-    closet.deleteCostume = (costumeurl) => {
-      return APIFactory.deleteSomething(costumeurl)
-      .then(()=> {
-        for(const u in closet.costumes) {
-          if (closet.costumes[u].url === costumeurl) {
-            closet.costumes.splice(u, 1);
-          }
-        }
-        $timeout();
-      }, e => console.error);
+    closet.deleteCostume = (costume) => {
+      // Splice out the costume from list of costumes
+      closet.costumes.splice(closet.costumes.indexOf(costume), 1);
+      // Also delete it out of the database.
+      APIFactory.deleteSomething(costume.url);
     };
 
     closet.openModal = (costume) => {
-      console.log("costume I'm sending", costume);
-    //Sending the entire object into modal.
+      //Send the entire costume object and user object into modal.
       const modalInstance = $uibModal.open({
         size: "lg",
         templateUrl: "/partials/detail.html", 
@@ -54,7 +38,7 @@ app.controller("Closet",[
         controllerAs: "detail", 
         resolve: {
           "costume": costume, 
-          "userInfo": closet.userInfo
+          "user": closet.user
         }
       });
     };

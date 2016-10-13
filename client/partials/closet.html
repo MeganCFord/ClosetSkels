@@ -19,8 +19,8 @@
           </h4>
           <hr>
           <a ng-click="closet.openModal(costume)" class="btn btn-default">View</a>
-          <a href="#/{{costume.id}}/edit" class="btn btn-info">Edit</a>
-          <button ng-click="closet.deleteCostume(costume.url)" class="btn btn-danger">Delete</button>
+          <a href="#/edit/{{costume.id}}" class="btn btn-info">Edit</a>
+          <button ng-click="closet.deleteCostume(costume)" class="btn btn-danger">Delete</button>
         </div>
       </div>
       <div class="col col-sm-6" ng-show="closet.costumes | isEmpty">
