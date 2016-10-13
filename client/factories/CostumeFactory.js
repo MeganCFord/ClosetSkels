@@ -26,7 +26,7 @@ app.factory( "CostumeFactory", [
         // Argument: user id
         return APIFactory.getApiRoot()
         .then((root) => {
-          return $http.get(`${root.costumes}?owner=${userid}`);
+          return $http.get(`${root.costumes}?userid=${userid}`);
         }, errorHandle)
         .then((res) => {
           return res.data;

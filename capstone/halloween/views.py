@@ -105,7 +105,7 @@ class Costume(viewsets.ModelViewSet):
     queryset = DjangoCostume.objects.all()
     userid = self.request.query_params.get("userid", None)
     if userid is not None:
-      queryset = queryset.filter(owner=userid)
+      queryset = queryset.filter(owner__id=userid)
     else:
       public = self.request.query_params.get("public", None)
       if public is not None:
