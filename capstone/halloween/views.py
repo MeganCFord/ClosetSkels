@@ -79,12 +79,12 @@ class Supply(viewsets.ModelViewSet):
     costumeid = self.request.query_params.get('costumeid', None)
     if costumeid is not None:
       queryset = queryset.filter(costume__id=costumeid)
-    else: 
-      key = self.request.query_params.get("key", None)
-      if key is not None:
-        queryset=queryset.filter(pk = key)
-      else:
-        queryset = queryset.filter(costume=None)
+    # else: 
+    #   key = self.request.query_params.get("key", None)
+    #   if key is not None:
+    #     queryset=queryset.filter(pk = key)
+    else:
+      queryset = queryset.filter(costume=None)
     return queryset
 
 
