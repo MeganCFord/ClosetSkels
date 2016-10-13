@@ -12,6 +12,19 @@ app.controller("Create",[
 
     const create = this;
 
+    create.tags = [];
+    create.hideNewTagForm=true;
+    create.newTag = {
+      "name": "", 
+      "costumes": [], 
+      "supplies": []
+    };
+
+    create.currentFileName = "No File Selected"; 
+    
+    create.supplies = [];
+
+    
     if ($location.path() === "/create") { 
       // Pre-user 'Create' setup.
       create.title="Create Costume";
@@ -22,24 +35,14 @@ app.controller("Create",[
         "public": false, 
         "owner": "" ,
         "tags": [], 
-        "image": ""
+        "image": "", 
+        "supplies": []
       };
     } else {
       // Pre-user 'Edit' setup.
       create.title = "Edit Costume";
       create.deleteButton = "Delete";
     }
-
-    create.hideNewTagForm=true;
-    create.currentFileName = "No File Selected"; 
-    create.tags = [];
-    create.supplies = [];
-
-    create.newTag = {
-      "name": "", 
-      "costumes": [], 
-      "costumeelements": []
-    };
 
 
 ///////////////////////////////
@@ -53,7 +56,7 @@ app.controller("Create",[
         $timeout();
       }).then(()=> {
         if($location.path()==="/create") {
-          create.costume.owner = data;
+          create.costume.owner = data.url;
           // 'Create' setup. 
           // Get all supplies with no costume url assigned (meaning the costume has not been completed).
           return APIFactory.getSupplies()
@@ -196,24 +199,28 @@ app.controller("Create",[
 
 
     create.createCostume = () => {
-      // TODO: fix this and also handle what happens if you're editing the costume instead.
-     
-      APIFactory.createCostume(create.costume).then((res)=> {
-        console.log(res);
-        // TODO: pop up with a success modal or something for a second. 
-        $location.path("/closet");
-      });
+      if($location.path()==="/create") {
+        CostumeFactory.createNewCostume(create.costume, create.supplies).then((res)=> {
+          console.log(res);
+          $location.path("/closet");
+        });
+      } else {
+        CostumeFactory.updateCostume(create.costume).then((res)=> {
+          console.log(res);
+          $location.path("/closet");
+        });
+      }     
     };
 
     create.deleteCostume = () => {
       // Delete all the supplies. 
-      
       create.supplies.forEach((supply) => {
         return APIFactory.deleteSomething(supply.url);
       });
       if($location.path()==="/create") {
         $location.path("/closet");
       } else {
+        // If you were editing an existing costume, delete it.
         APIFactory.deleteSomething(create.costume.url)
         .then(()=> {
           $location.path("/closet");

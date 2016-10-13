@@ -65,18 +65,18 @@
           <div class="fixedheightsub">
            <!-- TAGS -->
             <div class="form-group">
-              <div uib-collapse="!create.tagIsCollapsed" class="well well-lg scrollthetags">
+              <div uib-collapse="!create.hideNewTagForm" class="well well-lg scrollthetags">
                 <span ng-repeat="tag in create.tags">
                   <span ng-hide="create.costume.tags | contains:tag" ng-click="create.addTag(tag)" class="btn btn-default">{{tag.name}}</span>
                   <span ng-show="create.costume.tags | contains:tag" ng-click="create.removeTag(tag)" class="btn btn-primary">{{tag.name}}</span>
                 </span>
-                <button type="button" class="btn btn-info" ng-click="create.tagIsCollapsed = !create.tagIsCollapsed">Add a New Tag</button>
+                <button type="button" class="btn btn-info" ng-click="create.hideNewTagForm = !create.hideNewTagForm">Add a New Tag</button>
               </div>
               <!-- ADD TAG -->
-              <div uib-collapse="create.tagIsCollapsed" class="well well-lg scrollthetags form-group">
+              <div uib-collapse="create.hideNewTagForm" class="well well-lg scrollthetags form-group">
                 <input class="form-control" ng-model="create.tag.name" placeholder="Tag name">
                 <span ng-click="create.createTag()" class="btn btn-default">Add</span>
-                <span ng-click="create.tagIsCollapsed = !create.tagIsCollapsed" class="btn btn-default">Cancel</span>
+                <span ng-click="create.hideNewTagForm = !create.hideNewTagForm" class="btn btn-default">Cancel</span>
               </div>
             </div>
           </div>
