@@ -37,20 +37,19 @@ app.controller("Detail",[
       detail.costume.boos.splice(detail.costume.boos.indexOf(boo), 1);
       // Remove boo via url.
       APIFactory.deleteSomething(boo.url);
+      $scope.$emit("unboo", boo);
+      $uibModalInstance.close();
     };
 
 
     detail.copyToCloset = () => {
       // Edit existing costume object 
-      if(detail.costume["$$hashkey"]) {
-        delete detail.costume["$$hashkey"];
-      }
       delete detail.costume["url"];
       delete detail.costume["id"];
-      detail.costume.owner = detail.userInfo.url;
+      detail.costume.owner = detail.user.url;
       detail.costume.public = false;
       // Create a new costume using most of existing info.
-      CostumeFactory.createCostume(detail.costume)
+      CostumeFactory.copyCostume(detail.costume, detail.supplies)
       .then(() => {
         // Redirect to costume closet page.
         $location.path("/closet");
@@ -60,7 +59,7 @@ app.controller("Detail",[
 
     detail.goToEdit = () => {
       // redirect to edit page.
-      $location.path(`/${detail.costume.id}/edit`);
+      $location.path(`/edit/${detail.costume.id}`);
       $uibModalInstance.close();
     };
   

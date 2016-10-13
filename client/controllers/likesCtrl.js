@@ -1,11 +1,12 @@
 app.controller("Likes",[
   "$scope",
+  "$rootScope",
   "$timeout",
   "APIFactory",
   "CostumeFactory",
   "$uibModal",
   "$location", 
-  function($scope, $timeout, APIFactory, CostumeFactory, $uibModal, $location) {
+  function($scope, $rootScope, $timeout, APIFactory, CostumeFactory, $uibModal, $location) {
     const likes = this;
     likes.title="likes page";
 
@@ -39,6 +40,12 @@ app.controller("Likes",[
       // Delete boo via its url property.
       APIFactory.deleteSomething(boo.url); 
     };
+
+    $rootScope.$on("unboo", (event, data)=> {
+      // Remove the deleted costume from list of bood costumes, if it has been unbood in the detail modal.
+      likes.boos.splice(likes.boos.indexOf(data), 1);
+      $timeout();
+    });
 
     likes.openModal = (costume) => {
     // Opens costume detail modal.
