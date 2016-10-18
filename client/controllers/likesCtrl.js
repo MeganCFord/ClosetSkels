@@ -42,9 +42,13 @@ app.controller("Likes",[
     };
 
     $rootScope.$on("unboo", (event, data)=> {
-      // Remove the deleted costume from list of bood costumes, if it has been unbood in the detail modal.
-      likes.boos.splice(likes.boos.indexOf(data), 1);
-      $timeout();
+      // Remove the costume's associated boo from list of boos, if it has been unbood in the detail modal.
+      likes.boos.forEach((boo)=> {
+        if(boo.costume===data.url) {
+          likes.boos.splice(likes.boos.indexOf(boo), 1);
+          $timeout();
+        }
+      });
     });
 
     likes.openModal = (costume) => {

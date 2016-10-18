@@ -37,7 +37,7 @@ app.controller("Detail",[
       detail.costume.boos.splice(detail.costume.boos.indexOf(boo), 1);
       // Remove boo via url.
       APIFactory.deleteSomething(boo.url);
-      $scope.$emit("unboo", boo);
+      $scope.$emit("unboo", detail.costume);
       $uibModalInstance.close();
     };
 
