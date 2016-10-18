@@ -53,7 +53,7 @@
           <div class="well well-lg">
           <!-- TAGS -->
             <span ng-repeat="tag in supplier.tags">          
-              <span ng-repeat="supplytag in supplier.supply.tags | filterBy:['id']: tag.id: true as tagged" class="btn boobutton btn-primary" ng-click="supplier.removeTag(tag)">{{tag.name}}</span>
+              <span ng-repeat="supplytag in supplier.supply.tags | filterBy:['id']: tag.id: true as tagged" class="btn btn-primary" ng-click="supplier.removeTag(tag)">{{tag.name}}</span>
               <span  class="btn btn-default" ng-if="tagged | isEmpty" ng-click="supplier.addTag(tag)">{{tag.name}}</span>
             </span>
             <hr>
