@@ -60,12 +60,12 @@ app.factory( "CostumeFactory", [
           });
         });
       },
-      // updateCostume: (data) => {
-      //   return $http.put(`${data.url}`, data)
-      //   .then((res) => {
-      //     return res.data;
-      //   }, errorHandle);
-      // }, 
+      updateCostume: (costume) => {
+        return $http.put(`${costume.url}`, costume)
+        .then((res) => {
+          return res.data;
+        }, errorHandle);
+      }, 
       
       copyCostume: (costume, supplies) => {
         return APIFactory.getApiRoot()
@@ -78,7 +78,7 @@ app.factory( "CostumeFactory", [
             supply.costume = String(res.data.url);
             return APIFactory.createSupply(supply)
             .then((res)=> {
-              console.log("should have made a supply copy here", res.data);
+              console.log("supply copy created", res);
             }, errorHandle);
           });
         });

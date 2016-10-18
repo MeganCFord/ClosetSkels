@@ -50,7 +50,7 @@ class SupplySerializer(serializers.HyperlinkedModelSerializer):
     new_supply.save()
     
     if request["costume"]:
-      setattr(new_supply, costume, request["costume"])
+      setattr(new_supply, 'costume', request["costume"])
       new_supply.save()
 
     tags_data = request.pop("tags", None)
@@ -150,7 +150,7 @@ class CostumeSerializer(serializers.HyperlinkedModelSerializer):
       instance.tags = [];
       for tag_data in tags_data:
         # Add each tag back based on update.
-        tag_to_add = Tags.objects.get(pk=tag_data["id"])
+        tag_to_add = Tag.objects.get(name=tag_data["name"])
         instance.tags.add(tag_to_add)
     instance.save()
 

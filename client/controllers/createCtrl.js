@@ -185,15 +185,19 @@ app.controller("Create",[
 ///////////////////////////////
 
     create.openModal = (supply = null) => {
-      //If editing, send the entire supply object into modal.
+      // If editing costume: 
+      // Assign the costume URL to assign to any created/edited supply.
+      // Send the entire supply object into modal.
+      
       const modalInstance = $uibModal.open({
         size: "lg",
         templateUrl: "/partials/supply.html", 
         controller: "Supplier",
         controllerAs: "supplier",
         resolve: {
-          "supply": supply
-        }   
+          "supply": supply, 
+          "costume": create.costume
+        }  
       });
     }; 
 
@@ -207,12 +211,12 @@ app.controller("Create",[
     create.createCostume = () => {
       if($location.path()==="/create") {
         CostumeFactory.createNewCostume(create.costume, create.supplies).then((res)=> {
-          console.log(res);
+          console.log("created costume", res);
           $location.path("/closet");
         });
       } else {
         CostumeFactory.updateCostume(create.costume).then((res)=> {
-          console.log(res);
+          console.log("updated costume", res);
           $location.path("/closet");
         });
       }     

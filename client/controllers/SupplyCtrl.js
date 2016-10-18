@@ -5,7 +5,8 @@ app.controller("Supplier",[
   "$uibModalInstance",
   "APIFactory",
   "supply",
-  function($scope, $timeout, $location, $uibModalInstance, APIFactory, supply) {
+  "costume",
+  function($scope, $timeout, $location, $uibModalInstance, APIFactory, supply, costume) {
     const supplier = this;
     
     supplier.newElement = {"name": ""};
@@ -15,8 +16,13 @@ app.controller("Supplier",[
     supplier.hideNewTagForm = true;
     
     if(supply === null) {
-      // 'Create' setup.
+      // 'Create' setup. If creating a supply on an existing costume, assign costume URL. 
+      
       supplier.supply = {"name": "", "costume": "", "element": {}, "description": "", "tags": []};
+      if(costume.url) {
+        supplier.supply.costume = String(costume.url);
+        console.log("creating new supply for existing costume", supplier.supply.costume);
+      }
       supplier.title = "Create Supply";
       supplier.deleteButtonText = "Discard";
     } else {
@@ -101,6 +107,7 @@ app.controller("Supplier",[
 
     supplier.ok = () =>  {
       if (supply===null) {
+        console.log("supply to create", supplier.supply)
         APIFactory.createSupply(supplier.supply)
         .then((res)=> {
           // Send the new supply to the main create page for display.
