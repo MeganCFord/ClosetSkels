@@ -34,7 +34,7 @@
           <!-- IMAGE UPLOAD -->
           <div class="text-center">
             <label class="btn btn-info">
-              <span ng-model="create.uploadBtnText">Choose a File</span>
+              <span>Choose a File</span>
               <!-- this input broadcasts the name of the file loaded for display. -->
               <input type="file" ng-model="create.costumeImage" accept="image/*" style="display: none" onchange="angular.element(this).scope().photoChanged(this.files)"/>
             </label>
@@ -66,9 +66,9 @@
            <!-- TAGS -->
             <div class="form-group">
               <div uib-collapse="!create.hideNewTagForm" class="well well-lg scrollthetags">
-                <span ng-repeat="tag in create.tags">
-                  <span ng-hide="create.costume.tags | contains:tag" ng-click="create.addTag(tag)" class="btn btn-default">{{tag.name}}</span>
-                  <span ng-show="create.costume.tags | contains:tag" ng-click="create.removeTag(tag)" class="btn btn-primary">{{tag.name}}</span>
+                <span ng-repeat="tag in create.tags">          
+                  <span ng-repeat="costume in create.costume.tags | filterBy:['id']: tag.id: true as tagged" class="btn  btn-primary" ng-click="create.removeTag(tag)">{{tag.name}}</span>
+                  <span  class="btn btn-default" ng-if="tagged | isEmpty" ng-click="create.addTag(tag)">{{tag.name}}</span>
                 </span>
                 <button type="button" class="btn btn-info" ng-click="create.hideNewTagForm = !create.hideNewTagForm">Add a New Tag</button>
               </div>

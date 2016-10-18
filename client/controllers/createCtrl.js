@@ -20,7 +20,7 @@ app.controller("Create",[
       "supplies": []
     };
 
-    create.currentFileName = "No File Selected"; 
+    create.currentFileName = ""; 
     
     create.supplies = [];
 
@@ -67,7 +67,7 @@ app.controller("Create",[
         } else {
           // 'Edit' setup. 
           // Get costume via ID in route.
-          APIFactory.getOneCostume($routeParams.id)
+          CostumeFactory.getOneCostume($routeParams.id)
           .then((res)=> {
             create.costume = res;
             // Get all supplies assigned to that costume.
@@ -126,12 +126,14 @@ app.controller("Create",[
 ///////////////////////////////
 
     create.uploadPhoto = function() {  
-      //find the file. Angular can't really find files automatically.
+      //Find the file. Angular can't really find files automatically.
       const input = document.querySelector('[type="file"]');
       const file = input.files[0];
 
+      // Upload to Firebase.
       FirebaseFactory.uploadImage(file)
       .then(res => {
+        // Save firebase URL into costume object.
         create.costume.image = res.downloadURL;
       }, e=>console.error)
       .then(()=> {
@@ -140,11 +142,9 @@ app.controller("Create",[
     };
 
     $scope.photoChanged = function(files) {
-      //displays file name on DOM and uploads file on file choice. 
+      // Uploads file on file choice. 
       if (files !== null ) {
-        create.currentFileName = files[0].name;
         create.uploadPhoto();
-        $scope.$apply();
       }
     };
 
@@ -158,7 +158,13 @@ app.controller("Create",[
     };
 
     create.removeTag = (tag) => {
-      create.costume.tags.splice(create.costume.tags.indexOf(tag));
+      // Since while editing the list of all tags has a hashkey and the list of tags on the costume does not, I can't simply splice this match.
+      
+      create.costume.tags.forEach((costumetag)=> {
+        if(costumetag.id === tag.id) { 
+          create.costume.tags.splice(create.costume.tags.indexOf(costumetag), 1);
+        }
+      });
     };
 
 
