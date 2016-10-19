@@ -69,15 +69,12 @@ app.controller("Likes",[
 
     likes.copyToCloset = (costume) => {
       // Edit existing costume object 
-      if(costume["$$hashKey"]) {
-        delete costume["$$hashKey"];
-      }
       delete costume["url"];
       delete costume["id"];
       costume.owner = likes.userInfo.url;
       costume.public = false;
       // Create a new costume using most of existing info.
-      CostumeFactory.createCostume(costume)
+      CostumeFactory.copyCostume(costume)
       .then(() => {
         // Redirect to costume closet page.
         $location.path("/closet");

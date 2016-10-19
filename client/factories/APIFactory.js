@@ -103,7 +103,7 @@ app.factory( "APIFactory", [
         });     
       }, 
 
-      updateSupply: (data) => {
+      editSupply: (data) => {
         // TODO: fix this. 
         return $http.put(`${data.url}`, data)
         .then((res) => {
