@@ -10,8 +10,8 @@
   <div class="col col-sm-9">
     <div class="container-fluid">
       <!-- Page titles. -->
-      <h1 ng-if="!home.filtering" style="padding-left: 15px">Browse</h1> 
-      <h1 ng-if="home.filtering" style="padding-left: 15px">Search</h1> 
+      <h1 ng-if="!home.filtering" class="pagetitle">Browse</h1> 
+      <h1 ng-if="home.filtering" class="pagetitle">Search</h1> 
       <hr>
       <div class="col col-sm-6" ng-repeat="costume in home.costumes | filter:home.search" ng-if="!home.filtering">
         <div class="well well-lg card">

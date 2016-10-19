@@ -1,37 +1,90 @@
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
+.addtagform {
+  height: 327px;
+}
+
 .btn {
   margin: 2px 0;
+}
+
+.boobutton {
+  height: 32px;
+  padding-top: 3.5px;
+  width: 66px;
+}
+
+.buttonarea {
+  padding-bottom: 5px;
 }
 
 .card {
   height: 155px;
 }
-.modal-dialog {
-  width: 125vh;
+
+.cardfiller {
+  height: 29px;
 }
 
-.filtersidebar {
-  height:85vh; 
-  padding-right: 0px; 
-  border-right: 1px solid #ccc
+.costumeimage {
+  max-height: 50vh;
+  max-width: 33vh;
+}
+
+.elementcard {
+  height: 148px;
+  margin-top: 15px;
 }
 
 .elementform {
   height: 116px;
 }
 
-.tagform {
-  height: 57vh;
-  overflow-y: scroll;
-}
-.addtagform {
-  height: 327px;
+.filtersidebar {
+  border-right: 1px solid #ccc;
+  height: 85vh;
+  padding-right: 0;
 }
 
-.elementcard {
-  margin-top: 15px;
-  height: 148px;
+.fixedheightmain {
+  height: 74vh;
+}
+
+.fixedheightsub {
+  height: 26vh;
+  overflow-y: scroll;
+}
+
+.floatingboo {
+  margin-top: -4.5px;
+}
+
+.modal-dialog {
+  width: 125vh;
+}
+
+.nohoverdefault:hover {
+  background-color: #fff;
+  border-color: #ccc;
+  cursor: default;
+}
+
+.nohoverprimary:hover {
+  background-color: #337ab7;
+  border-color: #2e6da4;
+  cursor: default;
+}
+
+.pagetitle {
+  padding-left: 15px;
+}
+
+.pullpubliccheckboxup {
+  margin-top: -31px;
+}
+
+.pulltextareaup {
+  margin-top: -2px;
 }
 
 .scrollingsidebar {
@@ -41,45 +94,25 @@
   overflow-y: scroll;
 }
 
-.fixedheightmain {
-  height: 74vh;
-}
-.fixedheightsub {
-  height: 26vh;
+.scrollthetags {
+  height: 23vh;
+  margin-bottom: 0;
   overflow-y: scroll;
 }
 
-.nohoverprimary:hover {
-  background-color: #337ab7;
-  border-color: #2e6da4;
-  cursor: default;
+.searchinput {
+  margin-right: 15px;
 }
 
-.nohoverdefault:hover {
-  background-color: #fff;
-  border-color: #ccc;
-  cursor: default;
-}
-.boobutton {
-  height: 32px;
-  width: 66px;
-  padding-top: 3.5px;
+.supplyselect {
+  margin-bottom: 20px;
 }
 
-.floatingboo {
-  margin-top: -4.5px;
-}
-
-.pagetitle {
-  padding-left: 15px;
+.tagform {
+  height: 57vh;
+  overflow-y: scroll;
 }
 
 .topofscrollingsidebar {
   margin-top: 15px;
-}
-
-.scrollthetags {
-  height: 23vh;
-  overflow-y: scroll;
-  margin-bottom: 0;
 }

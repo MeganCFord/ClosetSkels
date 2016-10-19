@@ -3,14 +3,14 @@
 
 <div class="container-fluid">
   <div class="col col-sm-3 filtersidebar">
-    <div style="margin-right: 15px">
+    <div class="searchinput">
       <input class="form-control" placeholder="Search by title" ng-model="likes.search">
       <hr>      
     </div>
   </div>
   <div class="col col-sm-9">
     <div class="container-fluid">
-      <h1 style="padding-left: 15px">Boos</h1> 
+      <h1 class="pagetitle">Boos</h1> 
       <hr>
       <!-- Repeating costumes within Boos so unBoo functionality is simpler. -->
       <div class="col col-sm-6" ng-repeat="boo in likes.boos">

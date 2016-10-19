@@ -24,7 +24,7 @@
   <div class="col col-sm-9">
     <div class="container-fluid fixedheightmain">
       <h1 class="pagetitle">{{create.title}}</h1> 
-        <div style="margin-top: -31px" class="pull-right">
+        <div class="pull-right pullpubliccheckboxup">
           <label class="checkbox-inline">
             <input type="checkbox" ng-model="create.costume.public"> <p>Public</p>
           </label>
@@ -35,13 +35,13 @@
           <div class="text-center">
             <label class="btn btn-info">
               <span>Choose a File</span>
-              <!-- this input broadcasts the name of the file loaded for display. -->
-              <input type="file" ng-model="create.costumeImage" accept="image/*" style="display: none" onchange="angular.element(this).scope().photoChanged(this.files)"/>
+              <!-- this input broadcasts the name of the file loaded for display. inline styling required to override standard button-->
+              <input style="display: none" type="file" ng-model="create.costumeImage" accept="image/*" onchange="angular.element(this).scope().photoChanged(this.files)"/>
             </label>
           </div>
           <hr>
           <div ng-if="create.costume.image.length >0">
-            <img class="img-thumbnail center-block" style="max-width: 33vh; max-height: 50vh" ng-src="{{create.costume.image}}" alt="costume image">
+            <img class="img-thumbnail center-block costumeimage" ng-src="{{create.costume.image}}" alt="costume image">
             <p class="text-center" ng-model="create.currentFileName">{{create.currentFileName}}</p>
           </div>
 
@@ -54,7 +54,7 @@
             </div>
             <!-- DESCRIPTION -->
             <div class="form-group">
-                <textarea style="margin-top: -2px" class="form-control"
+                <textarea class="form-control pulltextareaup"
                        placeholder="talk about some features of your costume or special instructions here."
                        ng-model="create.costume.description"
                        rows="5">

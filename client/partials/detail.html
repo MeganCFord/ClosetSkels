@@ -21,7 +21,7 @@
         <div class="col col-sm-6">
           <!-- image here -->
            <div ng-if="detail.costume.image.length >0">
-            <img class="img-thumbnail center-block" style="max-width: 33vh; max-height: 50vh" ng-src="{{detail.costume.image}}" alt="costume image">
+            <img class="img-thumbnail center-block costumeimage" ng-src="{{detail.costume.image}}" alt="costume image">
           </div>
           <!-- if there is no image uploaded. -->
           <div ng-if="detail.costume.image.length===0">
@@ -42,7 +42,7 @@
         </div>
     </div>
     <hr>
-    <div  style="padding-bottom: 5px" class="text-right">
+    <div class="text-right buttonarea">
     <!-- how many boos. -->
      <button class="btn btn-default boobutton nohoverdefault">{{detail.costume.boos.length}}   <i class="em em-ghost"></i>s</button>
      <!-- unboo button, checking if owner exists in list of costume boos. -->
