@@ -47,7 +47,7 @@
 
         </div>
         <div class="col col-sm-6">
-          <div class="fixedheightsub">
+          <div class="fixedheightdesc">
             <!-- NAME -->
             <div class="form-group">
               <input class="form-control" placeholder="Costume Title" ng-model="create.costume.name">
@@ -62,16 +62,17 @@
             </div>
           </div>
           <hr>
-          <div class="fixedheightsub">
+          <div class="fixedheighttag">
            <!-- TAGS -->
             <div class="form-group">
+              <input class="form-control" ng-model="create.tagsearch" placeholder="search for tags">
               <div uib-collapse="!create.hideNewTagForm" class="well well-lg scrollthetags">
-                <span ng-repeat="tag in create.tags">          
+                <span ng-repeat="tag in create.tags | filter: create.tagsearch">
                   <span ng-repeat="costume in create.costume.tags | filterBy:['id']: tag.id: true as tagged" class="btn  btn-primary" ng-click="create.removeTag(tag)">{{tag.name}}</span>
                   <span  class="btn btn-default" ng-if="tagged | isEmpty" ng-click="create.addTag(tag)">{{tag.name}}</span>
                 </span>
-                <button type="button" class="btn btn-info" ng-click="create.hideNewTagForm = !create.hideNewTagForm">Add a New Tag</button>
               </div>
+              <button type="button" class="btn btn-info text-center" ng-click="create.hideNewTagForm = !create.hideNewTagForm">Add a New Tag</button>
               <!-- ADD TAG -->
               <div uib-collapse="create.hideNewTagForm" class="well well-lg scrollthetags form-group">
                 <input class="form-control" ng-model="create.tag.name" placeholder="Tag name">

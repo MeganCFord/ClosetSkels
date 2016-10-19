@@ -31,6 +31,12 @@
   max-width: 33vh;
 }
 
+.detailtags {
+  height: 33vh;
+  overflow-y: scroll;
+  padding: 5px;
+}
+
 .elementcard {
   height: 148px;
   margin-top: 15px;
@@ -50,8 +56,12 @@
   height: 74vh;
 }
 
-.fixedheightsub {
-  height: 26vh;
+.fixedheightdesc {
+  height: 21vh;
+}
+
+.fixedheighttag {
+  height: 37vh;
   overflow-y: scroll;
 }
 
@@ -59,8 +69,17 @@
   margin-top: -4.5px;
 }
 
+.logoutbutton {
+  margin-right: 5px;
+  margin-top: 8px;
+}
+
 .modal-dialog {
   width: 125vh;
+}
+
+.nohoverdefault {
+  margin-right: 2px;
 }
 
 .nohoverdefault:hover {
@@ -68,7 +87,9 @@
   border-color: #ccc;
   cursor: default;
 }
-
+.nohoverprimary {
+  margin-right: 2px;
+}
 .nohoverprimary:hover {
   background-color: #337ab7;
   border-color: #2e6da4;
@@ -95,9 +116,11 @@
 }
 
 .scrollthetags {
-  height: 23vh;
-  margin-bottom: 0;
+  height: 24vh;
+  margin-bottom: 5px;
+  margin-top: 5px;
   overflow-y: scroll;
+  padding: 5px;
 }
 
 .searchinput {
@@ -106,6 +129,14 @@
 
 .supplyselect {
   margin-bottom: 20px;
+}
+
+.supplytagwell {
+  height: 44vh;
+  margin-bottom: 20px;
+  margin-top: 5px;
+  overflow-y: scroll;
+  padding: 5px;
 }
 
 .tagform {
