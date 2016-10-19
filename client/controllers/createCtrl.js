@@ -99,7 +99,7 @@ app.controller("Create",[
       // If the supply is a new version of an edited one, splice it out.
       create.supplies.forEach((supply)=> {
         if(supply.id === data.id) {
-          create.supplies.splice(create.supplies.indexOf(supply));
+          create.supplies.splice(create.supplies.indexOf(supply), 1);
         }
       });
       create.supplies.push(data);
@@ -110,7 +110,7 @@ app.controller("Create",[
       //Splice out the supply to delete from the list.
       create.supplies.forEach((supply)=> {
         if(supply.id === data.id) {
-          create.supplies.splice(create.supplies.indexOf(supply));
+          create.supplies.splice(create.supplies.indexOf(supply), 1);
         }
       });
       return APIFactory.deleteSomething(data.url);
@@ -203,7 +203,7 @@ app.controller("Create",[
 
     create.deleteSupply = (supply) => {
       // Delete supply.
-      create.supplies.splice(create.supplies.indexOf(supply));
+      create.supplies.splice(create.supplies.indexOf(supply), 1);
       APIFactory.deleteSomething(supply.url);
     };
 
