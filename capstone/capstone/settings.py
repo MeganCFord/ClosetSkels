@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'halloween.apps.HalloweenConfig', 
     'rest_framework', 
     'corsheaders',
+    'coverage',
 ]
 
 MIDDLEWARE = [
