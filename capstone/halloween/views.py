@@ -75,16 +75,14 @@ class Supply(viewsets.ModelViewSet):
     Optionally restricts the returned queryset to a given costume,
     by filtering against a `costumeid` query parameter in the URL.
     """
+    
     queryset = DjangoSupply.objects.all()
+
     costumeid = self.request.query_params.get('costumeid', None)
+    print(self.request.data)
     if costumeid is not None:
       queryset = queryset.filter(costume__id=costumeid)
-    # else: 
-    #   key = self.request.query_params.get("key", None)
-    #   if key is not None:
-    #     queryset=queryset.filter(pk = key)
-    else:
-      queryset = queryset.filter(costume=None)
+      
     return queryset
 
 
