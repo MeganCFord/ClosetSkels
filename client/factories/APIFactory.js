@@ -79,12 +79,16 @@ app.factory( "APIFactory", [
 
       //// SUPPLIES ////
 
-      getSupplies: (costumeid=null) => {
+      getSupplies: (costumeid=null, userid=null) => {
         // Gets the supplies either for an uncreated costume, or for the selected costume. TODO: make supplies attached to a user so multiple users can be creating costumes/have created supplies at once.
         return getApiRoot()
         .then((root) => {
           if (costumeid===null) {
-            return $http.get(`${root.supplies}`);
+            if(userid===null) {
+              return $http.get(`${root.supplies}`);
+            } else {
+              return $http.get(`${root.supplies}?userid=${userid}`);
+            }
           } else {
             return $http.get(`${root.supplies}?costumeid=${costumeid}`);
           }

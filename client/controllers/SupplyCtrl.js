@@ -19,15 +19,17 @@ app.controller("Supplier",[
       // 'Create' setup. If creating a supply on an existing costume, assign costume URL. 
       
       supplier.supply = {"name": "", "costume": "", "element": {}, "description": "", "tags": []};
+      supplier.supply.owner=costume.owner;
+
       if(costume.url) {
         supplier.supply.costume = String(costume.url);
-        console.log("creating new supply for existing costume", supplier.supply.costume);
       }
       supplier.title = "Create Supply";
       supplier.deleteButtonText = "Discard";
     } else {
       // 'Edit' setup.
       supplier.supply = supply;
+
       supplier.title = "Edit Supply";
       supplier.deleteButtonText = "Delete Supply";
       $timeout();
@@ -107,7 +109,6 @@ app.controller("Supplier",[
 
     supplier.ok = () =>  {
       if (supply===null) {
-        console.log("supply to create", supplier.supply)
         APIFactory.createSupply(supplier.supply)
         .then((res)=> {
           // Send the new supply to the main create page for display.

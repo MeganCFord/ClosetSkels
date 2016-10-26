@@ -59,7 +59,7 @@ app.controller("Create",[
           create.costume.owner = data.url;
           // 'Create' setup. 
           // Get all supplies with no costume url assigned (meaning the costume has not been completed).
-          return APIFactory.getSupplies()
+          return APIFactory.getSupplies(costumeid=null, userid=data.id)
           .then((res) => {
             create.supplies = res;
             $timeout();

@@ -79,10 +79,13 @@ class Supply(viewsets.ModelViewSet):
     queryset = DjangoSupply.objects.all()
 
     costumeid = self.request.query_params.get('costumeid', None)
-    print(self.request.data)
     if costumeid is not None:
       queryset = queryset.filter(costume__id=costumeid)
-      
+
+    userid = self.request.query_params.get('userid', None)
+    if userid is not None:
+      queryset = queryset.filter(owner__id=userid)
+    
     return queryset
 
 
@@ -104,14 +107,15 @@ class Costume(viewsets.ModelViewSet):
     userid = self.request.query_params.get("userid", None)
     if userid is not None:
       queryset = queryset.filter(owner__id=userid)
-    else:
-      public = self.request.query_params.get("public", None)
-      if public is not None:
-        queryset = queryset.filter(public=True)
-      else: 
-        costumeid = self.request.query_params.get("costumeid", None)
-        if costumeid is not None:
-          queryset = queryset.filter(id=costumeid)
+
+    public = self.request.query_params.get("public", None)
+    if public is not None:
+      queryset = queryset.filter(public=True)
+
+    costumeid = self.request.query_params.get("costumeid", None)
+    if costumeid is not None:
+      queryset = queryset.filter(id=costumeid)
+
     return queryset
 
 

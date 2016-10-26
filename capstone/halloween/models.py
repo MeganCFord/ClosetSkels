@@ -43,6 +43,7 @@ class Supply(models.Model):
     description=models.CharField(max_length=1000, blank=True, null=True)
     costume=models.ForeignKey('costume', null=True, blank=True, on_delete=models.CASCADE, related_name="supplies")
     element=models.ForeignKey('element', blank=True, null=True, on_delete=models.CASCADE, related_name="supplies")
+    owner=models.ForeignKey('auth.User', blank=True, null=True, on_delete=models.CASCADE, related_name="supplies")
     # Tags are on tag.
 
     def __str__(self):

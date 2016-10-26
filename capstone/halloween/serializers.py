@@ -34,13 +34,13 @@ class SupplySerializer(serializers.HyperlinkedModelSerializer):
   element = ElementSerializer()
   class Meta:
     model = Supply
-    fields = ("id", "name", "url", "costume", "description", "element", "tags")
+    fields = ("id", "name", "url", "costume", "description", "element", "owner", "tags")
 
   def create(self, request): 
     '''
     Handles assignment of tags during supply creation 
-    by adding newly created supply instance to existing tags.
-    Supplies are created with a 'null' costume field during the creation of a new costume. 
+    by adding newly created supply instance to existing tags
+    Supplies are created with a 'null' costume field during the creation of a new costume. They have a user attached to them in case of refresh. 
     They are created with a costume url during the copying of an existing costume to a new one.
     '''
     element = request["element"]
@@ -52,6 +52,9 @@ class SupplySerializer(serializers.HyperlinkedModelSerializer):
     if request["costume"]:
       setattr(new_supply, 'costume', request["costume"])
       new_supply.save()
+
+    if request["owner"]:
+      setattr(new_supply, "owner", request["owner"])
 
     tags_data = request.pop("tags", None)
     if tags_data:
